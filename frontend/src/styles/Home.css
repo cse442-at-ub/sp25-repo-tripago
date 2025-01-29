@@ -1,0 +1,35 @@
+.home-wrapper h1 span{
+  color: #FF5757;
+}
+
+.home-wrapper h1 {
+  margin-bottom: 20px;
+}
+
+.home-subtext {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 10px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* .home-button {
+  /* background-color: #FF5757; */
+  /* color: #FF5757;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+} */
+
+/* .home-button:hover {
+  border: 1px solid #FF5757; 
+  color: #FF5757;
+} */
+
+/* .home-button:focus {
+  outline: none; /* Ensures no extra blue outline on focus */
+/* }  */
