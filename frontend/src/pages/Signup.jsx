@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
 
-const Login = () => {
+const Signup = () => {
 
   const navigate = useNavigate()
 
@@ -20,13 +20,12 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log("Registration Data:", formData);
     // Add validation code
   };
 
   return (
     <div className="login-container">
-      {/* <h3 className='signup-message'>Welcome to your all-in-one travel companion</h3> */}
     <h2>Ready to <span>go</span>? Sign up for free!</h2>
     <form onSubmit={handleSubmit}>
     <input
@@ -89,4 +88,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Signup

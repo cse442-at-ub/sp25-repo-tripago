@@ -111,3 +111,10 @@ p a {
 .password-container:hover .password-tooltip {
   display: block;
 }
+
+
+/* RESET PASSWORD */
+
+.email-input-box {
+  margin-bottom: 30px;
+}
