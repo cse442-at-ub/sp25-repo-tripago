@@ -5,6 +5,16 @@
 
 }
 
+.logo-btn {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.logo-btn:hover {
+  background: none;
+}
+
 .nav-links {
   list-style: none;
   display: flex;
@@ -24,6 +34,22 @@
   transition: color 0.5s ease-in-out
 }
 
-.nav-links a:hover {
+.navbar-links {
+  background: none;
+  border: none;
+  color: var(--black);
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0;
+  box-shadow: none;
+  transition: ease-in-out 0.3s;
+}
+
+.navbar-links:hover {
+  text-decoration: none;
+  opacity: 0.9;
+  background: none;
   color: var(--primary-color);
 }
+

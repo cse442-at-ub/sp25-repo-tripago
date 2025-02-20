@@ -43,12 +43,6 @@ input {
   border: 1px solid var(--secondary-color)
 }
 
-.login_signup-btn {
-  font-size: 0.85rem;
-  color: #b99c9c;
-  transition: color 0.3s ease-in-out;
-}
-
 .login_signup-btn:hover {
   color: var(--primary-color);
 }
@@ -61,3 +55,23 @@ p a {
   text-decoration: none;
   color: #333;
 }
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--secondary-text);
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0;
+  box-shadow: none;
+  transition: ease-in-out 0.3s;
+}
+
+.link-button:hover {
+  text-decoration: none;
+  opacity: 0.9;
+  background: none;
+  color: var(--primary-color);
+}
+

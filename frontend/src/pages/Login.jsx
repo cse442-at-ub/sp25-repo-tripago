@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
 
 const Login = () => {
+
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -42,11 +44,16 @@ const Login = () => {
       />
       <button type="submit" className='login_signup-button'>Login</button>
     </form>
+
     <p classname='forgot_password_link'>
-      <Link to="/forgot_password" className='login_signup-btn'>Forgot your password?</Link>
+        <button className='link-button' onClick={() => navigate("/forgot_password")}>
+          Forgot your password?
+        </button>
     </p>
     <p> 
-      <Link to="/signup" className='login_signup-btn'> Don't have an account? Sign up here.</Link>
+        <button className='link-button' onClick={() => navigate("/signup")}>
+        Don't have an account? Sign up here.
+        </button>
     </p>
   </div>
   )

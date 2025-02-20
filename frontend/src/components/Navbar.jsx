@@ -1,19 +1,21 @@
 import React from 'react'
 import "../styles/Navbar.css"
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 import logo from '../assets/Tripago_VX.png'
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
       <nav className="navbar">
         <div className="logo">
-        <Link to="/" className="logo">
-        <img src={logo} alt="Tripago Logo" />
-      </Link>
+        <button className="logo-btn" onClick={() => navigate("/")}>
+          <img src={logo} alt="Tripago Logo" />
+        </button>
         </div>
         <ul className="nav-links">
-          <li><a href="/login">Login</a></li>
-          <li><a href="/signup">Signup</a></li>
+          <li><button className='navbar-links' onClick={() => navigate("/login")}>Login</button></li>
+          <li><button className='navbar-links' onClick={() => navigate("/signup")}>Signup</button></li>
         </ul>
       </nav>
   )
