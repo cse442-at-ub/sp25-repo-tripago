@@ -5,6 +5,7 @@ import Footer from './components/Footer.jsx';
 import './App.css'
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
+import PasswordReset from "./pages/PasswordReset.jsx";
 
 const App = () => {
 
@@ -18,6 +19,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<PasswordReset />} />
+
         </Routes>
       </main>
 
