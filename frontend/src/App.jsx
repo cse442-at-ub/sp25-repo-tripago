@@ -12,6 +12,7 @@ const App = () => {
     <HashRouter>
     <div className="app-container">
       <Navbar />
+      
       <main className="content">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
         </Routes>
       </main>
+
       <Footer />
     </div>
   </HashRouter>
