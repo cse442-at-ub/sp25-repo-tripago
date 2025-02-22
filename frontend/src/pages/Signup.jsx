@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
+import axios from 'axios'
 
 const Signup = () => {
 
@@ -18,10 +19,35 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Registration Data:", formData);
     // Add validation code
+
+    if (formData.password != formData.confirmPassword){
+      alert("Passwords do not match!");
+    }
+
+    try {
+      const response = await axios.post("/api/signup.php",formData,{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      const result = response.data
+      console.log("Registration Response",result);
+      if (result.success){
+        //navigate to login on success
+        navigate('/login')
+      } else {
+        alert(result.message)
+      }
+    } catch(error){
+      console.log("Error during signup:",error)
+    }
+
+
+
   };
 
   return (
@@ -76,7 +102,7 @@ const Signup = () => {
           </div>
       </div>
 
-      <button type="submit" className='login_signup-button'>Create my account</button>
+      <button type="submit" className='login_signup-button'> onClick={handleSubmit} Create my account</button>
     </form>
 
     <p> 
