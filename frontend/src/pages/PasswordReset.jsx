@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
 
-const Login = () => {
+const PasswordReset = () => {
 
   const navigate = useNavigate()
 
@@ -19,14 +19,17 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log("Password Reset Data:", formData);
+
+    useNavigate("/new-password")
   };
 
   return (
     <div className="login-container ">
-    <h2>Login to Tripa<span>go</span></h2>
+    <h2>Reset Password</h2>
     <form onSubmit={handleSubmit}>
       <input
+        className='email-input-box'
         type="email"
         name="email"
         placeholder="Email address"
@@ -34,20 +37,13 @@ const Login = () => {
         onChange={handleChange}
         required
       />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit" className='login_signup-button'>Login</button>
+      {/* The Send Link button takes you to the New Password Page */}
+      <button type="submit" className='login_signup-button'>Send Link</button>
     </form>
 
     <p classname='forgot_password_link'>
-        <button className='link-button' onClick={() => navigate("/forgot-password")}>
-          Forgot your password?
+        <button className='link-button' onClick={() => navigate("/login")}>
+          I know my password.
         </button>
     </p>
     <p> 
@@ -59,4 +55,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default PasswordReset

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
 
-const Login = () => {
+const NewPassword = () => {
 
   const navigate = useNavigate()
 
@@ -24,25 +24,32 @@ const Login = () => {
 
   return (
     <div className="login-container ">
-    <h2>Login to Tripa<span>go</span></h2>
+    <h2>Create new password</h2>
     <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        name="email"
-        placeholder="Email address"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit" className='login_signup-button'>Login</button>
+    <div className="password-container">
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+          <div className="password-tooltip">
+            <p>✔ 1 uppercase letter</p>
+            <p>✔ 1 number or special character</p>
+            <p>✔ Longer than 6 characters</p>
+          </div>
+      </div>
+      <button type="submit" className='login_signup-button'>Continue</button>
     </form>
 
     <p classname='forgot_password_link'>
@@ -59,4 +66,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default NewPassword
