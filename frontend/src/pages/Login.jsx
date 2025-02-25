@@ -17,9 +17,28 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Login Data:", formData);
+
+    try {
+      const response = await axios.post("/api/login.php",formData,{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      const result = response.data
+      console.log("Registration Response",result);
+      if (result.success){
+        //navigate to login on success
+        navigate('/home')
+      } else {
+        alert(result.message)
+      }
+    } catch(error){
+      console.log("Error during signup:",error)
+    }
+
   };
 
   return (

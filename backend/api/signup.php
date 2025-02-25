@@ -6,9 +6,12 @@ header("Content-Type: application/json");
 
 $jsonData = file_get_contents("php://input");
 
-//DATA HAS DICTIONARY THING FROM SIGNUP PAGE
+//DATA SHOULD HAVE DICTIONARY THING FROM SIGNUP PAGE
 $data = json_decode($jsonData,true);
 
+if ($data == null){
+  echo json_encode(["success"=>false,"message"=>"Error with data recieved"]);
+}
 
 $firstName = $data['firstName'];
 $lastName = $data['lastName'];
@@ -23,8 +26,10 @@ $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 //establish connection to sql DATABASE
 $mysqli = new mysqli("localhost","root","","test");
 
-//will confirm connection has been established
-//echo $mysqli->host_info;
+//return error if there is connection issue to database
+if ($mysqli->connection_status != 0){
+  echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connection_status]);
+}
 
 //prepare
 $stmt = $mysqli->prepare("SELECT * FROM test_users WHERE email=?");
