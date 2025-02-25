@@ -102,7 +102,7 @@ const Signup = () => {
           </div>
       </div>
 
-      <button type="submit" className='login_signup-button'> onClick={handleSubmit} Create my account</button>
+      <button type="submit" className='login_signup-button'>  Create my account </button>
     </form>
 
     <p> 
