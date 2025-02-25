@@ -1,6 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
+header("Content-Type: application/json");
 
 
 $jsonData = file_get_contents("php://input");
@@ -15,7 +16,7 @@ $email = $data['email'];
 $password = $data['password'];
 $confirmPassword = $data['confirmPassword'];
 
-
+//hashes password from user
 $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 
 
@@ -23,7 +24,7 @@ $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 $mysqli = new mysqli("localhost","root","","test");
 
 //will confirm connection has been established
-echo $mysqli->host_info;
+//echo $mysqli->host_info;
 
 //prepare
 $stmt = $mysqli->prepare("SELECT * FROM test_users WHERE email=?");
@@ -49,11 +50,18 @@ if ($result == null){//user does not exist
   //enter params from frontend
   $stmt->bind_param("ssss",$firstName,$lastName,$email,$hashed_p_word);
 
-  //do it
+  //add user record
   $stmt->execute();
 
+  $response = ["success"=>true,"message"=>"User registered successfully!"];
+
+  echo json_encode($response);
+
 }else{
-  echo "user already exists in table";
+
+  $response = ["success"=>false,"message"=>"An error has occurred"];
+
+  echo json_encode($response);
 }
 
 
