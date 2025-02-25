@@ -16,6 +16,9 @@ $password = $data['password'];
 $confirmPassword = $data['confirmPassword'];
 
 
+$hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
+
+
 //establish connection to sql DATABASE
 $mysqli = new mysqli("localhost","root","","test");
 
@@ -44,7 +47,7 @@ if ($result == null){//user does not exist
   $stmt = $mysqli->prepare("INSERT INTO test_users(first_name,last_name,email,password_hash) VALUES (?,?,?,?)");
 
   //enter params from frontend
-  $stmt->bind_param("ssss",$firstName,$lastName,$email,$password);
+  $stmt->bind_param("ssss",$firstName,$lastName,$email,$hashed_p_word);
 
   //do it
   $stmt->execute();
