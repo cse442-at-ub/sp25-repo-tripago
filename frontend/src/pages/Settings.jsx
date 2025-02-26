@@ -10,8 +10,11 @@ const Settings = () => {
     <div className='settings-container'>
 
       <div className='settings-left'>
+
         Preferences
         <hr></hr>
+
+        <button>Accessibility</button>
       </div>
     </div>
   )
