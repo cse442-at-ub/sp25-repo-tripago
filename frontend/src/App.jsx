@@ -17,7 +17,9 @@ const App = () => {
     <div className="app-container">
       <Navbar />
 
-      <Sidebar />
+      <Routes>
+        <Route path="/settings" element={<Sidebar />} />
+      </Routes>
       
       <main className="content">
         <Routes>
