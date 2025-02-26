@@ -3,7 +3,6 @@ html, body, #root, .settings-container {
     height: 100%;
     width: 100%;
     margin: 0px;
-    padding: 0px;
     display: flex;
     flex-direction: column;
 }
@@ -20,7 +19,6 @@ html, body, #root, .settings-container {
     flex-direction: column;
     gap: 10px;
     width: 75%;
-    padding: 0px;
 }
 
 hr {
