@@ -1,0 +1,35 @@
+.side-links li {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    text-align: left;
+    width: 80%;
+    margin: auto;
+    font-size: 30px;
+}
+
+.side-links a {
+    color: var(--dark-grey);
+    text-decoration: none;
+    transition: color 0.5s ease-in-out
+}
+
+.sidebar-links {
+    font-size: inherit;
+    background: none;
+    border: none;
+    color: var(--dark-grey);
+    /* font-size: inherit; */
+    cursor: pointer;
+    text-decoration: none;
+    /* padding: 150; */
+    box-shadow: none;
+    transition: ease-in-out 0.3s;
+}
+
+.sidebar-links:hover {
+text-decoration: none;
+opacity: 0.9;
+background: none;
+color: var(--primary-color);
+}

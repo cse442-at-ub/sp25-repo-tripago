@@ -96,17 +96,15 @@ button:focus-visible {
   z-index: 1000; 
 }
 
-/* THIS IS CENTERED AND IT SHOULDN'T BE. THIS IS BECAUSE I WRAPPED THIS WITH SETTINGS WHICH IS CENTERED BC IT IS CONTENT. */
 .sidebar {
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 10%;
   height: 90%;
-  background-color: #FF0000;
-  padding: 15px 0px;
+  /* background-color: #FF0000; */
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow at the bottom */
 }
 
