@@ -8,6 +8,7 @@ import Signup from "./pages/Signup.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
 import Settings from "./pages/Settings.jsx";
+import Sidebar from "./components/Sidebar.jsx";
 
 const App = () => {
 
@@ -15,6 +16,8 @@ const App = () => {
     <HashRouter>
     <div className="app-container">
       <Navbar />
+
+      <Sidebar />
       
       <main className="content">
         <Routes>
