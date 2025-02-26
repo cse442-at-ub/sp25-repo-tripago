@@ -26,9 +26,9 @@ if ($mysqli->connection_status != 0){
     echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connection_status]);
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM test_users WHERE email=? AND password_hash=?");
+$stmt = $mysqli->prepare("SELECT * FROM test_users WHERE email=?");
 
-$stmt->bind_param("ss",$email,$hashed_p_word);
+$stmt->bind_param("s",$email);
 
 $stmt->execute();
 
@@ -36,14 +36,19 @@ $result = $stmt->get_result();
 
 $result = $result->fetch_assoc();
 
+$hash = $result["password_hash"];
+
+$good = password_verify($password,$hash);
+//echo json_encode($result);
+
 //execution found a match
 
-if ($result != null){
+if ($good){
     
     echo json_encode(["success"=>true,"message"=>"Authentication successful"]);
 } else {
 
-    echo json_encode(["success"=>false,"message"=>"blahhhhhh"]);
+    echo json_encode(["success"=>false,"message"=>"Authentication failed"]);
 }
 
 ?>
