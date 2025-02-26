@@ -1,0 +1,32 @@
+html, body, #root, .settings-container {
+    background: var(--background-color);
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-left {
+    position: relative;
+    color: var(--black);
+    top: 200px;
+    left: 400px;
+    text-align: left;
+}
+
+hr {
+    background-color: var(--black);
+    /* height: 1px; */
+    width: 10%;
+    margin: 0 auto;
+    /* right: 200px; */
+    /* display: block; */
+    /* clear: both; */
+    /* border: 0; */
+    /* left: 300px; */
+    text-align: left;
+    /* top: 200px;
+    left: 300px; */
+    /* text-align: left; */
+}

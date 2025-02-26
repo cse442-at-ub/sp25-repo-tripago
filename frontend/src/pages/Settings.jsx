@@ -7,11 +7,13 @@ const Settings = () => {
   const navigate = useNavigate();
 
   return (
-    <>
-      {/* <Sidebar /> */}
+    <div className='settings-container'>
 
-      <b>Settings frontend has loaded.</b>
-    </>
+      <div className='settings-left'>
+        Preferences
+        <hr></hr>
+      </div>
+    </div>
   )
 }
 

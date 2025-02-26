@@ -99,7 +99,7 @@ button:focus-visible {
 .sidebar {
   position: fixed;
   top: 0;
-  width: 10%;
+  width: 15%;
   height: 90%;
   /* background-color: #FF0000; */
   display: flex;
