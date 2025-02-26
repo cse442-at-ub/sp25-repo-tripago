@@ -7,6 +7,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
+import Settings from "./pages/Settings.jsx";
 
 const App = () => {
 
