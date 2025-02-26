@@ -69,7 +69,7 @@ try {
     $mail->Port       = 465;
 
     // Recipients
-    $mail->setFrom('npulaaa@gmail.com', 'Tripago');
+    $mail->setFrom('***@gmail.com', 'Tripago');
     $mail->addAddress($email);
 
     // Email content
