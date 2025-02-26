@@ -13,13 +13,34 @@ const PasswordReset = () => {
     password: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Password Reset Data:", formData);
+    try {
+      const response = await fetch("http://localhost/tripago/passwordreset.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      const result = await response.json();
+      console.log("Response:", result);
+  
+      if (result.status === "success") {
+        alert("Check your email for the reset link: " + result.resetLink);
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -38,7 +59,7 @@ const PasswordReset = () => {
       <button type="submit" className='login_signup-button'>Send Link</button>
     </form>
 
-    <p classname='forgot_password_link'>
+    <p className='forgot_password_link'>
         <button className='link-button' onClick={() => navigate("/login")}>
           I know my password.
         </button>
