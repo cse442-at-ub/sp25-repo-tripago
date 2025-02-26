@@ -1,0 +1,369 @@
+.trips-status {
+    margin-top: 0px;
+}
+
+.trips-status-pad {
+    padding-bottom: 15px;
+}
+
+h2 {
+    font-size: 20px;
+    color: #333;
+}
+
+p {
+    color: #666;
+}
+
+/* TITLE CONTAINER */
+.title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    gap: 40px;
+    width: 100%;
+}
+
+.title-accent {
+    color: var(--primary-color);
+    font-weight: 800;
+}
+
+.itin-budget-container {
+    display: flex;
+    flex-direction: row;
+    margin-left: 30px;
+    margin-right: 30px;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.itin-budget-tab {
+    cursor: pointer;
+}
+
+.itin-budget-tab:hover {
+    color: var(--primary-color);
+}
+
+.itin-budget-tab.active {
+    color: var(--primary-color);
+}
+
+.divider {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.plan-trip-btn {
+    width: 175px;
+    border-radius: 30px;
+}
+
+/* ITINERARY */
+
+.itinerary-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 520px;
+}
+
+.no-dates-selected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+    line-height: 1.5px;
+    gap: 30px;
+}
+
+.plan-trip-create-section {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: center;
+}
+
+.create-for-me-text {
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.days-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.day-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+}
+
+.add-activity-btn {
+    background: none;
+    border: 2px dashed var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.add-activity-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-style: solid;
+}
+
+.activities-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.activity-item {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.activity-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.activity-time {
+    color: var(--dark-grey);
+    font-size: 14px;
+    text-align: left;
+}
+
+.activity-description {
+    color: var(--dark-grey);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.activity-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.location-input {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 200px;
+    transition: border-color 0.2s ease;
+}
+
+.location-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.location-input::placeholder {
+    color: #999;
+}
+
+/* HOTEL DETAILS */
+.hotel-details {
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.hotel-details h3 {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 15px 0;
+}
+
+.hotel-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    text-align: right;
+}
+
+.no-hotel-message {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 12px;
+}
+
+.find-hotel-btn {
+    width: 200px;
+    border-radius: 30px;
+    margin-left: 10px;
+}
+
+/* BUDGETING */
+.budgeting-container {
+  width: 520px;
+}
+
+.budget-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.budget-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  margin-bottom: 30px;
+}
+
+.budget-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.edit-budget-btn {
+  display: flex;
+  width: 85px;
+  align-items: center;
+  gap: 8px;
+  margin-left: 30px;
+  margin-top: 10px;
+  background: none;
+  border: 1px solid var(--dark-grey);
+  color: var(--dark-grey);
+  box-shadow: none;
+  cursor: pointer;
+  font-size: 8px;
+  /* padding: 8px 12px; */
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.edit-budget-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.budget-overview {
+  text-align: right;
+  line-height: 1;
+}
+
+.budget-amount {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+}
+
+.budget-spent {
+  font-size: 32px;
+  color: #666;
+}
+
+.budget-spent .over-budget {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.budget-warning {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--primary-color);
+  font-size: 8px;
+  margin-top: 8px;
+  justify-content: right;
+}
+
+.warning-icon {
+  font-size: 10px;
+}
+
+.expenses-section {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.expenses-section h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.expense-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.expense-icon {
+  font-size: 24px;
+}
+
+.expense-details {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expense-category {
+  font-size: 16px;
+  color: #333;
+}
+
+.expense-amount {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.add-expense-btn {
+  width: fit-content;
+  border-radius: 30px;
+  margin-bottom: 30px;
+}
