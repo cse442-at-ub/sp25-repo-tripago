@@ -123,3 +123,8 @@ button:focus-visible {
   z-index: 1;
 }
 
+@media (max-width: 480px) {
+  .footer p {
+    font-size: small;
+  }
+}
