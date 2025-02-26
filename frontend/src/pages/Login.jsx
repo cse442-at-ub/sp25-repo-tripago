@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
+import axios from 'axios'
 
 const Login = () => {
 
@@ -17,9 +18,31 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Login Data:", formData);
+    
+    try{
+      
+      const response = await axios.post("/api/login.php",formData,{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      
+      const result = response.data
+      console.log("Login response",result);
+      if (result.success){
+        navigate('/')
+      } else {
+        alert(result.message)
+      }
+      
+    } catch(error){
+      console.log("Error during login: ",error.response);
+    }
+
+    
   };
 
   return (
@@ -45,7 +68,7 @@ const Login = () => {
       <button type="submit" className='login_signup-button'>Login</button>
     </form>
 
-    <p classname='forgot_password_link'>
+    <p className='forgot_password_link'>
         <button className='link-button' onClick={() => navigate("/forgot-password")}>
           Forgot your password?
         </button>
