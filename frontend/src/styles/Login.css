@@ -112,6 +112,9 @@ p a {
   display: block;
 }
 
+.create-account-button {
+  margin-top: 5px;
+}
 
 /* RESET PASSWORD */
 
@@ -155,4 +158,9 @@ p a {
   .link-button {
     font-size: 0.9rem;
   }
+
+  .signup-container {
+    margin-top: 150px;
+  }
+
 }
