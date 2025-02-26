@@ -25,21 +25,21 @@ const Login = () => {
     try{
       
       const response = await axios.post("/api/login.php",formData,{
-          headers:{
-            'Content-Type':'application/json'
-          }
+        headers:{
+          'Content-Type':'application/json'
+        }
       })
-      /*
+      
       const result = response.data
       console.log("Login response",result);
       if (result.success){
-        navigate('/home')
+        navigate('/')
       } else {
         alert(result.message)
       }
-      */
+      
     } catch(error){
-      console.log("Error during login: ",error);
+      console.log("Error during login: ",error.response);
     }
 
     
@@ -68,7 +68,7 @@ const Login = () => {
       <button type="submit" className='login_signup-button'>Login</button>
     </form>
 
-    <p classname='forgot_password_link'>
+    <p className='forgot_password_link'>
         <button className='link-button' onClick={() => navigate("/forgot-password")}>
           Forgot your password?
         </button>

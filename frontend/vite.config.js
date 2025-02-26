@@ -5,17 +5,16 @@ export default defineConfig({
   plugins: [react()],
   base: '/CSE442/2025-Spring/cse-442aj/frontend/',
   server: {
-    /*
+    
     proxy: {
+      /*
       '/api': {
         target: 'http://localhost:8000', // PHP server 
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''), // Remove "/api" prefix
       },
-    },
-    */
-
-    '/api': {
+      */
+      '/api': {
         target: 'http://tripago-backend.local/', // PHP server address
         changeOrigin: true,
         configure: (proxy) => {
@@ -25,6 +24,11 @@ export default defineConfig({
           });
         },
       },
+
+    },
+    
+
+    
   },
 });
 
