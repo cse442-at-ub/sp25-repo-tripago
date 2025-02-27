@@ -120,7 +120,7 @@ const Budgeting = ({ trip }) => {
 
         <div className="budget-overview">
             <div className="budget-amount">${budget}</div>
-            <div className="budget-spent">${totalExpenses}
+            <div className="budget-spent">You spent ${totalExpenses}
             {isOverBudget && (
                 <div className="budget-warning">
                 <span className="warning-icon">ⓘ</span>
@@ -136,17 +136,6 @@ const Budgeting = ({ trip }) => {
         <button className="add-expense-btn">
           + Add expense
         </button>
-        <div className="expenses-list">
-          {expenses.map((expense, index) => (
-            <div key={index} className="expense-item">
-              <div className="expense-icon">✈️</div>
-              <div className="expense-details">
-                <span className="expense-category">{expense.category}</span>
-                <span className="expense-amount">${expense.amount}</span>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
