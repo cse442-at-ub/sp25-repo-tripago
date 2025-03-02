@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import '../styles/Accordion.css';
+import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
+import "../styles/Accordion.css";
 
 const Accordion = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,22 +19,20 @@ const Accordion = ({ title, children }) => {
 
   return (
     <div className="accordion">
-      <button 
-        className={`accordion-header ${isOpen && 'active'}`}
+      <button
+        className={`accordion-header ${isOpen && "active"}`}
         onClick={toggleAccordion}
       >
-        <span className={`accordion-icon ${isOpen && 'open'}`}>▼</span>
+        <span className={`accordion-icon ${isOpen && "open"}`}>▼</span>
         <span>{title}</span>
       </button>
-      <div 
+      <div
         className="accordion-content"
-        style={{ 
-          height: isOpen ? `${contentHeight}px` : '0',
+        style={{
+          height: isOpen ? `${contentHeight}px` : "0",
         }}
       >
-        <div ref={contentRef}>
-          {children}
-        </div>
+        <div ref={contentRef}>{children}</div>
       </div>
     </div>
   );
@@ -42,7 +40,7 @@ const Accordion = ({ title, children }) => {
 
 Accordion.propTypes = {
   title: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default Accordion;

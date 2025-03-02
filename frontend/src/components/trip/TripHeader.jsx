@@ -1,9 +1,13 @@
-import PropTypes from 'prop-types';
-import { FaEdit } from 'react-icons/fa';
-import airplaneIllustration from '../assets/airplane.svg';
-import '../styles/TripHeader.css';
+import PropTypes from "prop-types";
+import { FaEdit } from "react-icons/fa";
+import airplaneIllustration from "../../assets/airplane.svg";
+import "../../styles/trip/TripHeader.css";
 
-const TripHeader = ({ firstName, lastName, picture = airplaneIllustration }) => {
+const TripHeader = ({
+  firstName,
+  lastName,
+  picture = airplaneIllustration,
+}) => {
   const isCustomPicture = picture !== airplaneIllustration;
 
   return (
@@ -12,7 +16,7 @@ const TripHeader = ({ firstName, lastName, picture = airplaneIllustration }) => 
         <img
           src={picture}
           alt="Profile Illustration"
-          className={`header-image ${isCustomPicture && 'custom-picture'}`}
+          className={`header-image ${isCustomPicture && "custom-picture"}`}
         />
       </div>
 
@@ -32,7 +36,7 @@ const TripHeader = ({ firstName, lastName, picture = airplaneIllustration }) => 
 TripHeader.propTypes = {
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
-  picture: PropTypes.string
+  picture: PropTypes.string,
 };
 
 export default TripHeader;
