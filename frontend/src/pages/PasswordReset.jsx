@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import '../styles/Login.css'
+import axios from "axios";
 
 const PasswordReset = () => {
 
@@ -19,6 +20,15 @@ const PasswordReset = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    //axios.post('http://localhost/tripago/passwordreset.php', formData).then(function(responce){
+    //  console.log(responce.data);
+    //  console.log(responce.status);
+      //navigate('/');
+
+    //});
+    
+    
     console.log("Password Reset Data:", formData);
     try {
       const response = await fetch("http://localhost/tripago/passwordreset.php", {
@@ -40,7 +50,7 @@ const PasswordReset = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("Something went wrong. Please try again.");
-    }
+    } 
   };
 
   return (

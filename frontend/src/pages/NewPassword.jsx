@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
+import axios from "axios";
 
 const NewPassword = () => {
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
+    selector: ""
   });
 
   const handleChange = (e) => {
@@ -20,13 +23,21 @@ const NewPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
+    //if (formData.password !== formData.confirmPassword) {
+    //  alert("Passwords do not match!");
+    //  return;
+    //}
+
+    axios.post('http://localhost/tripago/new_password.php', formData).then(function(responce){
+      console.log(responce.data);
+      console.log(responce.status);
+      //navigate('/');
+
+    });
   
+    /*
     try {
-      const response = await fetch("localhost/new_password.php", {
+      const response = await fetch("http://localhost/tripago/new_password.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,14 +56,21 @@ const NewPassword = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred. Please try again.");
-    }
-  };
+    } */
+  }; 
 
   return (
     <div className="login-container ">
     <h2>Create new password</h2>
     <form onSubmit={handleSubmit}>
     <div className="password-container">
+        
+        <input 
+          type="hidden" 
+          name="selector" 
+          value="<?php echo $_GET['selector'] ?>"
+        />
+
         <input
           type="password"
           name="password"
