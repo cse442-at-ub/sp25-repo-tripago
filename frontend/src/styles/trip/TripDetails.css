@@ -267,7 +267,6 @@ p {
   box-shadow: none;
   cursor: pointer;
   font-size: 8px;
-  /* padding: 8px 12px; */
   border-radius: 6px;
   transition: background-color 0.2s ease;
 }
@@ -376,6 +375,49 @@ p {
   margin-bottom: 20px;
 }
 
+/* Category Buttons Styles */
+.category-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.category-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  padding: 10px 5px;
+  border: 2px solid var(--lightest-grey);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-button.active {
+  border-color: var(--primary-color);
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+}
+
+.category-button:hover {
+  border-color: var(--primary-color);
+}
+
+.category-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.category-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark-grey);
+}
+
 .modal-header {
   display: flex;
   justify-content: center;
@@ -394,6 +436,7 @@ p {
   font-size: 1.4em;
   font-weight: bold;
   margin-bottom: 16px;
+  color: var(--dark-grey);
 }
 
 .modal-highlight {

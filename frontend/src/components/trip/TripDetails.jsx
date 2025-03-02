@@ -104,7 +104,8 @@ const Itinerary = ({ trip }) => {
 const Budgeting = ({ trip }) => {
   const [budget, setBudget] = useState(trip.budget?.amount);
   const [expenses, setExpenses] = useState(trip.budget?.expenses);
-  const [showModal, setShowModal] = useState(false);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [showBudgetModal, setShowBudgetModal] = useState(false);
 
   const totalExpenses = expenses.reduce(
     (sum, expense) => sum + expense.amount,
@@ -113,10 +114,11 @@ const Budgeting = ({ trip }) => {
   const isOverBudget = totalExpenses > budget;
 
   const handleEditBudget = () => {
-    const newBudget = prompt("Enter new budget amount:", budget);
-    if (newBudget && !isNaN(newBudget)) {
-      setBudget(Number(newBudget));
-    }
+    setShowBudgetModal(true);
+  };
+
+  const handleSaveBudget = (newBudget) => {
+    setBudget(newBudget);
   };
 
   const handleAddExpense = (newExpense) => {
@@ -149,7 +151,7 @@ const Budgeting = ({ trip }) => {
 
       <div className="expenses-section">
         <h3>Expenses</h3>
-        <button onClick={() => setShowModal(true)}>+ Add expense</button>
+        <button onClick={() => setShowExpenseModal(true)}>+ Add expense</button>
         <div className="expenses-list">
           {expenses.map((expense, index) => (
             <div key={index} className="expense-item">
@@ -171,12 +173,74 @@ const Budgeting = ({ trip }) => {
         </div>
       </div>
 
-      {showModal && (
+      {showExpenseModal && (
         <ExpenseModal
-          onClose={() => setShowModal(false)}
+          onClose={() => setShowExpenseModal(false)}
           onSave={handleAddExpense}
         />
       )}
+
+      {showBudgetModal && (
+        <BudgetModal
+          currentBudget={budget}
+          onClose={() => setShowBudgetModal(false)}
+          onSave={handleSaveBudget}
+        />
+      )}
+    </div>
+  );
+};
+
+const BudgetModal = ({ currentBudget, onClose, onSave }) => {
+  const [amount, setAmount] = useState(currentBudget.toString());
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+      alert("Please enter a valid budget amount");
+      return;
+    }
+
+    onSave(parseFloat(amount));
+    onClose();
+  };
+
+  const handleAmountChange = (e) => {
+    // Only allow numbers and decimal points
+    const value = e.target.value;
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setAmount(value);
+    }
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <span className="modal-close" onClick={onClose}>
+            <FaTimes />
+          </span>
+          <h3>
+            Edit <span className="modal-highlight">Budget</span>
+          </h3>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            className="modal-input"
+            placeholder="Budget Amount ($)"
+            value={amount}
+            onChange={handleAmountChange}
+            required
+          />
+
+          <button type="submit" className="modal-button">
+            Save Budget
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
@@ -201,6 +265,10 @@ const ExpenseModal = ({ onClose, onSave }) => {
     onClose();
   };
 
+  const handleCategorySelect = (selectedCategory) => {
+    setCategory(selectedCategory);
+  };
+
   const handleAmountChange = (e) => {
     // Only allow numbers and decimal points
     const value = e.target.value;
@@ -222,23 +290,32 @@ const ExpenseModal = ({ onClose, onSave }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <select
-            className="modal-dropdown"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="" disabled>
-              Select Category
-            </option>
-            <option value="Flight">Flight</option>
-            <option value="Hotel">Hotel</option>
-            <option value="Food">Food</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Activities">Activities</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Other">Other</option>
-          </select>
+          <div className="category-buttons-container">
+            <button
+              type="button"
+              className={`category-button ${category === "Flight" && "active"}`}
+              onClick={() => handleCategorySelect("Flight")}
+            >
+              <div className="category-icon">✈️</div>
+              <div className="category-label">Flight</div>
+            </button>
+            <button
+              type="button"
+              className={`category-button ${category === "Hotel" && "active"}`}
+              onClick={() => handleCategorySelect("Hotel")}
+            >
+              <div className="category-icon">🏨</div>
+              <div className="category-label">Hotel</div>
+            </button>
+            <button
+              type="button"
+              className={`category-button ${category === "Food" && "active"}`}
+              onClick={() => handleCategorySelect("Food")}
+            >
+              <div className="category-icon">🍽️</div>
+              <div className="category-label">Food</div>
+            </button>
+          </div>
 
           <input
             type="text"
@@ -356,6 +433,11 @@ Budgeting.propTypes = {
   trip: tripProps,
 };
 ExpenseModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+};
+BudgetModal.propTypes = {
+  currentBudget: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
