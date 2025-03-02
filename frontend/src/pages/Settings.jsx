@@ -13,8 +13,8 @@ const Settings = () => {
         Preferences
         <hr></hr>
 
-        <button>Accessibility</button>
-        <button>Language and Region</button>
+        <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
+        <button onClick={() => navigate("/settings/language-and-region")}>Language and Region</button>
 
         <br></br>
 
@@ -28,17 +28,17 @@ const Settings = () => {
         Privacy and Security
         <hr></hr>
 
-        <button>Manage Password</button>
-        <button>Recent Activity</button>
-        <button>My Data</button>
+        <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
+        <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
+        <button onClick={() => navigate("/settings/my-data")}>My Data</button>
 
         <br></br>
 
         Legal
         <hr></hr>
 
-        <button>Terms of Service</button>
-        <button>Privacy Policy</button>
+        <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
+        <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
 
         <br></br>
         <br></br>

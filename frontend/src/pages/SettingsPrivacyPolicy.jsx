@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Settings.css'
 
-const SettingsProfileDetails = () => {
+const SettingsPrivacyPolicy = () => {
   const navigate = useNavigate();
 
   return (
@@ -21,7 +21,7 @@ const SettingsProfileDetails = () => {
         Profile
         <hr></hr>
 
-        <button className='selected' onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
+        <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
         <br></br>
 
@@ -38,7 +38,7 @@ const SettingsProfileDetails = () => {
         <hr></hr>
 
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
-        <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
+        <button className='selected' onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
 
         <br></br>
         <br></br>
@@ -72,4 +72,4 @@ const SettingsProfileDetails = () => {
   )
 }
 
-export default SettingsProfileDetails
+export default SettingsPrivacyPolicy

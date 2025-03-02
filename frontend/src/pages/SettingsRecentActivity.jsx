@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Settings.css'
 
-const SettingsProfileDetails = () => {
+const SettingsRecentActivity = () => {
   const navigate = useNavigate();
 
   return (
@@ -21,7 +21,7 @@ const SettingsProfileDetails = () => {
         Profile
         <hr></hr>
 
-        <button className='selected' onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
+        <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
         <br></br>
 
@@ -29,7 +29,7 @@ const SettingsProfileDetails = () => {
         <hr></hr>
 
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
-        <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
+        <button className='selected' onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
 
         <br></br>
@@ -72,4 +72,4 @@ const SettingsProfileDetails = () => {
   )
 }
 
-export default SettingsProfileDetails
+export default SettingsRecentActivity
