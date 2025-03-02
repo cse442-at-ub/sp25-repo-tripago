@@ -2,7 +2,7 @@ import React from 'react'
 import "../styles/Sidebar.css"
 import { useNavigate } from "react-router-dom"; 
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   const navigate = useNavigate();
 
   return (

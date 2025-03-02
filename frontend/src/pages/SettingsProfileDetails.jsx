@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Settings.css'
 
-const Settings = () => {
+const SettingsProfileDetails = () => {
   const navigate = useNavigate();
 
   return (
@@ -21,7 +21,7 @@ const Settings = () => {
         Profile
         <hr></hr>
 
-        <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
+        <button className='selected' onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
         <br></br>
 
@@ -50,8 +50,12 @@ const Settings = () => {
 
       </div>
 
+      <div className='settings-right'>
+        Placeholder
+      </div>
+
     </div>
   )
 }
 
-export default Settings
+export default SettingsProfileDetails

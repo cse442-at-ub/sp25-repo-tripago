@@ -3,8 +3,8 @@ html, body, #root, .settings-container {
     height: 100%;
     width: 100%;
     margin: 0px;
-    display: flex;
     flex-direction: column;
+    display: inline-block;
 }
 
 .settings-left {
@@ -44,4 +44,25 @@ hr {
     opacity: 0.9;
     background: none;
     color: var(--primary-color);
+}
+
+.settings-left .selected {
+    color: var(--primary-color);
+}
+    
+.settings-right {
+    background-color: white;
+    position: absolute;
+    color: var(--black);
+    top: 200px;
+    right: 400px;
+    text-align: center;
+    margin: 400 auto;
+    font-size: 40px;
+    display: inline-block;
+    flex-direction: column;
+    gap: 10px;
+    width: 20%;
+    border-radius: 21px;
+    border: 1px solid var(--primary-color);
 }
