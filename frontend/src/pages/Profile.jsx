@@ -7,6 +7,12 @@ import "../styles/Profile.css";
 import parisPicture from "../assets/paris.jpg";
 
 const Profile = () => {
+  const [user] = useState({
+    firstName: "Jane",
+    lastName: "Doe",
+    username: "Jane",
+  });
+
   // Test trip
   const [trip] = useState({
     location: "Paris, France",
