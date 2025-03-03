@@ -7,20 +7,13 @@ export default defineConfig({
   server: {
     
     proxy: {
-      /*
       '/api': {
-        target: 'http://localhost:8000', // PHP server 
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Remove "/api" prefix
-      },
-      */
-      '/api': {
-        target: 'http://tripago-backend.local/', // PHP server address
+        target: 'https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/', // PHP server address
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq, req, res) => {
             // Force the Host header so Apache sees tripago-backend.local
-            proxyReq.setHeader('Host', 'tripago-backend.local');
+            proxyReq.setHeader('Host', 'https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/');
           });
         },
       },

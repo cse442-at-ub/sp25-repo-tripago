@@ -19,7 +19,7 @@ $password = $data['password'];
 $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
                          //host   user  pass  DB
                          
-$mysqli = new mysqli("localhost","root","","test");
+$mysqli = new mysqli("localhost","romanswi","50456839","users");
 
 
 if ($mysqli->connection_status != 0){
