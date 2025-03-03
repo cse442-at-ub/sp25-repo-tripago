@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
-
 $jsonData = file_get_contents("php://input");
 
 //DATA SHOULD HAVE DICTIONARY THING FROM SIGNUP PAGE
@@ -24,7 +23,7 @@ $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 
 
 //establish connection to sql DATABASE
-$mysqli = new mysqli("localhost","romanswi","50456839","users");
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 
 //return error if there is connection issue to database
 if ($mysqli->connection_status != 0){
@@ -32,7 +31,7 @@ if ($mysqli->connection_status != 0){
 }
 
 //prepare
-$stmt = $mysqli->prepare("SELECT * FROM test_users WHERE email=?");
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE email=?");
 
 //specify that firstname will go into above param
 $stmt->bind_param("s",$email);
@@ -50,7 +49,7 @@ $result = $result->fetch_assoc();
 if ($result == null){//user does not exist
   
   //prepare statement to make new user record
-  $stmt = $mysqli->prepare("INSERT INTO test_users(first_name,last_name,email,password_hash) VALUES (?,?,?,?)");
+  $stmt = $mysqli->prepare("INSERT INTO users(first_name,last_name,email,password_hash) VALUES (?,?,?,?)");
 
   //enter params from frontend
   $stmt->bind_param("ssss",$firstName,$lastName,$email,$hashed_p_word);
