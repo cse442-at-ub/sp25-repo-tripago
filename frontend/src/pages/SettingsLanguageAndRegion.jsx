@@ -54,16 +54,30 @@ const SettingsLanguageAndRegion = () => {
         
         <form>
             <br></br>
-            <label>Display Name</label>
-            <input type='text'></input>
+
+            <label>Account Language</label>
+            <select>
+              <option value='english'>English</option>
+              <option value='spanish'>Spanish</option>
+              <option value='tbd'>Languages TBD</option>
+            </select>
             <br></br>
-            <label>Email</label>
-            <input type='text'></input>
+
+            <label>Region/Time</label>
+            <select>
+              <option value='est'>Eastern Time</option>
+              <option value='pst'>Pacifc Time</option>
+              <option value='etc'>etc</option>
+            </select>
             <br></br>
-            <label>About</label>
-            <textarea type='text' className='about'></textarea>
+
+            <label>Country</label>
+            <select>
+              <option value='US'>United States</option>
+              <option value='etc'>etc</option>
+            </select>
             <br></br>
-            <button type='submit'>Save</button>
+
         </form>
 
       </div>

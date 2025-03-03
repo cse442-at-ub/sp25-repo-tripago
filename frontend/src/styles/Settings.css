@@ -68,7 +68,7 @@ hr {
     border: 1px solid var(--primary-color);
 }
 
-.settings-right input, .settings-right textarea {
+.settings-right input, .settings-right textarea, .settings-right select {
     text-align: center;
     width: 75%;
     border-radius: 8px;

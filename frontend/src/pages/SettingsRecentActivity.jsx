@@ -52,20 +52,21 @@ const SettingsRecentActivity = () => {
 
       <div className='settings-right'>
         
-        <form>
-            <br></br>
-            <label>Display Name</label>
-            <input type='text'></input>
-            <br></br>
-            <label>Email</label>
-            <input type='text'></input>
-            <br></br>
-            <label>About</label>
-            <textarea type='text' className='about'></textarea>
-            <br></br>
-            <button type='submit'>Save</button>
-        </form>
+        <br></br>
 
+        <b>Purchase History</b>
+        <br></br>
+        <br></br>
+        None
+        <br></br>
+        <br></br>
+        <br></br>
+
+        <b>Recently Visted Pages</b>
+        <br></br>
+        <br></br>
+        None
+        
       </div>
 
     </div>

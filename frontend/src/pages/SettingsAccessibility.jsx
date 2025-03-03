@@ -54,16 +54,12 @@ const SettingsAccessbility = () => {
         
         <form>
             <br></br>
-            <label>Display Name</label>
-            <input type='text'></input>
-            <br></br>
-            <label>Email</label>
-            <input type='text'></input>
-            <br></br>
-            <label>About</label>
-            <textarea type='text' className='about'></textarea>
-            <br></br>
-            <button type='submit'>Save</button>
+            
+            <label>Display Mode</label>
+            <select>
+              <option value='light'>Light Mode</option>
+              <option value='dark'>Dark Mode</option>
+            </select>
         </form>
 
       </div>
