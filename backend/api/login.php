@@ -19,14 +19,14 @@ $password = $data['password'];
 $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
                          //host   user  pass  DB
                          
-$mysqli = new mysqli("localhost","romanswi","50456839","users");
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 
 
 if ($mysqli->connection_status != 0){
     echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connection_status]);
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM test_users WHERE email=?");
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE email=?");
 
 $stmt->bind_param("s",$email);
 
