@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route, HashRouter } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -21,13 +22,20 @@ import SettingsTermsOfService from "./pages/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/SettingsPrivacyPolicy.jsx";
 
 const App = () => {
+  const [user] = useState({
+    firstName: "Jane",
+    lastName: "Doe",
+    username: "Jane",
+  });
+
   return (
     <HashRouter>
       <div className="app-container">
         <Navbar />
 
       <Routes>
-        <Route path="/settings/*" element={<Sidebar />} />
+        <Route path="/settings/*" element={<Sidebar username={user.username} />} />
+        <Route path="/profile/*" element={<Sidebar username={user.username} />} />
       </Routes>
 
         <main className="content">

@@ -56,7 +56,7 @@ const Sidebar = ({ username }) => {
         </button>
 
         <button 
-          className={`sidebar-item ${currentPath === '/settings' && 'sidebar-item-active'}`} 
+          className={`sidebar-item ${currentPath.startsWith('/settings') && 'sidebar-item-active'}`} 
           onClick={() => navigate('/settings')}
         >
           <FaCog className="sidebar-icon" />
