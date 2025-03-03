@@ -60,3 +60,9 @@
 .sidebar-icon {
   margin-right: 12px;
 }
+
+@media (max-width: 480px) {
+  .sidebar {
+    display: none;
+  }
+}
