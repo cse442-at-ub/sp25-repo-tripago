@@ -1,12 +1,14 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
-import Home from './pages/Home.jsx'
-import Navbar from './components/Navbar.jsx';
-import Footer from './components/Footer.jsx';
-import './App.css'
+import { useState } from "react";
+import { Routes, Route, HashRouter } from "react-router-dom";
+import Home from "./pages/Home.jsx";
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
+import "./App.css";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
+import Profile from "./pages/Profile.jsx";
 import StyleGuide from "./pages/StyleGuide.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Settings from "./pages/Settings.jsx";
@@ -20,23 +22,29 @@ import SettingsTermsOfService from "./pages/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/SettingsPrivacyPolicy.jsx";
 
 const App = () => {
+  const [user] = useState({
+    firstName: "Jane",
+    lastName: "Doe",
+    username: "Jane",
+  });
 
   return (
     <HashRouter>
-    <div className="app-container">
-      <Navbar />
+      <div className="app-container">
+        <Navbar />
 
       <Routes>
-        <Route path="/settings/*" element={<Sidebar />} />
+        <Route path="/settings/*" element={<Sidebar username={user.username} />} />
+        <Route path="/profile/*" element={<Sidebar username={user.username} />} />
       </Routes>
-      
-      <main className="content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<PasswordReset />} />
-          <Route path="/new-password" element={<NewPassword />} />
+
+        <main className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<PasswordReset />} />
+            <Route path="/new-password" element={<NewPassword />} />
           <Route path="/style-guide" element={<StyleGuide />} />
 
           {/* Settings */}
@@ -49,14 +57,14 @@ const App = () => {
           <Route path="/settings/my-data" element={<SettingsMyData />} />
           <Route path="/settings/terms-of-service" element={<SettingsTermsOfService />} />
           <Route path="/settings/privacy-policy" element={<SettingsPrivacyPolicy />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </main>
 
-        </Routes>
-      </main>
+        <Footer />
+      </div>
+    </HashRouter>
+  );
+};
 
-      <Footer />
-    </div>
-  </HashRouter>
-  )
-}
-
-export default App
+export default App;

@@ -1,21 +1,74 @@
-import React from 'react'
-import "../styles/Sidebar.css"
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../styles/Sidebar.css';
+import {
+  FaUser,
+  FaPlaneDeparture,
+  FaPlus,
+  FaUsers,
+  FaCog,
+} from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
-const Sidebar = (props) => {
+const Sidebar = ({ username }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   return (
-      <nav className="sidebar">
-        <ul className="side-links">
-          <li><button className='sidebar-links' onClick={() => navigate("/")}>Profile</button></li>
-          <li><button className='sidebar-links' onClick={() => navigate("/")}>All Trips</button></li>
-          <li><button className='sidebar-links' onClick={() => navigate("/")}>New Trip</button></li>
-          <li><button className='sidebar-links' onClick={() => navigate("/")}>Community</button></li>
-          <li><button className='sidebar-links' onClick={() => navigate("/")}>Settings</button></li>
-        </ul>
-      </nav>
-  )
-}
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <p>
+          Hello, <span className="username">{username}</span>.
+        </p>
+      </div>
 
-export default Sidebar
+      <div className="sidebar-menu">
+        <button 
+          className={`sidebar-item ${currentPath === '/profile' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/profile')}
+        >
+          <FaUser className="sidebar-icon" />
+          <span>Profile</span>
+        </button>
+
+        <button 
+          className={`sidebar-item ${currentPath === '/trips' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/trips')}
+        >
+          <FaPlaneDeparture className="sidebar-icon" />
+          <span>All trips</span>
+        </button>
+
+        <button 
+          className={`sidebar-item ${currentPath === '/new-trip' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/new-trip')}
+        >
+          <FaPlus className="sidebar-icon" />
+          <span>New trip</span>
+        </button>
+
+        <button 
+          className={`sidebar-item ${currentPath === '/community' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/community')}
+        >
+          <FaUsers className="sidebar-icon" />
+          <span>Community</span>
+        </button>
+
+        <button 
+          className={`sidebar-item ${currentPath.startsWith('/settings') && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/settings')}
+        >
+          <FaCog className="sidebar-icon" />
+          <span>Settings</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+Sidebar.propTypes = {
+  username: PropTypes.string.isRequired,
+};
+
+export default Sidebar;
