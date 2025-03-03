@@ -26,8 +26,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body, #root, .app-container {
+html {
   background: var(--gradient-bg);
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+html, body, #root, .app-container {
   height: 100%;
   width: 100%;
   margin: 0;
@@ -41,6 +46,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background: none;
 }
 
 h1 {
@@ -50,7 +56,7 @@ h1 {
 
 a {
   font-weight: 500;
-  color:var(--white);
+  color:var(--dark-grey);
   text-decoration: inherit;
 }
 
@@ -58,6 +64,7 @@ a:hover {
   color: var(--secondary-color);
 }
 
+/* Button styles */
 button {
   color: var(--white);
   border-radius: 8px;
@@ -83,6 +90,12 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+button:disabled {
+  background-color: var(--dark-grey);
+  color: var(--white);
+  pointer-events: none;
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -95,6 +108,19 @@ button:focus-visible {
   align-items: center;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow at the bottom */
   z-index: 1000; 
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  width: 15%;
+  height: 80%;
+  /* background-color: #FF0000; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); Soft shadow at the bottom */
+  border-right: 1px solid #E8E7E7;
 }
 
 /* Pushes content below the navbar */
@@ -116,6 +142,7 @@ button:focus-visible {
   width: 100%;
   position: fixed;
   bottom: 0;
+  height: 10%;
 }
 
 .footer p {

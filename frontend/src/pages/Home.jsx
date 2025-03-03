@@ -6,12 +6,20 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
+    <>
     <div className='content'>
       <p className='title-text'>The smarter way to <span className='title-text-accent'>go.</span></p>
       <p className='description-text'>Effortless trip planning – from itinerary creation to budgeting and beyond.</p>
 
       <button onClick={() => navigate('/login')} className='plan-button'>Plan your next trip.</button>
+
     </div>
+    <div className="style-guide_container">
+        <button className='link-button' onClick={() => navigate("/style-guide")}>
+        Tripago Style Guide
+        </button>
+      </div>
+    </>
   )
 }
 

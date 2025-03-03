@@ -1,0 +1,111 @@
+html, body, #root, .settings-container {
+    background: var(--background-color);
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    flex-direction: column;
+    display: inline-block;
+}
+
+.settings-left {
+    position: relative;
+    color: var(--black);
+    top: 150px;
+    left: 400px;
+    text-align: left;
+    margin: 400 auto;
+    font-size: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 75%;
+}
+
+hr {
+    width: 300px;
+    margin-left: 0;
+}
+
+.settings-left button {
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: var(--black);
+    font-size: 30px;
+    transition: color 0.1s ease-in-out;
+    text-align: left;
+    font-weight: 400;
+    padding: 0em 0em;
+    width: 25%;
+}
+
+.settings-left button:hover {
+    text-decoration: none;
+    opacity: 0.9;
+    background: none;
+    color: var(--primary-color);
+}
+
+.settings-left .selected {
+    color: var(--primary-color);
+}
+    
+.settings-right {
+    background-color: white;
+    position: absolute;
+    color: var(--black);
+    top: 200px;
+    right: 200px;
+    text-align: center;
+    margin: 400 auto;
+    font-size: 30px;
+    display: block;
+    flex-direction: column;
+    gap: 10px;
+    width: 40%;
+    height: 108%;
+    border-radius: 21px;
+    border: 1px solid var(--primary-color);
+}
+
+.settings-right input, .settings-right textarea, .settings-right select {
+    text-align: center;
+    width: 75%;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+    font-size: 24px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.settings-right button {
+    text-align: center;
+    width: 40%;
+    /* border-radius: 13px; */
+    /* border: 1px solid var(--primary-color); */
+    font-size: 24px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.settings-right button {
+    background-color: var(-secondary-color);
+    color: var(--white);
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+  
+.settings-right button:hover {
+    background-color: var(--lightest-grey);
+    transform: scale(1.05);
+    color: var(--secondary-color);
+    border: 1px solid var(--secondary-color)
+}
+
+.about {
+    height: 200px;
+    font-family: inherit;
+}
