@@ -24,7 +24,7 @@ $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 
 
 //establish connection to sql DATABASE
-$mysqli = new mysqli("localhost","root","","test");
+$mysqli = new mysqli("localhost","romanswi","50456839","users");
 
 //return error if there is connection issue to database
 if ($mysqli->connection_status != 0){
