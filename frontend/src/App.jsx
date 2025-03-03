@@ -7,6 +7,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
+import StyleGuide from "./pages/StyleGuide.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import Settings from "./pages/Settings.jsx";
 import SettingsProfileDetails from "./pages/SettingsProfileDetails.jsx";
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<PasswordReset />} />
           <Route path="/new-password" element={<NewPassword />} />
+          <Route path="/style-guide" element={<StyleGuide />} />
 
           {/* Settings */}
           <Route path="/settings" element={<Settings />} />
