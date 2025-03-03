@@ -112,9 +112,55 @@ p a {
   display: block;
 }
 
+.create-account-button {
+  margin-top: 5px;
+}
 
 /* RESET PASSWORD */
 
 .email-input-box {
   margin-bottom: 30px;
+}
+
+/* MEDIA QUERIES FOR IPHONE 12PRO DIMENSIONS 390px x 844px  */
+
+@media (max-width: 480px) {
+  /* Adjust container */
+  .login-container {
+    width: 95%;
+    max-width: 320px;
+    margin-top: 200px; /* Push down from navbar */
+  }
+
+  .login-container p {
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+
+  .login-container h2 {
+    font-size: 1.5rem; /* Slightly smaller */
+  }
+
+  /* Make input fields smaller */
+  input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Make buttons smaller */
+  .login_signup-button {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 20px;
+  }
+
+  /* Center forgot password link */
+  .link-button {
+    font-size: 0.9rem;
+  }
+
+  .signup-container {
+    margin-top: 150px;
+  }
+
 }

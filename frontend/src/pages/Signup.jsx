@@ -51,7 +51,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container signup-container">
     <h2>Ready to <span>go</span>? Sign up for free!</h2>
     <form onSubmit={handleSubmit}>
     <input
@@ -102,7 +102,7 @@ const Signup = () => {
           </div>
       </div>
 
-      <button type="submit" className='login_signup-button'>  Create my account </button>
+      <button type="submit" className='login_signup-button create-account-button'>Create my account</button>
     </form>
 
     <p> 
