@@ -41,7 +41,7 @@ const PasswordReset = () => {
       <button type="submit" className='login_signup-button'>Send Link</button>
     </form>
 
-    <p classname='forgot_password_link'>
+    <p className='forgot_password_link'>
         <button className='link-button' onClick={() => navigate("/login")}>
           I know my password.
         </button>

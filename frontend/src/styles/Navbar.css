@@ -53,3 +53,25 @@
   color: var(--primary-color);
 }
 
+/* MEDIA QUERIES FOR IPHONE 12PRO DIMENSIONS 390px x 844px  */
+
+@media (max-width: 480px) {
+  /* Center the logo */
+  .logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .logo img {
+    margin-top: 8px;
+    height: 60px; 
+  }
+
+  /* Hide the nav links and show the menu icon */
+  .nav-links {
+    display: none;
+  }
+
+}
