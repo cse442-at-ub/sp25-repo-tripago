@@ -5,7 +5,6 @@ export default defineConfig({
   plugins: [react()],
   base: '/CSE442/2025-Spring/cse-442aj/frontend/',
   server: {
-    
     proxy: {
       '/api': {
         target: 'https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/', // PHP server address

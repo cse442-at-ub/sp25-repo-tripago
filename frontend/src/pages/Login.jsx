@@ -36,8 +36,7 @@ const Login = () => {
       const result = response.data
       console.log("Login response",result);
       if (result.success){
-
-        navigate('/')
+        navigate('/profile')
       } else {
         alert(result.message)
       }
