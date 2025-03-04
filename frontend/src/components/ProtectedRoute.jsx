@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     axios
-      .get("/api/cookieVerify.php") // Proxied to backend
+      .get("/CSE442/2025-Spring/cse-442aj/backend/api/cookieVerify.php") // Proxied to backend
       .then(response => {
         if (response.data.success) {
           setIsAuthenticated(true);
