@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
 import axios from 'axios'
-import {CookiesProvider,useCookies} from 'react-cookie'
+
 
 const Login = () => {
 
-  
+
 
   const navigate = useNavigate()
 
