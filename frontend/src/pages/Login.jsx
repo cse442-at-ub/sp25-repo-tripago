@@ -36,10 +36,7 @@ const Login = () => {
       const result = response.data
       console.log("Login response",result);
       if (result.success){
-
-        //also set user cookie here
-        setCookie("user",formData.email)
-
+        
         navigate('/')
       } else {
         alert(result.message)

@@ -39,14 +39,14 @@ $result = $result->fetch_assoc();
 $hash = $result["password_hash"];
 
 $good = password_verify($password,$hash);
-//echo json_encode($result);
+
 
 //execution found a match
 
 if ($good){
     
     //generate uuid thing
-    $uuid = uniqid(true);
+    $uuid = bin2hex(random_bytes(32));
 
     //make expiration an hour after now
     $expiration = (new DateTime())->getTimestamp() + 3600;
@@ -55,6 +55,9 @@ if ($good){
     $stmt = $mysqli->prepare("UPDATE users SET token=?,expire=? WHERE email=?");
     $stmt->bind_param("sds",$uuid,$expiration,$email);
     $stmt->execute();
+
+    setcookie("authCookie",$uuid,$expiration,"/","",true,true);
+    setcookie("user",$email,$expiration,"/","",true,true);
 
     echo json_encode(["success"=>true,"message"=>"Authentication successful","token"=>$uuid]);
 
