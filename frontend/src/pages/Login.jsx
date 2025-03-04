@@ -6,6 +6,8 @@ import {CookiesProvider,useCookies} from 'react-cookie'
 
 const Login = () => {
 
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
+
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
@@ -36,8 +38,7 @@ const Login = () => {
       if (result.success){
 
         //also set user cookie here
-        
-
+        setCookie("user",formData.email)
 
         navigate('/')
       } else {

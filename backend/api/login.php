@@ -52,8 +52,8 @@ if ($good){
     $expiration = (new DateTime())->getTimestamp() + 3600;
 
     //this block sets user token ID and expiration date
-    $stmt = $mysqli->prepare("UPDATE users SET token=$uuid,expire=$expiration WHERE email=?");
-    $stmt = bind_param("s,$email");
+    $stmt = $mysqli->prepare("UPDATE users SET token=?,expire=? WHERE email=?");
+    $stmt->bind_param("sds",$uuid,$expiration,$email);
     $stmt->execute();
 
     echo json_encode(["success"=>true,"message"=>"Authentication successful","token"=>$uuid]);
