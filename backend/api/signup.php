@@ -18,6 +18,17 @@ $email = $data['email'];
 $password = $data['password'];
 $confirmPassword = $data['confirmPassword'];
 
+
+if (
+  !preg_match('/[A-Z]/', $password) ||
+  !preg_match('/[0-9!@#$%^&*(),.?":{}|<>]/', $password) ||
+  strlen($password) < 6
+) {
+ //send json error and exit;
+ echo json_encode(["success"=>false,"message"=>"Passwords requirements not met"]);
+ exit();
+} 
+
 //hashes password from user
 $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 
