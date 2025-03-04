@@ -45,7 +45,21 @@ $good = password_verify($password,$hash);
 
 if ($good){
     
-    echo json_encode(["success"=>true,"message"=>"Authentication successful"]);
+    //generate uuid thing
+    $uuid = uniqid(true);
+
+    //make expiration an hour after now
+    $expiration = (new DateTime())->getTimestamp() + 3600;
+
+    //this block sets user token ID and expiration date
+    $stmt = $mysqli->prepare("UPDATE users SET token=$uuid,expire=$expiration WHERE email=?");
+    $stmt = bind_param("s,$email");
+    $stmt->execute();
+
+    echo json_encode(["success"=>true,"message"=>"Authentication successful","token"=>$uuid]);
+
+
+
 } else {
 
     echo json_encode(["success"=>false,"message"=>"Authentication failed"]);

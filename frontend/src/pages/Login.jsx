@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
 import axios from 'axios'
+import {CookiesProvider,useCookies} from 'react-cookie'
 
 const Login = () => {
 
@@ -33,6 +34,11 @@ const Login = () => {
       const result = response.data
       console.log("Login response",result);
       if (result.success){
+
+        //also set user cookie here
+        
+
+
         navigate('/')
       } else {
         alert(result.message)
