@@ -6,7 +6,7 @@ import {CookiesProvider,useCookies} from 'react-cookie'
 
 const Login = () => {
 
-  const [cookies, setCookie, removeCookie] = useCookies(['user']);
+  
 
   const navigate = useNavigate()
 
@@ -36,7 +36,7 @@ const Login = () => {
       const result = response.data
       console.log("Login response",result);
       if (result.success){
-        
+
         navigate('/')
       } else {
         alert(result.message)
