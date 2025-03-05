@@ -21,7 +21,7 @@ const PasswordReset = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //axios.post('http://localhost/tripago/passwordreset.php', formData).then(function(responce){
+    //axios.post('http://localhost/tripago/reset_password.php', formData).then(function(responce){
     //  console.log(responce.data);
     //  console.log(responce.status);
       //navigate('/');
@@ -29,9 +29,12 @@ const PasswordReset = () => {
     //});
     
     
+    
     console.log("Password Reset Data:", formData);
     try {
-      const response = await fetch("http://localhost/tripago/passwordreset.php", {
+      //const response = await fetch("http://localhost/tripago/passwordreset.php", {
+      //const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/passwordreset.php", {
+        const response = await fetch("http://localhost/tripago/reset_password.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +54,7 @@ const PasswordReset = () => {
       console.error("Error:", error);
       alert("Something went wrong. Please try again.");
     } 
-  };
+  }; 
 
   return (
     <div className="login-container ">

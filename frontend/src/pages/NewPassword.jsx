@@ -1,25 +1,38 @@
 import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import '../styles/Login.css'
 import axios from "axios";
+
+/*const SearchPage = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const key = queryParams.get('key');
+  console.log("key: " + key);
+  return key;
+}*/
 
 const NewPassword = () => {
 
   const navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("key");
+  console.log("key: " + token);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    selector: ""
+    key: token
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -28,7 +41,10 @@ const NewPassword = () => {
     //  return;
     //}
 
-    axios.post('http://localhost/tripago/new_password.php', formData).then(function(responce){
+
+    //axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/new_password.php", formData).then(function(responce){
+      //axios.post(`http://localhost/tripago/new_password_2.php?key=${token}`, formData).then(function(responce){
+      axios.post(`http://localhost/tripago/new_password_2.php`, formData).then(function(responce){
       console.log(responce.data);
       console.log(responce.status);
       //navigate('/');
@@ -37,7 +53,7 @@ const NewPassword = () => {
   
     /*
     try {
-      const response = await fetch("http://localhost/tripago/new_password.php", {
+      const response = await fetch("http://localhost/tripago/new_password_2.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -57,18 +73,20 @@ const NewPassword = () => {
       console.error("Error:", error);
       alert("An error occurred. Please try again.");
     } */
-  }; 
+  };
 
   return (
     <div className="login-container ">
     <h2>Create new password</h2>
     <form onSubmit={handleSubmit}>
     <div className="password-container">
-        
-        <input 
-          type="hidden" 
-          name="selector" 
-          value="<?php echo $_GET['selector'] ?>"
+
+        <input
+          type="hidden"
+          name="key"
+          placeholder="key"
+          value={token}
+          onChange={handleChange}
         />
 
         <input
