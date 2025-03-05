@@ -20,6 +20,7 @@ import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const App = () => {
   const [user] = useState({
