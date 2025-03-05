@@ -1,0 +1,49 @@
+import React from 'react';
+import { useNavigate } from "react-router-dom";
+import '../../styles/Settings.css';
+
+const SettingsRecentActivity = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="settings-container">
+
+      {/* Sidebar */}
+      <div className="settings-left">
+        <h3>Preferences</h3>
+        <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
+        <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
+
+        <h3>Profile</h3>
+        <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
+
+        <h3>Privacy & Security</h3>
+        <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
+        <button className="selected" onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
+        <button onClick={() => navigate("/settings/my-data")}>My Data</button>
+
+        <h3>Legal</h3>
+        <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
+        <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
+      </div>
+
+      {/* Right Panel */}
+      <div className="settings-right">
+        <h2>Recent Activity</h2>
+
+        <div className="activity-section">
+          <h3>Purchase History</h3>
+          <p>No recent purchases</p>
+        </div>
+
+        <div className="activity-section">
+          <h3>Recently Visited Pages</h3>
+          <p>No recent activity</p>
+        </div>
+      </div>
+
+    </div>
+  );
+};
+
+export default SettingsRecentActivity;
