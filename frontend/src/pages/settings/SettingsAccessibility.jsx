@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import '../styles/Settings.css';
+import '../../styles/Settings.css';
 
-const SettingsProfileDetails = () => {
+const SettingsAccessibility = () => {
   const navigate = useNavigate();
 
   return (
@@ -11,11 +11,11 @@ const SettingsProfileDetails = () => {
       {/* Sidebar */}
       <div className="settings-left">
         <h3>Preferences</h3>
-        <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
+        <button className="selected" onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
         <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
 
         <h3>Profile</h3>
-        <button className="selected" onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
+        <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
         <h3>Privacy & Security</h3>
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
@@ -29,20 +29,14 @@ const SettingsProfileDetails = () => {
 
       {/* Right Panel */}
       <div className="settings-right">
-        <h2>Profile Details</h2>
-        
+        <h2>Accessibility Settings</h2>
+
         <form>
-          <div className="form-group">
-            <label htmlFor="display-name">Display Name</label>
-            <input type="text" id="display-name" placeholder="Enter new name" />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" placeholder="Enter new email" />
-          </div>
-
-          <button type="submit">Save Changes</button>
+          <label htmlFor="display-mode">Display Mode</label>
+          <select id="display-mode">
+            <option value="light">Light Mode</option>
+            <option value="dark">Dark Mode</option>
+          </select>
         </form>
       </div>
 
@@ -50,4 +44,4 @@ const SettingsProfileDetails = () => {
   );
 };
 
-export default SettingsProfileDetails;
+export default SettingsAccessibility;

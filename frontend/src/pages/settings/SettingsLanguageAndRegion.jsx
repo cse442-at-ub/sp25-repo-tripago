@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import '../styles/Settings.css';
+import '../../styles/Settings.css';
 
-const SettingsManagePassword = () => {
+const SettingsLanguageAndRegion = () => {
   const navigate = useNavigate();
 
   return (
@@ -12,13 +12,13 @@ const SettingsManagePassword = () => {
       <div className="settings-left">
         <h3>Preferences</h3>
         <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
-        <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
+        <button className="selected" onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
 
         <h3>Profile</h3>
         <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
         <h3>Privacy & Security</h3>
-        <button className="selected" onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
+        <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
 
@@ -29,24 +29,34 @@ const SettingsManagePassword = () => {
 
       {/* Right Panel */}
       <div className="settings-right">
-        <h2>Manage Password</h2>
+        <h2>Language & Region Settings</h2>
+
         <form>
           <div className="form-group">
-            <label htmlFor="current-password">Current Password</label>
-            <input type="password" id="current-password" placeholder="Enter current password" />
+            <label htmlFor="account-language">Account Language</label>
+            <select id="account-language">
+              <option value="english">English</option>
+              <option value="spanish">Spanish</option>
+              <option value="tbd">Languages TBD</option>
+            </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="new-password">New Password</label>
-            <input type="password" id="new-password" placeholder="Enter new password" />
+            <label htmlFor="time-zone">Region/Time</label>
+            <select id="time-zone">
+              <option value="est">Eastern Time</option>
+              <option value="pst">Pacific Time</option>
+              <option value="etc">etc</option>
+            </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" placeholder="Confirm new password" />
+            <label htmlFor="country">Country</label>
+            <select id="country">
+              <option value="US">United States</option>
+              <option value="etc">etc</option>
+            </select>
           </div>
-
-          <button type="submit">Reset Password</button>
         </form>
       </div>
 
@@ -54,4 +64,4 @@ const SettingsManagePassword = () => {
   );
 };
 
-export default SettingsManagePassword;
+export default SettingsLanguageAndRegion;

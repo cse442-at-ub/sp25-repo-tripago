@@ -1,14 +1,14 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/Settings.css';
+import { useNavigate } from "react-router-dom";
+import '../../styles/Settings.css';
 
-const Settings = () => {
+const SettingsMyData = () => {
   const navigate = useNavigate();
 
   return (
     <div className="settings-container">
 
-      {/* Left Sidebar */}
+      {/* Sidebar */}
       <div className="settings-left">
         <h3>Preferences</h3>
         <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
@@ -20,21 +20,23 @@ const Settings = () => {
         <h3>Privacy & Security</h3>
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
-        <button onClick={() => navigate("/settings/my-data")}>My Data</button>
+        <button className="selected" onClick={() => navigate("/settings/my-data")}>My Data</button>
 
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
       </div>
 
-      {/* Right Content Area */}
+      {/* Right Panel */}
       <div className="settings-right">
-        <h2>Settings</h2>
-        <p>Select a category from the left to view and update your preferences.</p>
+        <h2>Manage Your Data</h2>
+        <p>You can download a copy of your data at any time.</p>
+        
+        <button className="download-btn">Download Your Data</button>
       </div>
 
     </div>
   );
 };
 
-export default Settings;
+export default SettingsMyData;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import '../styles/Settings.css';
+import '../../styles/Settings.css';
 
-const SettingsPrivacyPolicy = () => {
+const SettingsProfileDetails = () => {
   const navigate = useNavigate();
 
   return (
@@ -15,7 +15,7 @@ const SettingsPrivacyPolicy = () => {
         <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
 
         <h3>Profile</h3>
-        <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
+        <button className="selected" onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
         <h3>Privacy & Security</h3>
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
@@ -24,19 +24,30 @@ const SettingsPrivacyPolicy = () => {
 
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
-        <button className="selected" onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
+        <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
       </div>
 
       {/* Right Panel */}
       <div className="settings-right">
-        <h2>Privacy Policy</h2>
-        <p>Review our privacy policy and download a copy if needed.</p>
+        <h2>Profile Details</h2>
         
-        <button className="download-btn">Download Privacy Policy</button>
+        <form>
+          <div className="form-group">
+            <label htmlFor="display-name">Display Name</label>
+            <input type="text" id="display-name" placeholder="Enter new name" />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" placeholder="Enter new email" />
+          </div>
+
+          <button type="submit">Save Changes</button>
+        </form>
       </div>
 
     </div>
   );
 };
 
-export default SettingsPrivacyPolicy;
+export default SettingsProfileDetails;
