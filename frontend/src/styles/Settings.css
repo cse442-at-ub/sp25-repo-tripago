@@ -1,111 +1,137 @@
-html body #root .settings-container {
-    background: var(--background-color);
-    height: 100%;
-    width: 100%;
-    margin: 0px;
-    flex-direction: column;
-    display: inline-block;
+.settings-container {
+    display: flex;
+    justify-content: center; /* Centers the settings panel */
+    width: 900px; /* Fixed width */
+    margin-left: 0; /* Centers the container */
+    min-height: 100vh;
+    background: var(--white);
+    margin-top: 130px;
+    padding: 800px;
 }
 
 .settings-left {
-    position: relative;
-    color: var(--black);
-    top: 150px;
-    left: 400px;
-    text-align: left;
-    margin: 400 auto;
-    font-size: 40px;
+    width: 30%;
+    padding: 40px 20px;
+    background: var(--white);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: 75%;
+    gap: 15px;
+    font-size: 16px;
+    min-height: 100vh;
 }
 
-hr {
-    width: 300px;
-    margin-left: 0;
+.settings-left h3 {
+    font-size: 16px;
+    color: var(--dark-grey);
+    margin-top: 20px;
 }
 
 .settings-left button {
     background: none;
     border: none;
-    box-shadow: none;
-    color: var(--black);
-    font-size: 30px;
-    transition: color 0.1s ease-in-out;
+    color: var(--dark-grey);
+    font-size: 16px;
     text-align: left;
-    font-weight: 400;
-    padding: 0em 0em;
-    width: 25%;
+    cursor: pointer;
+    padding: 10px 0;
+    transition: color 0.2s ease-in-out;
+    padding: 12px 15px;
 }
 
-.settings-left button:hover {
-    text-decoration: none;
-    opacity: 0.9;
-    background: none;
+.settings-left button:hover,
+.settings-left .selected {
     color: var(--primary-color);
+    font-weight: bold;
 }
 
 .settings-left .selected {
     color: var(--primary-color);
 }
-    
+
+
 .settings-right {
-    background-color: white;
-    position: absolute;
-    color: var(--black);
-    top: 200px;
-    right: 200px;
-    text-align: center;
-    margin: 400 auto;
-    font-size: 30px;
-    display: block;
-    flex-direction: column;
-    gap: 10px;
-    width: 40%;
-    height: 108%;
-    border-radius: 21px;
-    border: 1px solid var(--primary-color);
+    padding: 40px;
+    background: var(--white);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+    min-height: 100vh;
+    width: 70%;
 }
 
-.settings-right input, .settings-right textarea, .settings-right select {
-    text-align: center;
-    width: 75%;
+/* Inputs */
+.settings-right input,
+.settings-right textarea,
+.settings-right select {
+    border: 2px solid var(--lightest-grey);
     border-radius: 8px;
-    border: 1px solid var(--primary-color);
-    font-size: 24px;
-    margin-left: auto;
-    margin-right: auto;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+    margin: 0;
+    width: 70%;
 }
 
+/* Buttons */
 .settings-right button {
-    text-align: center;
-    width: 40%;
-    /* border-radius: 13px; */
-    /* border: 1px solid var(--primary-color); */
-    font-size: 24px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.settings-right button {
-    background-color: var(-secondary-color);
     color: var(--white);
-    padding: 12px;
-    border: none;
-    border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    font-size: 1em;
+    width: 75%;
+    height: 2.5em;
+    border-radius: 1em;
+    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    align-self: center;
 }
-  
+
 .settings-right button:hover {
-    background-color: var(--lightest-grey);
     transform: scale(1.05);
     color: var(--secondary-color);
-    border: 1px solid var(--secondary-color)
+    border: 1px solid var(--secondary-color);
 }
 
 .about {
     height: 200px;
     font-family: inherit;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.settings-right label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 60px;
+    color: var(--dark-grey);
+}
+
+.settings-right select {
+    width: 100%;
+    padding: 12px 15px; 
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--light-grey);
+    background: var(--white);
+    appearance: none; /* Removes default styles */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.activity-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: var(--lightest-grey);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.activity-section h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: var(--dark-grey);
+}
+
+.activity-section p {
+    font-size: 14px;
+    color: var(--dark-grey);
 }

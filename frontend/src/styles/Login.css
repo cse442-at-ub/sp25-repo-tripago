@@ -119,7 +119,7 @@ p a {
 /* RESET PASSWORD */
 
 .email-input-box {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 /* MEDIA QUERIES FOR IPHONE 12PRO DIMENSIONS 390px x 844px  */
@@ -161,6 +161,10 @@ p a {
 
   .signup-container {
     margin-top: 150px;
+  }
+
+  .password-tooltip {
+    line-height: .6;
   }
 
 }

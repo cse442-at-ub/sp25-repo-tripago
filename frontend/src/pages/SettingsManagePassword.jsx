@@ -1,79 +1,57 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from "react-router-dom";
-import '../styles/Settings.css'
+import '../styles/Settings.css';
 
 const SettingsManagePassword = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='settings-container'>
+    <div className="settings-container">
 
-      <div className='settings-left'>
-
-        Preferences
-        <hr></hr>
-
+      {/* Sidebar */}
+      <div className="settings-left">
+        <h3>Preferences</h3>
         <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
-        <button onClick={() => navigate("/settings/language-and-region")}>Language and Region</button>
+        <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
 
-        <br></br>
-
-        Profile
-        <hr></hr>
-
+        <h3>Profile</h3>
         <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
-        <br></br>
-
-        Privacy and Security
-        <hr></hr>
-
-        <button className='selected' onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
+        <h3>Privacy & Security</h3>
+        <button className="selected" onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
 
-        <br></br>
-
-        Legal
-        <hr></hr>
-
+        <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-
       </div>
 
-      <div className='settings-right'>
-        
+      {/* Right Panel */}
+      <div className="settings-right">
+        <h2>Manage Password</h2>
         <form>
-            <br></br>
+          <div className="form-group">
+            <label htmlFor="current-password">Current Password</label>
+            <input type="password" id="current-password" placeholder="Enter current password" />
+          </div>
 
-            <label>Current Password</label>
-            <input type='password'></input>
-            <br></br>
+          <div className="form-group">
+            <label htmlFor="new-password">New Password</label>
+            <input type="password" id="new-password" placeholder="Enter new password" />
+          </div>
 
-            <label>New Password</label>
-            <input type='password'></input>
-            <br></br>
+          <div className="form-group">
+            <label htmlFor="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" placeholder="Confirm new password" />
+          </div>
 
-            <label>Confirm Password</label>
-            <input type='password'></input>
-            <br></br>
-
-            <button type='submit'>Reset</button>
+          <button type="submit">Reset Password</button>
         </form>
-
       </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default SettingsManagePassword
+export default SettingsManagePassword;

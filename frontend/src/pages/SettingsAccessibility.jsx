@@ -1,71 +1,47 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from "react-router-dom";
-import '../styles/Settings.css'
+import '../styles/Settings.css';
 
-const SettingsAccessbility = () => {
+const SettingsAccessibility = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='settings-container'>
+    <div className="settings-container">
 
-      <div className='settings-left'>
+      {/* Sidebar */}
+      <div className="settings-left">
+        <h3>Preferences</h3>
+        <button className="selected" onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
+        <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
 
-        Preferences
-        <hr></hr>
-
-        <button className='selected' onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
-        <button onClick={() => navigate("/settings/language-and-region")}>Language and Region</button>
-
-        <br></br>
-
-        Profile
-        <hr></hr>
-
+        <h3>Profile</h3>
         <button onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
-        <br></br>
-
-        Privacy and Security
-        <hr></hr>
-
+        <h3>Privacy & Security</h3>
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
 
-        <br></br>
-
-        Legal
-        <hr></hr>
-
+        <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-
       </div>
 
-      <div className='settings-right'>
-        
-        <form>
-            <br></br>
-            
-            <label>Display Mode</label>
-            <select>
-              <option value='light'>Light Mode</option>
-              <option value='dark'>Dark Mode</option>
-            </select>
-        </form>
+      {/* Right Panel */}
+      <div className="settings-right">
+        <h2>Accessibility Settings</h2>
 
+        <form>
+          <label htmlFor="display-mode">Display Mode</label>
+          <select id="display-mode">
+            <option value="light">Light Mode</option>
+            <option value="dark">Dark Mode</option>
+          </select>
+        </form>
       </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default SettingsAccessbility
+export default SettingsAccessibility;

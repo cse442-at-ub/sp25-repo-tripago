@@ -1,79 +1,53 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from "react-router-dom";
-import '../styles/Settings.css'
+import '../styles/Settings.css';
 
 const SettingsProfileDetails = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='settings-container'>
+    <div className="settings-container">
 
-      <div className='settings-left'>
-
-        Preferences
-        <hr></hr>
-
+      {/* Sidebar */}
+      <div className="settings-left">
+        <h3>Preferences</h3>
         <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
-        <button onClick={() => navigate("/settings/language-and-region")}>Language and Region</button>
+        <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
 
-        <br></br>
+        <h3>Profile</h3>
+        <button className="selected" onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
 
-        Profile
-        <hr></hr>
-
-        <button className='selected' onClick={() => navigate("/settings/profile-details")}>Profile Details</button>
-
-        <br></br>
-
-        Privacy and Security
-        <hr></hr>
-
+        <h3>Privacy & Security</h3>
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
 
-        <br></br>
-
-        Legal
-        <hr></hr>
-
+        <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-
       </div>
 
-      <div className='settings-right'>
+      {/* Right Panel */}
+      <div className="settings-right">
+        <h2>Profile Details</h2>
         
         <form>
-            <br></br>
+          <div className="form-group">
+            <label htmlFor="display-name">Display Name</label>
+            <input type="text" id="display-name" placeholder="Enter new name" />
+          </div>
 
-            <label>Display Name</label>
-            <input type='text'></input>
-            <br></br>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" placeholder="Enter new email" />
+          </div>
 
-            <label>Email</label>
-            <input type='text'></input>
-            <br></br>
-
-            <label>About</label>
-            <textarea type='text' className='about'></textarea>
-            <br></br>
-            
-            <button type='submit'>Save</button>
+          <button type="submit">Save Changes</button>
         </form>
-
       </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default SettingsProfileDetails
+export default SettingsProfileDetails;
