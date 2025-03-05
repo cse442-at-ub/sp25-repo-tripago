@@ -24,7 +24,7 @@ const NewPassword = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    key: searchParams.get("key")
+    key: token
   });
 
   const handleChange = (e) => {
@@ -61,6 +61,7 @@ const NewPassword = () => {
           email: formData.email, 
           password: formData.password,
           confirmPassword: formData.confirmPassword,
+          key: formData.key
         }),
       });
   
@@ -68,7 +69,7 @@ const NewPassword = () => {
       alert(data.message);
       
       if (data.status === "success") {
-        navigate("https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/npula/#/login"); // Redirect after success
+        navigate("/login"); // Redirect after success
       }
     } catch (error) {
       console.error("Error:", error);

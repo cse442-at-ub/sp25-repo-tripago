@@ -58,14 +58,6 @@
 			echo json_encode(["status" => "error", "message" => "Unable to update user: $email"]);
 			exit;
 		} 
-		//echo json_encode(["status" => "success", "message" => "updated user: $email, $key"]);
-		//exit;
-		//$row = mysqli_num_rows($results);
-		//if ($row==0){
-		//	echo json_encode(["status" => "error", "message" => "Unable to update user"]);
-		//	exit;
-		//}
-		//"INSERT INTO `users` (`email`, `key`, `expDate`) VALUES ('".$email."', '".$key."', '".$expDate."');");
 
 		$output='<p>To user,</p>';
 		$output.='<p>Please click on the following link to reset your password.</p>';
