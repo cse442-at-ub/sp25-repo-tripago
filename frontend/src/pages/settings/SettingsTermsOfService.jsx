@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../../styles/Settings.css';
 
 const SettingsTermsOfService = () => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="settings-container">
 
-      {/* Sidebar */}
-      <div className="settings-left">
+       {/* Hamburger Button */}
+       <button className="hamburger-menu" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </button>
+
+      {/* Left Sidebar */}
+      <div className={`settings-left ${menuOpen ? "open" : ""}`}>
         <h3>Preferences</h3>
         <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
         <button onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
@@ -29,6 +35,7 @@ const SettingsTermsOfService = () => {
 
       {/* Right Panel */}
       <div className="settings-right">
+        <div className="terms-of-service__container">
         <h2>Terms of Service</h2>
         <p>
           By using Tripago, you agree to the following terms and conditions. Please read them carefully before proceeding.
@@ -59,7 +66,8 @@ const SettingsTermsOfService = () => {
           If you have any questions regarding these Terms of Service, please contact our support team.
         </p>
 
-        <button className="download-btn">Download Terms of Service</button>
+        <button className="download-btn terms-btn">Download Terms of Service</button>
+      </div>
       </div>
 
     </div>
