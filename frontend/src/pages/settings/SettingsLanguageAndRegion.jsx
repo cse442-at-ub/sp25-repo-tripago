@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../../styles/Settings.css';
 
 const SettingsLanguageAndRegion = () => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="settings-container">
 
-      {/* Sidebar */}
-      <div className="settings-left">
+       {/* Hamburger Button */}
+       <button className="hamburger-menu" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </button>
+
+      {/* Left Sidebar */}
+      <div className={`settings-left ${menuOpen ? "open" : ""}`}>
         <h3>Preferences</h3>
         <button onClick={() => navigate("/settings/accessibility")}>Accessibility</button>
         <button className="selected" onClick={() => navigate("/settings/language-and-region")}>Language & Region</button>
