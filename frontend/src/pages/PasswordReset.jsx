@@ -69,6 +69,7 @@ const PasswordReset = () => {
         onChange={handleChange}
         required
       />
+      {/* The Send Link button takes you to the New Password Page */}
       <button type="submit" className='login_signup-button'>Send Link</button>
     </form>
 
