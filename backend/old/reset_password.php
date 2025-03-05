@@ -5,14 +5,14 @@
 	header("Access-Control-Allow-Methods: OPTIONS, PUT, GET, POST");
 	header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
-	//use PHPMailer\PHPMailer\PHPMailer;
-	//use PHPMailer\PHPMailer\SMTP;
-	//use PHPMailer\PHPMailer\Exception;
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\SMTP;
+	use PHPMailer\PHPMailer\Exception;
 
-	//$path_to_composers_autoloader = dirname(__FILE__) . "/frontend/vendor/" . "autoload.php";
+	$path_to_composers_autoloader = dirname(__FILE__) . "/frontend/vendor/" . "autoload.php";
 	//Load Composer's autoloader
 	//require 'F:\Projects\School\sp25-repo-tripago\frontend\vendor\autoload.php';
-	//require $path_to_composers_autoloader;
+	require $path_to_composers_autoloader;
 
 	$con = mysqli_connect("localhost","npula","50540565","cse442_2025_spring_team_aj_db");
 		if (mysqli_connect_errno()){
@@ -70,11 +70,11 @@
 		$output='<p>To user,</p>';
 		$output.='<p>Please click on the following link to reset your password.</p>';
 		$output.='<p>-------------------------------------------------------------</p>';
-		$output.='<p><a href="https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/npula/#/NewPassword?
+		$output.='<p><a href="http://localhost:5173/#/NewPassword?
 		key='.$key.'&email='.$email.'&action=reset" target="_blank">
-		https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/npula/#/NewPassword?
+		http://localhost:5173/#/NewPassword?
 		?key=$key&email=$email&action=reset</a></p>';	
-		$url = 'https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/npula/#/NewPassword?key='.$key.'&email='.$email.'&action=reset';
+		$url = 'http://localhost:5173/#/NewPassword?key='.$key.'&email='.$email.'&action=reset';
 		$output.='<p>-------------------------------------------------------------</p>';
 		$output.='<p>Please be sure to copy the link into your browser.
 		The link will expire after 1 day for security reason.</p>';
@@ -89,7 +89,6 @@
 		$fromserver = "[]"; // enter email in brackets
 		//require("PHPMailer/PHPMailerAutoload.php");
 		
-		/*
 		$mail = new PHPMailer();
 		//$mail->SMTPDebug = SMTP::DEBUG_SERVER;
 		$mail->IsSMTP();
@@ -110,7 +109,7 @@
 			//echo "Mailer Error: " . $mail->ErrorInfo;
 			echo json_encode(["status" => "success", "message" => "Email not sent:", "resetLink" => $url]);
 			exit;
-		} */
+		}
 		echo json_encode(["status" => "success", "message" => "Email sent:", "resetLink" => $url]);
 		exit;
 	//}else{

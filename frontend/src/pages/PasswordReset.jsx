@@ -33,8 +33,8 @@ const PasswordReset = () => {
     console.log("Password Reset Data:", formData);
     try {
       //const response = await fetch("http://localhost/tripago/passwordreset.php", {
-      //const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/passwordreset.php", {
-        const response = await fetch("http://localhost/tripago/reset_password.php", {
+      const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/reset_password.php", {
+        //const response = await fetch("http://localhost/tripago/reset_password.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

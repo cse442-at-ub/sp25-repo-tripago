@@ -1,5 +1,5 @@
 <?php
-//session_start();
+session_start();
 	header("Access-Control-Allow-Origin: *");
 	header("Access-Control-Allow-Methods: OPTIONS, PUT, GET, POST");
 	header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");

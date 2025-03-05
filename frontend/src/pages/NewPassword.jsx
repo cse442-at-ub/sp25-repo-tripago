@@ -17,13 +17,14 @@ const NewPassword = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("key");
   console.log("key: " + token);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    key: token
+    key: searchParams.get("key")
   });
 
   const handleChange = (e) => {
@@ -42,22 +43,22 @@ const NewPassword = () => {
     //}
 
 
-    //axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/new_password.php", formData).then(function(responce){
+    //axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/new_password_2.php", formData).then(function(responce){
       //axios.post(`http://localhost/tripago/new_password_2.php?key=${token}`, formData).then(function(responce){
-      axios.post(`http://localhost/tripago/new_password_2.php`, formData).then(function(responce){
-      console.log(responce.data);
-      console.log(responce.status);
-      //navigate('/');
-
-    });
+      //axios.post(`http://localhost/tripago/new_password_2.php`, formData).then(function(responce){
+      //console.log(responce.data);
+      //console.log(responce.status);
+      //navigate('https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/npula/#/login');
+      
+    //}).catch(() => { console.log(formData); });
   
-    /*
+    
     try {
-      const response = await fetch("http://localhost/tripago/new_password_2.php", {
+      const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/new_password_2.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: formData.email, // Make sure the email is collected in the form
+          email: formData.email, 
           password: formData.password,
           confirmPassword: formData.confirmPassword,
         }),
@@ -67,12 +68,12 @@ const NewPassword = () => {
       alert(data.message);
       
       if (data.status === "success") {
-        navigate("/login"); // Redirect after success
+        navigate("https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/npula/#/login"); // Redirect after success
       }
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred. Please try again.");
-    } */
+    } 
   };
 
   return (
@@ -81,7 +82,7 @@ const NewPassword = () => {
     <form onSubmit={handleSubmit}>
     <div className="password-container">
 
-        <input
+       <input
           type="hidden"
           name="key"
           placeholder="key"
