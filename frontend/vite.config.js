@@ -7,11 +7,17 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000', // PHP server 
+        target: 'https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/', // PHP server address
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Remove "/api" prefix
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            proxyReq.setHeader('Host', 'https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/');
+          });
+        },
       },
     },
+    
+
+    
   },
 });
-
