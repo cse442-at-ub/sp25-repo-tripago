@@ -1,10 +1,9 @@
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import TripHeader from "../components/trip/TripHeader";
-import TripDetails from "../components/trip/TripDetails";
-import "../styles/Profile.css";
-
-import parisPicture from "../assets/paris.jpg";
+import Sidebar from "../../components/Sidebar.jsx";
+import TripHeader from '../../components/trip/TripHeader.jsx'
+import TripDetails from '../../components/trip/TripDetails.jsx'
+import "../../styles/Profile.css";
+import parisPicture from "../../assets/paris.jpg";
 
 const Profile = () => {
   const [user] = useState({

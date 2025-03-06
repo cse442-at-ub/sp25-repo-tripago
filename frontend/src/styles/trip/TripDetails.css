@@ -498,6 +498,10 @@ p {
     padding: unset;
   }
 
+  .no-dates-selected {
+    line-height: 16px;
+  }
+
   .budget-info {
     align-items: right;
     gap: 20px;
