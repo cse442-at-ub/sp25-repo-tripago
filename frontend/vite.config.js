@@ -6,6 +6,7 @@ export default defineConfig({
   base: '/CSE442/2025-Spring/cse-442aj/frontend/',
   server: {
     proxy: {
+
       '/api': {
         target: 'https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/', // PHP server address
         changeOrigin: true,
