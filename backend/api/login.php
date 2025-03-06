@@ -22,8 +22,8 @@ $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 
 
-if ($mysqli->connection_status != 0){
-    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connection_status]);
+if ($mysqli->connect_error != 0){
+    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
 }
 
 $stmt = $mysqli->prepare("SELECT * FROM users WHERE email=?");
