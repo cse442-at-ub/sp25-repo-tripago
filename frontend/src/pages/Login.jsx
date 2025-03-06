@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
+import axios from 'axios'
+
 
 const Login = () => {
+
+
 
   const navigate = useNavigate()
 
@@ -20,25 +24,28 @@ const Login = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Login Data:", formData);
-
-    try {
-      const response = await axios.post("/api/login.php",formData,{
+    
+    try{
+      
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/login.php",formData,{
         headers:{
           'Content-Type':'application/json'
         }
       })
+      
       const result = response.data
-      console.log("Registration Response",result);
+      console.log("Login response",result);
       if (result.success){
-        //navigate to login on success
-        navigate('/home')
+        navigate('/profile')
       } else {
         alert(result.message)
       }
+      
     } catch(error){
-      console.log("Error during signup:",error)
+      console.log("Error during login: ",error.response);
     }
 
+    
   };
 
   return (

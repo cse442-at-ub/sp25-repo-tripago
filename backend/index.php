@@ -1,3 +1,4 @@
-<?php  
-echo "Uuuuh you should see something, maybe";
+<?php
+
+echo "test";
 ?>

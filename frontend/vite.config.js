@@ -12,13 +12,13 @@ export default defineConfig({
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq, req, res) => {
-            // Force the Host header so Apache sees tripago-backend.local
             proxyReq.setHeader('Host', 'https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/');
           });
         },
       },
-      
     },
+    
+
+    
   },
 });
-
