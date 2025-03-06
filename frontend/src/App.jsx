@@ -8,19 +8,19 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import PasswordReset from "./pages/PasswordReset.jsx";
 import NewPassword from "./pages/NewPassword.jsx";
-import Profile from "./pages/Profile.jsx";
 import StyleGuide from "./pages/StyleGuide.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import Settings from "./pages/Settings.jsx";
-import SettingsProfileDetails from "./pages/SettingsProfileDetails.jsx";
-import SettingsAccessibility from "./pages/SettingsAccessibility.jsx";
-import SettingsLanguageAndRegion from "./pages/SettingsLanguageAndRegion.jsx";
-import SettingsManagePassword from "./pages/SettingsManagePassword.jsx";
-import SettingsRecentActivity from "./pages/SettingsRecentActivity.jsx";
-import SettingsMyData from "./pages/SettingsMyData.jsx";
-import SettingsTermsOfService from "./pages/SettingsTermsOfService.jsx";
-import SettingsPrivacyPolicy from "./pages/SettingsPrivacyPolicy.jsx";
-import ProtectedRoute from "../src/components/ProtectedRoute.jsx"; 
+import Settings from "./pages/settings/Settings.jsx";
+import SettingsProfileDetails from "./pages/settings/SettingsProfileDetails.jsx";
+import SettingsAccessibility from "./pages/settings/SettingsAccessibility.jsx";
+import SettingsLanguageAndRegion from "./pages/settings/SettingsLanguageAndRegion.jsx";
+import SettingsManagePassword from "./pages/settings/SettingsManagePassword.jsx";
+import SettingsRecentActivity from "./pages/settings/SettingsRecentActivity.jsx";
+import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
+import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
+import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
+import Profile from "./pages/profile/Profile.jsx";
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const App = () => {
   const [user] = useState({
