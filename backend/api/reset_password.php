@@ -75,10 +75,8 @@
 		$output='<p>To user,</p>';
 		$output.='<p>Please click on the following link to reset your password.</p>';
 		$output.='<p>-------------------------------------------------------------</p>';
-		$output.='<p><a href="https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/frontend/#/new-password?
-		key='.$key.'&email='.$email.'&action=reset" target="_blank">
-		https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/frontend/#/new-password?
-		?key=$key&email=$email&action=reset</a></p>';	
+		$output.='<p><a href="https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/frontend/#/new-password?key='.$key.'&email='.$email.'&action=reset" target="_blank">
+		https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/frontend/#/new-password?key=$key&email=$email&action=reset</a></p>';	
 		$url = 'https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/frontend/#/new-password?key='.$key.'&email='.$email.'&action=reset';
 		$output.='<p>-------------------------------------------------------------</p>';
 		$output.='<p>Please be sure to copy the link into your browser.
