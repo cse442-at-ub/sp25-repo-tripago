@@ -146,7 +146,7 @@
 
 
 
-@media screen and (max-width: 385px) {
+@media screen and (max-width: 430px) {
   /* Make settings container full-width on mobile */
   .settings-container {
     flex-direction: column;
