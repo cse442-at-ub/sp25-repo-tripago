@@ -20,6 +20,7 @@ import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const App = () => {
   const [user] = useState({
@@ -48,17 +49,18 @@ const App = () => {
             <Route path="/newpassword/:key" element={<NewPassword />} />
             <Route path="/style-guide" element={<StyleGuide />} />
 
-          {/* Settings */}
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/settings/profile-details" element={<SettingsProfileDetails />} />
-            <Route path="/settings/accessibility" element={<SettingsAccessibility />} />
-            <Route path="/settings/language-and-region" element={<SettingsLanguageAndRegion />} />
-            <Route path="/settings/manage-password" element={<SettingsManagePassword />} />
-            <Route path="/settings/recent-activity" element={<SettingsRecentActivity />} />
-            <Route path="/settings/my-data" element={<SettingsMyData />} />
-            <Route path="/settings/terms-of-service" element={<SettingsTermsOfService />} />
-            <Route path="/settings/privacy-policy" element={<SettingsPrivacyPolicy />} />
-            <Route path="/profile" element={<Profile />} />
+          {/* Protected Routes: Only logged in users can access these pages */}
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />
+            <Route path="/settings/accessibility" element={<ProtectedRoute><SettingsAccessibility /></ProtectedRoute>} />
+            <Route path="/settings/language-and-region" element={<ProtectedRoute><SettingsLanguageAndRegion /></ProtectedRoute>} />
+            <Route path="/settings/manage-password" element={<ProtectedRoute><SettingsManagePassword /></ProtectedRoute>} />
+            <Route path="/settings/recent-activity" element={<ProtectedRoute><SettingsRecentActivity /></ProtectedRoute>} />
+            <Route path="/settings/my-data" element={<ProtectedRoute><SettingsMyData /></ProtectedRoute>} />
+            <Route path="/settings/terms-of-service" element={<ProtectedRoute><SettingsTermsOfService /></ProtectedRoute>} />
+            <Route path="/settings/privacy-policy" element={<ProtectedRoute><SettingsPrivacyPolicy /></ProtectedRoute>} />
+
           </Routes>
         </main>
 

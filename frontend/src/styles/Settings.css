@@ -140,9 +140,13 @@
     color: var(--dark-grey);
 }
 
+.hamburger-menu {
+  display: none;
+}
 
 
-@media screen and (max-width: 385px) {
+
+@media screen and (max-width: 430px) {
   /* Make settings container full-width on mobile */
   .settings-container {
     flex-direction: column;
@@ -168,6 +172,7 @@
 
   .hamburger-menu {
     position: absolute;
+    display: block;
     top: 20px;
     left: 20px;
     background: none;
