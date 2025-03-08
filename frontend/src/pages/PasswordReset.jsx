@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import '../styles/Login.css'
+import axios from "axios";
 
 const PasswordReset = () => {
 
@@ -13,16 +14,47 @@ const PasswordReset = () => {
     password: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Password Reset Data:", formData);
 
-    useNavigate("/new-password")
-  };
+    //axios.post('http://localhost/tripago/reset_password.php', formData).then(function(responce){
+    //  console.log(responce.data);
+    //  console.log(responce.status);
+      //navigate('/');
+
+    //});
+    
+    
+    
+    console.log("Password Reset Data:", formData);
+    try {
+      //const response = await fetch("http://localhost/tripago/passwordreset.php", {
+      const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/reset_password.php", {
+        //const response = await fetch("http://localhost/tripago/reset_password.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      const result = await response.json();
+      console.log("Response:", result);
+  
+      if (result.status === "success") {
+        alert("Check your email for the reset link: " + result.resetLink);
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    } 
+  }; 
 
   return (
     <div className="login-container ">

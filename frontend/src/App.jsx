@@ -46,6 +46,7 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<PasswordReset />} />
             <Route path="/new-password" element={<NewPassword />} />
+            <Route path="/new-password/:key" element={<NewPassword />} />
             <Route path="/style-guide" element={<StyleGuide />} />
 
           {/* Protected Routes: Only logged in users can access these pages */}
