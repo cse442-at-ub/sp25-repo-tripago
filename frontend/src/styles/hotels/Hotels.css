@@ -1,20 +1,22 @@
-/* .hotels-page {
-  background: var(--white);
-  padding: 20px;
-  min-height: 100vh;
-} */
+.hotels-pagee {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Keep content at the top */
+  width: 900px;
+  min-height: 100vh; /* Ensure full height */
+  padding: 0; /* Remove the massive padding */
+  margin-top: 0;
+  max-width: 1100px;
+}
 
 .hotels-page {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centers the settings panel */
-  width: 900px; /* Fixed width */
-  margin-left: 0; /* Centers the container */
-  min-height: 100vh;
-  /* background: var(--white); */
-  margin-top: 320px;
-  padding: 300px;
+  justify-content: flex-start;
+  width: 900px;
+  min-height: calc(100vh - 200px);
 }
+
 
 .hotels-page__header {
   display: flex;
@@ -76,16 +78,123 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: 400px; /* Ensures space stays reserved */
 }
 
-.lower-section {
-  background: var(--meduim-grey);
+.top-section, .lower-section {
+  width: 100%;
+  min-width: 100vw; /* Ensures it stretches across screen */
+  /* position: relative; */
+  /* overflow-x: hidden;  */
+
 }
 
 .top-section {
   background: var(--lightest-grey);
+  min-height: 180px; 
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 60px 0;
+}
+
+.lower-section {
+  background: var(--medium-grey);
+  padding: 20px 0;
+  flex-grow: 1; /* Allows the lower section to expand */
+}
+
+
+/* Ensure both sections stretch the full width */
+.top-sectionn, .lower-sectionn {
+  width: 100vw; /* Forces full viewport width */
+  position: relative; /* Avoids layout shifting */
+  /* left: 50%; */
+  /* transform: translateX(-50%);  */
+
+  width: 100%;
+  min-width: 100%;
+  position: relative;
+  overflow-x: hidden; 
+}
+
+/* Background Colors */
+.top-sectionn {
+  background: var(--lightest-grey);
+  padding: 30px 0;
+}
+
+.lower-sectionn {
+  background: var(--medium-grey);
+  padding: 20px 0;
+}
+
+/* Center Content without Stretching */
+.content-container {
+  max-width: 1100px; /* Keeps content centered */
+  margin: 0 auto;
+  padding: 0 20px; /* Adds spacing */
 }
 
 .search-icon {
   color: var(--dark-grey)
+}
+
+.filters-sort {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+  padding: 10px;
+  position: relative; /* Keeps position fixed when content changes */
+  min-height: 50px; /* Ensures space is maintained */
+}
+
+.filters-sort button {
+  width: 250px;
+  border-radius: 5px;
+  padding: 1px 50px;
+  font-size: 14px;
+  margin-right: 15px;
+}
+
+/* Free Breakfast Container */
+.free-breakfast-button {
+  background: var(--white);
+  color: var(--primary-color);
+  /* padding: 1px 50px; */
+  border-radius: 5px;
+  border: 1px solid var(--primary-color);
+  transition: none;
+}
+
+.free-breakfast-button:hover {
+  background: var(--white);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* Active State */
+.free-breakfast-button.active {
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  color: var(--white);
+}
+
+.sort-dropbtn {
+  max-width: none; 
+  white-space: nowrap;
+  align-items: center;
+}
+
+.sort-dropbtn:hover {
+  background: var(--medium-grey);
+}
+
+.sort-option {
+  margin-left: 5px; /* Adds spacing between text and arrow */
+}
+
+.sort-dropdown-content {
+  width: 250px;;
 }

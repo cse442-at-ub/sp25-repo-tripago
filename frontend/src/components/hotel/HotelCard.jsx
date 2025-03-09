@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/hotels/HotelCard.css";
+import "../../styles/hotels/HotelCard.css";
 
 const HotelCard = ({ hotel }) => {
   return (
