@@ -1,34 +1,8 @@
 .hotels-page {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  /* align-self: self-start; */
   width: 100%;
   min-height: calc(100vh - 200px);
-}
-
-.hotels-page__header {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Space between arrow and text */
-  padding: 20px 0;
-  margin-top: 20px;
-  margin-bottom: 0px;
-}
-
-.back-arrow {
-  width: 24px; /* Adjust size */
-  height: 24px;
-  cursor: pointer; /* Make it clickable */
-}
-
-.hotels-header {
-  font-size: 24px;
-  font-weight: bold;
-  /* margin-top: 40px; */
-  margin-bottom: 20px;
-  color: var(--dark-grey);
-  align-self: self-start;
 }
 
 .search-bar {
@@ -37,7 +11,8 @@
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   align-items: center;
-
+  margin-top: 50px;
+  margin-bottom: 30px;
 }
 
 .search-bar input {
@@ -65,15 +40,15 @@
 
 .top-section, .lower-section {
   width: 100%;
-  min-width: 100vw; /* Ensures it stretches across screen */
+  min-width: 100vw; 
 }
 
 .top-section {
   background: var(--lightest-grey);
   min-height: 180px; 
   display: flex;
-  /* align-items: center; */
-  padding: 60px 0;
+  padding-top: 30px;
+  padding-bottom: 5px;
   justify-content: start;
 }
 
@@ -89,7 +64,7 @@
 .content-container {
   max-width: 1100px; /* Keeps content centered */
   margin: 0 auto;
-  padding: 0 20px; /* Adds spacing */
+  padding: 0 20px;
 }
 
 .filters-sort {

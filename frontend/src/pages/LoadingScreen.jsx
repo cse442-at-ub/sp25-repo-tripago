@@ -44,7 +44,7 @@ const LoadingScreen = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate(redirectTo); // Navigate after 5 seconds
-    }, 5000);
+    }, 4000);
     
     return () => clearTimeout(timer); // Cleanup
   }, [navigate, redirectTo]);

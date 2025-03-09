@@ -1,7 +1,9 @@
-import React from 'react'
-import "../styles/Navbar.css"
-import { useNavigate, useLocation } from "react-router-dom"; 
-import logo from '../assets/Tripago_VX.png'
+import React from "react";
+import "../styles/Navbar.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import logo from "../assets/Tripago_VX.png";
+import backArrow from "../assets/arrow-left.png";
+import fav from "../assets/favicon.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,28 +12,48 @@ const Navbar = () => {
   // Check if the current page is "style-guide"
   const isStyleGuidePage = location.pathname === "/style-guide";
   const isBrowseHotelsPage = location.pathname === "/browse-hotels";
-  const isProfilePage = location.pathname === "/profile";
-
 
   return (
-      <nav className="navbar">
-        <div className="logo">
-        <button className="logo-btn" onClick={() => navigate("/")}>
-          <img src={logo} alt="Tripago Logo" />
-        </button>
+    <nav className="navbar">
+      {isBrowseHotelsPage ? (
+        <div className="browse-hotels-nav">
+          <img
+            src={backArrow}
+            alt="Back"
+            className="back-arrow"
+            onClick={() => navigate("/profile")} // Navigate to profile
+            style={{ cursor: "pointer" }}
+          />
+          <img src={fav} alt="Tripago Favicon" className="tripago-fav" />
+          <h1 className="hotels-header">Search for Hotels</h1>
         </div>
+      ) : (
+        <div className="logo">
+          <button className="logo-btn" onClick={() => navigate("/")}>
+            <img src={logo} alt="Tripago Logo" />
+          </button>
+        </div>
+      )}
 
-         {/* Hide Login and Signup buttons on the Style Guide page */}
-        {!isStyleGuidePage && !isBrowseHotelsPage && (
+      {!isStyleGuidePage && !isBrowseHotelsPage && (
         <ul className="nav-links">
-          <li><button className='navbar-links' onClick={() => navigate("/login")}>Login</button></li>
-          <li><button className='navbar-links' onClick={() => navigate("/signup")}>Signup</button></li>
+          <li>
+            <button className="navbar-links" onClick={() => navigate("/login")}>
+              Login
+            </button>
+          </li>
+          <li>
+            <button
+              className="navbar-links"
+              onClick={() => navigate("/signup")}
+            >
+              Signup
+            </button>
+          </li>
         </ul>
-        )}
+      )}
+    </nav>
+  );
+};
 
-        
-      </nav>
-  )
-}
-
-export default Navbar
+export default Navbar;

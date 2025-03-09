@@ -1,4 +1,6 @@
+// export default Hotels;
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HotelCard from "../../components/hotel/HotelCard";
 import "../../styles/hotels/Hotels.css";
 import Hotel1 from "../../assets/Hotel1.png";
@@ -13,13 +15,14 @@ import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
 
 const Hotels = () => {
+  const navigate = useNavigate();
   // Hardcoded hotel data. In the future, we will get this data from the API
   const hotels = [
     {
       name: "Courtyard by Marriott Paris Charles de Gaulle Central Airport",
-      distance: "0.5 mi",
+      distance: 0.5,
       location: "Le Marais, Paris, France",
-      rating: 4,
+      rating: 5,
       reviews: 740,
       platform1: "Booking.com",
       price1: 179,
@@ -31,7 +34,7 @@ const Hotels = () => {
     },
     {
       name: "Residence Inn by Marriott Paris Charles de Gaulle Central Airport",
-      distance: "2.1 mi",
+      distance: 2.1,
       location: "Le Marais, Paris, France",
       rating: 4,
       reviews: 961,
@@ -45,7 +48,7 @@ const Hotels = () => {
     },
     {
       name: "Mercure Paris Cdg Airport & Convention",
-      distance: "8.5 mi",
+      distance: 8.5,
       location: "Le Marais, Paris, France",
       rating: 3,
       reviews: 1342,
@@ -61,22 +64,36 @@ const Hotels = () => {
 
   const [sortOption, setSortOption] = useState("Distance");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
-
   const [currentPage, setCurrentPage] = useState(1);
   const hotelsPerPage = 3;
+  const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false);
 
-  const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false); // Filter state
-
-  // Filter hotels based on Free Breakfast selection
-  const filteredHotels = freeBreakfastOnly
+  // **Filter hotels by Free Breakfast**
+  let filteredHotels = freeBreakfastOnly
     ? hotels.filter((hotel) => hotel.freeBreakfast)
-    : hotels;
+    : [...hotels];
 
+  // **Sorting Logic**
+  const handleSortSelection = (option) => {
+    setSortOption(option);
+    setIsDropdownOpen(false);
+  };
+
+  if (sortOption === "Price (low to high)") {
+    filteredHotels.sort((a, b) => a.bestPrice - b.bestPrice);
+  } else if (sortOption === "Price (high to low)") {
+    filteredHotels.sort((a, b) => b.bestPrice - a.bestPrice);
+  } else if (sortOption === "Hotel class") {
+    filteredHotels.sort((a, b) => b.rating - a.rating);
+  } else if (sortOption === "Distance") {
+    filteredHotels.sort((a, b) => a.distance - b.distance);
+  }
+
+  // **Pagination Logic**
   const indexOfLastHotel = currentPage * hotelsPerPage;
   const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;
   const currentHotels = filteredHotels.slice(
@@ -84,20 +101,10 @@ const Hotels = () => {
     indexOfLastHotel
   );
 
-  const handleSortSelection = (option) => {
-    setSortOption(option);
-    setIsDropdownOpen(false);
-  };
-
   return (
     <div className="hotels-page">
       <div className="top-section">
         <div className="content-container">
-          <div className="hotels-page__header">
-            <img src={backArrow} alt="Back" className="back-arrow" />
-            <h1 className="hotels-header">Search for hotels</h1>
-          </div>
-
           <div className="search-bar">
             {/* Location Input */}
             <div className="input-wrapper">
@@ -142,7 +149,6 @@ const Hotels = () => {
 
             {/* Search Button */}
             <div className="input-wrapper">
-              {/* <label>Search</label> */}
               <div className="search-container">
                 <img src={searchIcon} alt="Search" className="search-icon" />
               </div>
@@ -209,64 +215,66 @@ const Hotels = () => {
           </div>
 
           <div className="hotels-list">
-            {filteredHotels.length > 0 ? (
-              filteredHotels.map((hotel, index) => (
+            {currentHotels.length > 0 ? (
+              currentHotels.map((hotel, index) => (
                 <HotelCard key={index} hotel={hotel} />
               ))
             ) : (
               <p>No hotels available with free breakfast.</p>
             )}
           </div>
-        
           <div className="pagination-container">
-        <p>
-          Showing {indexOfFirstHotel + 1} -{" "}
-          {Math.min(indexOfLastHotel, filteredHotels.length)} of{" "}
-          {filteredHotels.length} results
-        </p>
+            <p>
+              Showing {indexOfFirstHotel + 1} -{" "}
+              {Math.min(indexOfLastHotel, filteredHotels.length)} of{" "}
+              {filteredHotels.length} results
+            </p>
 
-        <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            {"<"}
-          </button>
+            <div className="pagination">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                {"<"}
+              </button>
 
-          {Array.from({
-            length: Math.ceil(filteredHotels.length / hotelsPerPage),
-          }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentPage(index + 1)}
-              className={currentPage === index + 1 ? "active" : ""}
-            >
-              {index + 1}
-            </button>
-          ))}
+              {Array.from({
+                length: Math.ceil(filteredHotels.length / hotelsPerPage),
+              }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={currentPage === index + 1 ? "active" : ""}
+                >
+                  {index + 1}
+                </button>
+              ))}
 
-          <button
-            onClick={() =>
-              setCurrentPage((prev) =>
-                Math.min(
-                  prev + 1,
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) =>
+                    Math.min(
+                      prev + 1,
+                      Math.ceil(filteredHotels.length / hotelsPerPage)
+                    )
+                  )
+                }
+                disabled={
+                  currentPage ===
                   Math.ceil(filteredHotels.length / hotelsPerPage)
-                )
-              )
-            }
-            disabled={
-              currentPage === Math.ceil(filteredHotels.length / hotelsPerPage)
-            }
-          >
-            {">"}
-          </button>
+                }
+              >
+                {">"}
+              </button>
+            </div>
+          </div>
+          <p className="powered-by">
+            Powered by{" "}
+            <a href="https://amadeus.com" target="_blank">
+              Amadeus
+            </a>
+          </p>
         </div>
-      </div>
-      <p class="powered-by">Powered by <a href="https://amadeus.com" target="_blank">Amadeus</a></p>
-
-        </div>
-     
-      
       </div>
     </div>
   );
