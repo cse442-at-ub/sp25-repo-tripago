@@ -5,22 +5,30 @@ import Hotel1 from "../../assets/Hotel1.png";
 import Hotel2 from "../../assets/Hotel2.png";
 import Hotel3 from "../../assets/Hotel3.png";
 import backArrow from "../../assets/arrow-left.png";
-import search from "../../assets/Search.png";
-import SortModal from "../../components/hotel/SortModal";
+import searchIcon from "../../assets/search.png";
+import calendarIcon from "../../assets/calendar.png";
+import locationIcon from "../../assets/location.png";
+import profileIcon from "../../assets/profile.png";
+import bedIcon from "../../assets/bed.png";
+import TravelersModal from "../../components/hotel/TravelersModal";
 
 const Hotels = () => {
   const [sortOption, setSortOption] = useState("Distance");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rooms, setRooms] = useState(1);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+
   const handleSortSelection = (option) => {
     setSortOption(option);
-    setIsDropdownOpen(false); // Close dropdown after selection
+    setIsDropdownOpen(false);
   };
 
   const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false); // Filter state
 
-
-  // Hardcoded hotel data
+  // Hardcoded hotel data. In the future, we will get this data from the API
   const hotels = [
     {
       name: "Courtyard by Marriott Paris Charles de Gaulle Central Airport",
@@ -66,10 +74,10 @@ const Hotels = () => {
     },
   ];
 
-    // Filter hotels based on Free Breakfast selection
+  // Filter hotels based on Free Breakfast selection
   const filteredHotels = freeBreakfastOnly
-  ? hotels.filter((hotel) => hotel.freeBreakfast)
-  : hotels;
+    ? hotels.filter((hotel) => hotel.freeBreakfast)
+    : hotels;
 
   return (
     <div className="hotels-page">
@@ -80,13 +88,67 @@ const Hotels = () => {
             <h1 className="hotels-header">Search for hotels</h1>
           </div>
 
-          {/* Search Bar */}
           <div className="search-bar">
-            <input type="text" placeholder="Le Marais, Paris, France" />
-            <input type="date" />
-            <input type="date" />
-            <input type="text" placeholder="1 room, 2 guests" />
-            <img src={search} alt="Search" className="search-icon" />
+            {/* Location Input */}
+            <div className="input-wrapper">
+              <label>Where</label>
+              <div className="input-container">
+                <img src={locationIcon} alt="Location" className="input-icon" />
+                <input type="text" placeholder="Le Marais, Paris, France" />
+              </div>
+            </div>
+
+            {/* Check-in Date Input */}
+            <div className="input-wrapper">
+              <label>Check-in</label>
+              <div className="input-container">
+                <img src={calendarIcon} alt="Calendar" className="input-icon" />
+                <input type="date" />
+              </div>
+            </div>
+
+            {/* Check-out Date Input */}
+            <div className="input-wrapper">
+              <label>Check-out</label>
+              <div className="input-container">
+                <img src={calendarIcon} alt="Calendar" className="input-icon" />
+                <input type="date" />
+              </div>
+            </div>
+
+            {/* Travelers Input */}
+            <div className="input-wrapper">
+              <label>Travelers</label>
+              <div
+                className="travelers-container"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <img src={bedIcon} alt="Bed" className="traveler-icon" />
+                {rooms}{" "}
+                <img src={profileIcon} alt="Person" className="traveler-icon" />{" "}
+                {adults + children}
+              </div>
+            </div>
+
+            {/* Search Button */}
+            <div className="input-wrapper">
+              {/* <label>Search</label> */}
+            <div className="search-container">
+              <img src={searchIcon} alt="Search" className="search-icon" />
+            </div>
+            </div>
+
+            {/* Travelers Modal Component */}
+            <TravelersModal
+              isOpen={isModalOpen}
+              setIsOpen={setIsModalOpen}
+              rooms={rooms}
+              setRooms={setRooms}
+              adults={adults}
+              setAdults={setAdults}
+              children={children}
+              setChildren={setChildren}
+            />
           </div>
         </div>
       </div>
@@ -95,11 +157,10 @@ const Hotels = () => {
         <div className="content-container">
           {/* Filters */}
           <div className="filters filters-sort">
-            {/* Free Breakfast Filter */}
-            {/* <div className="free-breakfast-container">Free Breakfast</div> */}
-                        {/* Free Breakfast Filter Button */}
-            <button 
-              className={`free-breakfast-button ${freeBreakfastOnly ? "active" : ""}`}
+            <button
+              className={`free-breakfast-button ${
+                freeBreakfastOnly ? "active" : ""
+              }`}
               onClick={() => setFreeBreakfastOnly(!freeBreakfastOnly)}
             >
               Free Breakfast
@@ -120,7 +181,6 @@ const Hotels = () => {
                     "Price (high to low)",
                     "Hotel class",
                     "Distance",
-                    "Review score",
                   ].map((option, index) => (
                     <a
                       href="#"
@@ -138,21 +198,15 @@ const Hotels = () => {
             </div>
           </div>
 
-          {/* Results */}
-          {/* <div className="hotels-list">
-            {hotels.map((hotel, index) => (
-              <HotelCard key={index} hotel={hotel} />
-            ))}
-          </div> */}
-
           <div className="hotels-list">
             {filteredHotels.length > 0 ? (
-              filteredHotels.map((hotel, index) => <HotelCard key={index} hotel={hotel} />)
+              filteredHotels.map((hotel, index) => (
+                <HotelCard key={index} hotel={hotel} />
+              ))
             ) : (
               <p>No hotels available with free breakfast.</p>
             )}
           </div>
-
         </div>
       </div>
     </div>

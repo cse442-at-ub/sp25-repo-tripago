@@ -6,6 +6,7 @@ import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 
 const Itinerary = ({ trip }) => {
+  const navigate = useNavigate();
   const generateDayAccordions = () => {
     const startDate = new Date(trip.startDate);
     const endDate = new Date(trip.endDate);
@@ -91,7 +92,20 @@ const Itinerary = ({ trip }) => {
               <p className="no-hotel-message">
                 Looks like you haven&apos;t booked a hotel yet for this trip.
               </p>
-              <button className="find-hotel-btn">+ Find a hotel</button>
+              <button
+                className="find-hotel-btn"
+                onClick={() =>
+                  navigate("/loading-screen", {
+                    state: {
+                      headerText:
+                        "Hang on! We’re finding the best hotels for you",
+                      redirectTo: "/browse-hotels",
+                    },
+                  })
+                }
+              >
+                + Find a hotel
+              </button>
             </div>
           </div>
           <div className="days-container">{generateDayAccordions()}</div>

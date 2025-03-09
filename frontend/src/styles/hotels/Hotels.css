@@ -1,28 +1,19 @@
-.hotels-pagee {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Keep content at the top */
-  width: 900px;
-  min-height: 100vh; /* Ensure full height */
-  padding: 0; /* Remove the massive padding */
-  margin-top: 0;
-  max-width: 1100px;
-}
-
 .hotels-page {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 900px;
+  /* align-self: self-start; */
+  width: 100%;
   min-height: calc(100vh - 200px);
 }
-
 
 .hotels-page__header {
   display: flex;
   align-items: center;
   gap: 10px; /* Space between arrow and text */
   padding: 20px 0;
+  margin-top: 20px;
+  margin-bottom: 0px;
 }
 
 .back-arrow {
@@ -34,6 +25,7 @@
 .hotels-header {
   font-size: 24px;
   font-weight: bold;
+  /* margin-top: 40px; */
   margin-bottom: 20px;
   color: var(--dark-grey);
   align-self: self-start;
@@ -43,10 +35,9 @@
   display: flex;
   background: var(--white);
   padding: 10px;
-  border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   align-items: center;
-  margin-bottom: 20px;
+
 }
 
 .search-bar input {
@@ -55,15 +46,6 @@
   margin-right: 8px;
   border: 1px solid var(--lightest-grey);
   border-radius: 5px;
-}
-
-.search-bar button {
-  background: var(--secondary-color);
-  color: var(--white);
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .filters {
@@ -84,18 +66,15 @@
 .top-section, .lower-section {
   width: 100%;
   min-width: 100vw; /* Ensures it stretches across screen */
-  /* position: relative; */
-  /* overflow-x: hidden;  */
-
 }
 
 .top-section {
   background: var(--lightest-grey);
   min-height: 180px; 
   display: flex;
-  align-items: center;
-  justify-content: start;
+  /* align-items: center; */
   padding: 60px 0;
+  justify-content: start;
 }
 
 .lower-section {
@@ -104,40 +83,11 @@
   flex-grow: 1; /* Allows the lower section to expand */
 }
 
-
-/* Ensure both sections stretch the full width */
-.top-sectionn, .lower-sectionn {
-  width: 100vw; /* Forces full viewport width */
-  position: relative; /* Avoids layout shifting */
-  /* left: 50%; */
-  /* transform: translateX(-50%);  */
-
-  width: 100%;
-  min-width: 100%;
-  position: relative;
-  overflow-x: hidden; 
-}
-
-/* Background Colors */
-.top-sectionn {
-  background: var(--lightest-grey);
-  padding: 30px 0;
-}
-
-.lower-sectionn {
-  background: var(--medium-grey);
-  padding: 20px 0;
-}
-
 /* Center Content without Stretching */
 .content-container {
   max-width: 1100px; /* Keeps content centered */
   margin: 0 auto;
   padding: 0 20px; /* Adds spacing */
-}
-
-.search-icon {
-  color: var(--dark-grey)
 }
 
 .filters-sort {
@@ -162,7 +112,6 @@
 .free-breakfast-button {
   background: var(--white);
   color: var(--primary-color);
-  /* padding: 1px 50px; */
   border-radius: 5px;
   border: 1px solid var(--primary-color);
   transition: none;
@@ -198,3 +147,152 @@
 .sort-dropdown-content {
   width: 250px;;
 }
+
+/* Wrapper to hold label + input */
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label Styling */
+.input-wrapper label {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--dark-grey);
+  margin-bottom: 5px;
+  align-self: self-start;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--medium-grey);
+  border-radius: 8px;
+  padding: 0px 0px;
+}
+
+.input-container input {
+  padding: 10px 10px 10px 35px; 
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+}
+
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--lightest-grey);
+  box-shadow: none;
+  gap: 10px;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;  
+  
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--secondary-color);
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  height: 38px;
+  margin-top: 20px;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.travelers-container {
+  display: flex;
+  align-items: center;
+  background: var(--medium-grey);
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  gap: 5px;
+  color: var(--dark-grey)
+}
+
+.traveler-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Box */
+.modal {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  text-align: center;
+}
+
+/* Modal Row (Rooms, Adults, Children) */
+.modal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.modal-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.modal-count {
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+/* Buttons */
+.modal-btn {
+  background: var(--lightest-grey);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+}
+

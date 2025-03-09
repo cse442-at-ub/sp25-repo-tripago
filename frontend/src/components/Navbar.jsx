@@ -9,7 +9,8 @@ const Navbar = () => {
 
   // Check if the current page is "style-guide"
   const isStyleGuidePage = location.pathname === "/style-guide";
-  const isBrowseHotelsPage = location.pathname === "//browse-hotels";
+  const isBrowseHotelsPage = location.pathname === "/browse-hotels";
+  const isProfilePage = location.pathname === "/profile";
 
 
   return (
@@ -21,12 +22,14 @@ const Navbar = () => {
         </div>
 
          {/* Hide Login and Signup buttons on the Style Guide page */}
-        {!isStyleGuidePage || !isBrowseHotelsPage && (
+        {!isStyleGuidePage && !isBrowseHotelsPage && (
         <ul className="nav-links">
           <li><button className='navbar-links' onClick={() => navigate("/login")}>Login</button></li>
           <li><button className='navbar-links' onClick={() => navigate("/signup")}>Signup</button></li>
         </ul>
         )}
+
+        
       </nav>
   )
 }
