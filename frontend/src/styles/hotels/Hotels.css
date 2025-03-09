@@ -81,6 +81,8 @@
   background: var(--medium-grey);
   padding: 20px 0;
   flex-grow: 1; /* Allows the lower section to expand */
+  padding-bottom: 30px;
+  
 }
 
 /* Center Content without Stretching */
@@ -294,5 +296,50 @@
   display: flex;
   justify-content: space-between;
   padding-top: 15px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* margin-top: 20px; */
+  margin: 20px auto; /* Centers it */
+  width: 96%; 
+}
+
+.pagination {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination button {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: var(--dark-grey);
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: var(--secondary-color);
+  color: var(--white);
+  border-radius: 5px;
+}
+
+.powered-by, .powered-by a:hover {
+  font-size: 12px;
+  color: var(--dark-grey);
+  text-align: center;
+  margin-top: 10px;
 }
 

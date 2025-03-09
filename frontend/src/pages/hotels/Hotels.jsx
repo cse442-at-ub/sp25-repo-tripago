@@ -13,21 +13,6 @@ import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
 
 const Hotels = () => {
-  const [sortOption, setSortOption] = useState("Distance");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-
-  const handleSortSelection = (option) => {
-    setSortOption(option);
-    setIsDropdownOpen(false);
-  };
-
-  const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false); // Filter state
-
   // Hardcoded hotel data. In the future, we will get this data from the API
   const hotels = [
     {
@@ -74,10 +59,35 @@ const Hotels = () => {
     },
   ];
 
+  const [sortOption, setSortOption] = useState("Distance");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rooms, setRooms] = useState(1);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const hotelsPerPage = 3;
+
+  const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false); // Filter state
+
   // Filter hotels based on Free Breakfast selection
   const filteredHotels = freeBreakfastOnly
     ? hotels.filter((hotel) => hotel.freeBreakfast)
     : hotels;
+
+  const indexOfLastHotel = currentPage * hotelsPerPage;
+  const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;
+  const currentHotels = filteredHotels.slice(
+    indexOfFirstHotel,
+    indexOfLastHotel
+  );
+
+  const handleSortSelection = (option) => {
+    setSortOption(option);
+    setIsDropdownOpen(false);
+  };
 
   return (
     <div className="hotels-page">
@@ -133,9 +143,9 @@ const Hotels = () => {
             {/* Search Button */}
             <div className="input-wrapper">
               {/* <label>Search</label> */}
-            <div className="search-container">
-              <img src={searchIcon} alt="Search" className="search-icon" />
-            </div>
+              <div className="search-container">
+                <img src={searchIcon} alt="Search" className="search-icon" />
+              </div>
             </div>
 
             {/* Travelers Modal Component */}
@@ -207,7 +217,56 @@ const Hotels = () => {
               <p>No hotels available with free breakfast.</p>
             )}
           </div>
+        
+          <div className="pagination-container">
+        <p>
+          Showing {indexOfFirstHotel + 1} -{" "}
+          {Math.min(indexOfLastHotel, filteredHotels.length)} of{" "}
+          {filteredHotels.length} results
+        </p>
+
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            {"<"}
+          </button>
+
+          {Array.from({
+            length: Math.ceil(filteredHotels.length / hotelsPerPage),
+          }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+              className={currentPage === index + 1 ? "active" : ""}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) =>
+                Math.min(
+                  prev + 1,
+                  Math.ceil(filteredHotels.length / hotelsPerPage)
+                )
+              )
+            }
+            disabled={
+              currentPage === Math.ceil(filteredHotels.length / hotelsPerPage)
+            }
+          >
+            {">"}
+          </button>
         </div>
+      </div>
+      <p class="powered-by">Powered by <a href="https://amadeus.com" target="_blank">Amadeus</a></p>
+
+        </div>
+     
+      
       </div>
     </div>
   );
