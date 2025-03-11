@@ -6,24 +6,24 @@ import axios from 'axios';
 const SettingsProfileDetails = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [currentEmail, setCurrentEmail] = useState("")
-
-  // Get the current email
-  useEffect(() => {
-    const callCurrentEmail = async () => {
-      await axios.get("/CSE442/2025-Spring/cse-442aj/owenbackend/api/getemail.php")
-      .then(res => setCurrentEmail(res.data))
-      .catch(err => console.log(err))
-    }
-    callCurrentEmail()
-  }, [])
 
   const [formData, setFormData] = useState({
     displayName: "",
     email: "",
   });
 
-  setFormData({formData, ["email"]: currentEmail });
+  // Get the current email
+  useEffect(() => {
+    const callCurrentEmail = async () => {
+      await axios.get("/CSE442/2025-Spring/cse-442aj/owenbackend/api/getemail.php")
+      .then(res => setFormData({
+        "displayName": "",
+        "email": res.data
+    }))
+      .catch(err => console.log(err))
+    }
+    callCurrentEmail()
+  }, [])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -84,7 +84,7 @@ const SettingsProfileDetails = () => {
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="display-name">Display Name</label>
+            <label>Display Name</label>
             <input
               type="text"
               name="displayName"
@@ -96,7 +96,7 @@ const SettingsProfileDetails = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label>Email</label>
             <input
               type="email"
               name="email"
