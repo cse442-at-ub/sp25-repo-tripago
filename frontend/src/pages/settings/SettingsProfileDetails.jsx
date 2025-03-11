@@ -11,7 +11,7 @@ const SettingsProfileDetails = () => {
   // Get the current email
   useEffect(() => {
     const callCurrentEmail = async () => {
-      await axios.get("/CSE442/2025-Spring/cse-442aj/owenbackend/api/settingsprofiledetails.php")
+      await axios.get("/CSE442/2025-Spring/cse-442aj/owenbackend/api/getemail.php")
       .then(res => setCurrentEmail(res.data))
       .catch(err => console.log(err))
     }
