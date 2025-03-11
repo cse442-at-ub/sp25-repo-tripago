@@ -53,6 +53,36 @@
   color: var(--primary-color);
 }
 
+.browse-hotels-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.browse-hotels-nav h1 {
+  font-size: 20px;
+  color: var(--dark-grey);
+}
+
+.tripago-fav {
+  width: 60px;
+  height: 50px;
+  /* margin: 10px 0; */
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.back-arrow {
+  width: 35px; /* Adjust size */
+  height: 40px;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-top: 13px;
+  margin-bottom: 13px;
+}
+
 /* MEDIA QUERIES FOR IPHONE 12PRO DIMENSIONS 390px x 844px  */
 
 @media (max-width: 480px) {
