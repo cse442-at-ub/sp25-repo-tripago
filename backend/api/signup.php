@@ -74,7 +74,7 @@ if ($result == null){//user does not exist
 
 }else{
 
-  $response = ["success"=>false,"message"=>"An error has occurred"];
+  $response = ["success"=>false,"message"=>"This email is already taken"];
 
   echo json_encode($response);
 }
