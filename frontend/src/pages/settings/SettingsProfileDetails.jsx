@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../../styles/Settings.css';
+import axios from 'axios';
 
 const SettingsProfileDetails = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Get the current email
+  const response = axios.get("/CSE442/2025-Spring/cse-442aj/backend/api/settingsprofiledetails.php")
 
   return (
     <div className="settings-container">
@@ -45,7 +49,7 @@ const SettingsProfileDetails = () => {
 
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" placeholder="Enter new email" />
+            <input type="email" id="email" placeholder="Enter new email" defaultValue="currentUsernameTest"/>
           </div>
 
           <button type="submit">Save Changes</button>
