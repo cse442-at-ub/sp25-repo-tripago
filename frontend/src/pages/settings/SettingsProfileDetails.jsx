@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../../styles/Settings.css';
 import axios from 'axios';
@@ -6,9 +6,17 @@ import axios from 'axios';
 const SettingsProfileDetails = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentEmail, setCurrentEmail] = useState("")
 
   // Get the current email
-  const response = axios.get("/CSE442/2025-Spring/cse-442aj/backend/api/settingsprofiledetails.php")
+  useEffect(() => {
+    const callCurrentEmail = async () => {
+      await axios.get("/CSE442/2025-Spring/cse-442aj/owenbackend/api/settingsprofiledetails.php")
+      .then(res => setCurrentEmail(res.data))
+      .catch(err => console.log(err))
+    }
+    callCurrentEmail()
+  }, [])
 
   return (
     <div className="settings-container">
@@ -49,7 +57,7 @@ const SettingsProfileDetails = () => {
 
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" placeholder="Enter new email" defaultValue="currentUsernameTest"/>
+            <input type="email" id="email" placeholder="Enter new email" defaultValue={currentEmail}/>
           </div>
 
           <button type="submit">Save Changes</button>

@@ -16,7 +16,7 @@ if (isset($_COOKIE['authCookie'])){
     $result = $stmt->get_result();
     $result = $result->fetch_assoc();
 
-    //did not find a user with associated token
+    //did not find a user with associated auth token
     if ($result==null){
         fail();    
     }
