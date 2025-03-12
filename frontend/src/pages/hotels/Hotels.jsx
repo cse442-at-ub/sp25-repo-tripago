@@ -7,7 +7,7 @@ import Hotel1 from "../../assets/Hotel1.png";
 import Hotel2 from "../../assets/Hotel2.png";
 import Hotel3 from "../../assets/Hotel3.png";
 import backArrow from "../../assets/arrow-left.png";
-import searchIcon from "../../assets/search.png";
+import searchIcon from "../../assets/Search.png";
 import calendarIcon from "../../assets/calendar.png";
 import locationIcon from "../../assets/location.png";
 import profileIcon from "../../assets/profile.png";
