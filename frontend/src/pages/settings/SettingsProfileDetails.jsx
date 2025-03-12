@@ -41,11 +41,7 @@ const SettingsProfileDetails = () => {
       })
       const result = response.data
       console.log("Profile Details Form Response", result);
-      if (result.success) {
-        //
-      } else {
-        alert(result.message)
-      }
+      alert(result.message)
     } catch(error) {
       console.log("Error updating profile details:", error)
     }
