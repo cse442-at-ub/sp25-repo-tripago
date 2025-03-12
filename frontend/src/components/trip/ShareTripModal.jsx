@@ -7,7 +7,7 @@ const ShareTripModal = ({ onClose }) => {
   const [quote, setQuote] = useState("");
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
-  const [isShared, setIsShared] = useState(true);
+  const [isShared, setIsShared] = useState(false);
   const modalRef = useRef(null);
 
   const handleQuoteChange = (e) => {
@@ -98,7 +98,7 @@ const ShareTripModal = ({ onClose }) => {
                   onChange={handleImageUpload}
                 />
                 <label htmlFor="trip-images" className="upload-button">
-                  + Add Images
+                  + Add Photos
                 </label>
               </div>
             </div>
