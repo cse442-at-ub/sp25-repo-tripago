@@ -7,7 +7,9 @@ import "../../styles/community/Community.css";
 
 const Community = () => {
 
-
+    return (
+        <h1>test</h1>
+    );
 
 };
 

@@ -23,6 +23,7 @@ import Profile from "./pages/profile/Profile.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
+import Community from "./pages/community/Community.jsx";
 
 const App = () => {
   const [user] = useState({
@@ -64,6 +65,7 @@ const App = () => {
             <Route path="/settings/my-data" element={<ProtectedRoute><SettingsMyData /></ProtectedRoute>} />
             <Route path="/settings/terms-of-service" element={<ProtectedRoute><SettingsTermsOfService /></ProtectedRoute>} />
             <Route path="/settings/privacy-policy" element={<ProtectedRoute><SettingsPrivacyPolicy /></ProtectedRoute>} />
+            <Route path="/community" element={<Community />} />
 
           </Routes>
         </main>
