@@ -12,6 +12,8 @@ const Navbar = () => {
   // Check if the current page is "style-guide"
   const isStyleGuidePage = location.pathname === "/style-guide";
   const isBrowseHotelsPage = location.pathname === "/browse-hotels";
+  const isCommunityPage = location.pathname === "/community";
+  const isProfilePage = location.pathname === "/profile";
 
   return (
     <nav className="navbar">
@@ -35,7 +37,7 @@ const Navbar = () => {
         </div>
       )}
 
-      {!isStyleGuidePage && !isBrowseHotelsPage && (
+      {!isStyleGuidePage && !isBrowseHotelsPage && !isCommunityPage && !isProfilePage ? (
         <ul className="nav-links">
           <li>
             <button className="navbar-links" onClick={() => navigate("/login")}>
@@ -51,6 +53,15 @@ const Navbar = () => {
             </button>
           </li>
         </ul>
+      ) : (
+        <ul className="nav-links">
+        <li>
+          <button className="navbar-links" onClick={() => navigate("/")}>
+            Logout
+          </button>
+        </li>
+       
+      </ul>
       )}
     </nav>
   );
