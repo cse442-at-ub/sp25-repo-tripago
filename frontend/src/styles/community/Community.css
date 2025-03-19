@@ -86,6 +86,39 @@
   background-color: var(--medium-grey);
 }
 
+.requests-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.requests-section h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--dark-grey);
+  margin-bottom: 8px;
+}
+
+.view-requests-btn {
+  background-color: var(--primary-color); /* Primary Theme Color */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+  width: 200px;
+  text-align: center;
+}
+
+.view-requests-btn:hover {
+  background-color: #684ad6;
+  color: white;
+  transform: scale(1.05);
+}
 
 /* Accept and Delete Buttons */
 .accept-btn,
@@ -134,8 +167,6 @@
   color: var(--primary-color);
 }
 
-
-
 .trip-comment {
   font-style: italic;
   color: #555555;
@@ -151,6 +182,14 @@
   cursor: pointer;
   font-size: 14px;
   margin-right: 10px;
+}
+
+.requests-section h3 {
+  color: var(--dark-grey);
+  text-align: left;
+  font-size: 25px;
+  padding: 0;
+  margin: 0;
 }
 
 .view-more-btn {

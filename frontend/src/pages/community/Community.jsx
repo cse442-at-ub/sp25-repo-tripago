@@ -2,7 +2,8 @@ import { useState } from "react";
 import "../../styles/community/Community.css";
 import paris from "../../assets/paris.jpg";
 import sandiego from "../../assets/sandiego.jpg";
-import FriendsModal from "../../components/community/FriendsModal";
+import FriendsModal from "../../components/community/FriendsModal.jsx";
+import RequestsModal from "../../components/community/RequestsModal.jsx";
 
 const trips = [
   {
@@ -25,17 +26,30 @@ const Community = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTrip, setSelectedTrip] = useState(null);
   const friendsList = ["John"]; //  Assume user is only friends with John
+  const [modalType, setModalType] = useState(null);
 
-  const isFriend = selectedTrip ? friendsList.includes(selectedTrip.user) : false;
-    // Open modal with selected trip
-    const handleViewMore = (trip) => {
-        setSelectedTrip(trip);
-      };
-    
-      // Close modal
-      const handleCloseModal = () => {
-        setSelectedTrip(null);
-      };
+  const isFriend = selectedTrip
+    ? friendsList.includes(selectedTrip.user)
+    : false;
+  // Open modal with selected trip
+  const handleViewMore = (trip) => {
+    setSelectedTrip(trip);
+  };
+
+  // Close modal
+  const handleCloseModal = () => {
+    setSelectedTrip(null);
+  };
+
+  const incomingRequests = [
+    { id: 1, name: "Anna" },
+    { id: 2, name: "Michael" },
+  ];
+
+  const sentRequests = [
+    { id: 1, name: "Sophia", status: "Pending" },
+    { id: 2, name: "David", status: "Accepted" },
+  ];
 
   return (
     <div className="community-container">
@@ -51,7 +65,7 @@ const Community = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="requests-list">
+        {/* <div className="requests-list">
           <div className="incoming-requests">
             <h3>Incoming Requests</h3>
             <ul>
@@ -72,6 +86,37 @@ const Community = () => {
             </ul>
           </div>
         </div>
+        <div className="requests-list">
+          <div className="incoming-requests">
+            <h3>Sent Requests</h3>
+            <ul>
+              <li>
+                Anna
+                <div>
+                  <button className="accept-btn">Accept</button>
+                  <button className="reset-btn">Delete</button>
+                </div>
+              </li>
+              <li>
+                Michael
+                <div>
+                  <button className="accept-btn">Accept</button>
+                  <button className="reset-btn">Delete</button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> */}
+          {/* Requests Section */}
+          <div className="requests-section">
+          <h3>Requests</h3>
+          <button className="view-requests-btn" onClick={() => setModalType("incoming")}>
+            View Incoming Requests
+          </button>
+          <button className="view-requests-btn" onClick={() => setModalType("sent")}>
+            View Sent Requests
+          </button>
+        </div>
       </div>
 
       <div className="community-bottom">
@@ -87,8 +132,16 @@ const Community = () => {
                   <span className="highlight">{trip.location}</span>.
                 </h2>
                 <p className="trip-comment">"{trip.comment}"</p>
-                <button className="send-request-btn">Send Request</button>
-                <button className="view-more-btn" onClick={() => handleViewMore(trip)}>View More</button>
+                {/* Hide "Send Request" button if already friends */}
+                {!friendsList.includes(trip.user) && (
+                  <button className="send-request-btn">Send Request</button>
+                )}
+                <button
+                  className="view-more-btn"
+                  onClick={() => handleViewMore(trip)}
+                >
+                  View More
+                </button>
               </div>
 
               {/* Right Side: Image */}
@@ -104,7 +157,7 @@ const Community = () => {
         </div>
       </div>
 
-<FriendsModal
+      <FriendsModal
         isOpen={selectedTrip !== null}
         onClose={() => setSelectedTrip(null)}
         user={selectedTrip?.user}
@@ -113,9 +166,16 @@ const Community = () => {
         comment={selectedTrip?.comment}
         isFriend={isFriend}
       />
+        {/* Requests Modal */}
+        <RequestsModal
+        isOpen={modalType !== null}
+        onClose={() => setModalType(null)}
+        type={modalType}
+        incomingRequests={incomingRequests}
+        sentRequests={sentRequests}
+      />
     </div>
 
-    // </div>
   );
 };
 

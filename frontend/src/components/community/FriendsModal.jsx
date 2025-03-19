@@ -57,27 +57,6 @@ const FriendsModal = ({ isOpen, onClose, user, location, imageUrl, comment, isFr
             </ul>
           </div>
 
-           {/* <div className="comments-section">
-           <h3>Comments</h3>
-           <div className="comments-list">
-             {comments.map((c) => (
-               <div key={c.id} className="comment">
-                 <span className="comment-user">{c.user}:</span> {c.text}
-               </div>
-             ))}
-           </div>
-
-           <div className="add-comment">
-             <input
-               type="text"
-               placeholder="Write a comment..."
-               value={newComment}
-               onChange={(e) => setNewComment(e.target.value)}
-               className="comment-input"
-             />
-             <button className="comment-btn" onClick={handleAddComment}>Post</button>
-           </div>
-         </div> */}
          <div className="comments-section">
   <h3>Comments</h3>
   <div className="comments-list">
