@@ -24,7 +24,9 @@ const trips = [
 const Community = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTrip, setSelectedTrip] = useState(null);
+  const friendsList = ["John"]; //  Assume user is only friends with John
 
+  const isFriend = selectedTrip ? friendsList.includes(selectedTrip.user) : false;
     // Open modal with selected trip
     const handleViewMore = (trip) => {
         setSelectedTrip(trip);
@@ -102,16 +104,18 @@ const Community = () => {
         </div>
       </div>
 
-      <FriendsModal
+<FriendsModal
         isOpen={selectedTrip !== null}
-        onClose={handleCloseModal}
+        onClose={() => setSelectedTrip(null)}
         user={selectedTrip?.user}
         location={selectedTrip?.location}
         imageUrl={selectedTrip?.imageUrl}
         comment={selectedTrip?.comment}
+        isFriend={isFriend}
       />
-
     </div>
+
+    // </div>
   );
 };
 

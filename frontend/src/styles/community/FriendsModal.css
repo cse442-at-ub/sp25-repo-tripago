@@ -19,6 +19,8 @@
   border-radius: 12px;
   width: 600px;
   max-width: 90%;
+  max-height: 80vh;  
+  overflow-y: auto;  
   text-align: center;
   position: relative;
 }
@@ -26,8 +28,7 @@
 /* Close Button */
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  left: 1px;
   font-size: 24px;
   background: none;
   border: none;
@@ -74,4 +75,38 @@
   font-size: 14px;
   color: #555;
   margin-top: 5px;
+}
+
+/* Friends Restriction Message */
+.friends-restriction {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Itinerary Section */
+.itinerary-section {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.itinerary-section h3 {
+  font-size: 18px;
+  color: #795BF1;
+  margin-bottom: 10px;
+}
+
+.itinerary-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.itinerary-section li {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
 }

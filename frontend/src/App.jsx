@@ -56,7 +56,7 @@ const App = () => {
             <Route path="/loading-screen" element={<LoadingScreen />} />
 
           {/* Protected Routes: Only logged in users can access these pages */}
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />
