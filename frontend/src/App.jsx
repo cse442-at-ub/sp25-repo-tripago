@@ -56,7 +56,7 @@ const App = () => {
             <Route path="/loading-screen" element={<LoadingScreen />} />
 
           {/* Protected Routes: Only logged in users can access these pages */}
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />
@@ -67,7 +67,7 @@ const App = () => {
             <Route path="/settings/my-data" element={<ProtectedRoute><SettingsMyData /></ProtectedRoute>} />
             <Route path="/settings/terms-of-service" element={<ProtectedRoute><SettingsTermsOfService /></ProtectedRoute>} />
             <Route path="/settings/privacy-policy" element={<ProtectedRoute><SettingsPrivacyPolicy /></ProtectedRoute>} />
-            <Route path="/community" element={<Community />} />
+            <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
 
           </Routes>
         </main>
