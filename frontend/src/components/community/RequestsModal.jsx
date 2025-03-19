@@ -5,8 +5,8 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests, sentRequests }
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="request-modal-overlay modal-overlay">
+      <div className="request-modal-content modal-content">
         <button className="close-btn" onClick={onClose}>×</button>
         <h2>{type === "incoming" ? "Incoming Requests" : "Sent Requests"}</h2>
 
