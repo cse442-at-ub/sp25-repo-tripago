@@ -1,9 +1,4 @@
-
-/* General Layout */
 .community-container {
-  /* max-width: 1000px; */
-  /* margin: 0 auto; */
-
   display: flex;
   width: 80%;
   flex-direction: column;
@@ -15,15 +10,21 @@
   padding: 100px;
 }
 
-/* Top Section */
 .community-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.community-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-/* Search Input */
 .search-input {
   width: 300px;
   padding: 10px;
@@ -41,28 +42,29 @@
 }
 
 .find-friends-label {
-  font-size: 18px;
+  font-size: 25px;
   font-weight: bold;
   color: #555555;
   margin-bottom: 5px;
   margin-left: 0;
   padding-left: 0;
+
 }
 
-/* Incoming Requests */
+ /* Incoming Requests */
 .incoming-requests {
-  background-color: #f4f4f4;
   padding: 10px;
   border-radius: 8px;
-  margin-top: 40px;
+  margin-top: 0px;
 }
 
 .incoming-requests h3 {
   font-size: 18px;
   color: #555555;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
+/* Fix List Layout */
 .incoming-requests ul {
   list-style: none;
   padding: 0;
@@ -70,34 +72,52 @@
 
 .incoming-requests li {
   display: flex;
+  align-items: center; /* Ensures buttons and text align */
   justify-content: space-between;
-  margin-bottom: 5px;
-  color: var(--primary-color)
+  margin-bottom: 8px;
+  color: var(--dark-grey);
+
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
 }
 
-/* Accept Button */
-.accept-btn {
-  background-color: #52DDA2;
-  color: white;
+.incoming-requests li:hover {
+  background-color: var(--medium-grey);
+}
+
+
+/* Accept and Delete Buttons */
+.accept-btn,
+.delete-btn {
+  font-size: 14px;
+  padding: 6px 10px;
   border: none;
-  padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
+  margin-left: 8px;
 }
 
-/* Trip Cards */
+/* Align Requests Section */
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
 .trip-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1;
 }
 
-.trip-card {
-  background-color: var(--lightest-grey);
-  /* border: 2px solid #795BF1; */
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.trip-list h3 {
+  font-size: 25px;
+  color: #555555;
+  margin-bottom: 5px;
+  align-self: flex-start;
 }
 
 .trip-card h2 {
@@ -115,14 +135,13 @@
 }
 
 
-/* Comment */
+
 .trip-comment {
   font-style: italic;
   color: #555555;
   margin-bottom: 10px;
 }
 
-/* Buttons */
 .send-request-btn {
   background-color: #52DDA2;
   color: white;
@@ -135,20 +154,43 @@
 }
 
 .view-more-btn {
-  background-color: #795BF1;
-  color: white;
+  background:none;
+  color: var(--secondary-text);
   padding: 8px 12px;
   border: none;
+  box-shadow: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
 }
 
-/* Hover Effects */
-.send-request-btn:hover {
-  background-color: #42c58a;
+.view-more-btn:hover {
+  color: var(--medium-grey);
 }
 
-.view-more-btn:hover {
-  background-color: #684ad6;
+.trip-card {
+  display: flex; 
+  align-items: center;
+  justify-content: space-between; 
+  background-color: var(--lightest-grey);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
+}
+
+.trip-info {
+  flex: 1; 
+}
+
+.community-image {
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.trip-image {
+  width: 300px; 
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
 }
