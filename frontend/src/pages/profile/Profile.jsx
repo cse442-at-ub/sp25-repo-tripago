@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Sidebar from "../../components/Sidebar.jsx";
 import TripHeader from '../../components/trip/TripHeader.jsx'
 import TripDetails from '../../components/trip/TripDetails.jsx'
 import "../../styles/Profile.css";
 import parisPicture from "../../assets/paris.jpg";
+import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 
 const Profile = () => {
   const [user] = useState({
@@ -54,6 +54,7 @@ const Profile = () => {
           />
 
           <TripDetails trip={trip} />
+          {trip && <ShareTripButton />}
         </div>
       </div>
     </div>

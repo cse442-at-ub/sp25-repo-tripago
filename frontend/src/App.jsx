@@ -23,6 +23,7 @@ import Profile from "./pages/profile/Profile.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
+import UserProfile from "./pages/user/UserProfile.jsx";
 
 const App = () => {
   const [user] = useState({
@@ -39,6 +40,7 @@ const App = () => {
       <Routes>
         <Route path="/settings/*" element={<Sidebar username={user.username} />} />
         <Route path="/profile/*" element={<Sidebar username={user.username} />} />
+        <Route path="/user-profile/*" element={<Sidebar username={user.username} />} />
       </Routes>
 
         <main className="content">
@@ -53,7 +55,8 @@ const App = () => {
             <Route path="/loading-screen" element={<LoadingScreen />} />
 
           {/* Protected Routes: Only logged in users can access these pages */}
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />

@@ -1,0 +1,198 @@
+/* General Styles */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--white);
+  height: auto;
+  min-height: 100vh;
+  margin-top: 100px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  width: 100%;
+}
+
+/* Restrict Content Width */
+.trips-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* User Profile Section */
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.profile-name {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.edit-link {
+  color: blue;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.edit-link:hover {
+  text-decoration: underline;
+}
+
+/* All Trips Header */
+.trips-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 30px auto 15px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.trips-header h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.start-trip-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.start-trip-btn:hover {
+  background-color: #218838;
+}
+
+/* Trip Cards */
+.trip-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid #a67cfc; /* Purple border like the screenshot */
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background-color: white;
+  padding: 12px;
+  position: relative; /* For positioning the "View" button */
+}
+
+/* Left side (Text + Icons) */
+.trip-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+/* Make destination larger & bold */
+.trip-destination {
+  font-size: 24px;
+  font-weight: bold;
+  color: #6a1b9a;
+  margin-bottom: 5px;
+}
+
+/* Dates should be smaller */
+.trip-dates {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Icons and price on the same row */
+.trip-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  width: 100%;
+}
+
+/* Icons row */
+.trip-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Price should be bold */
+.trip-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* View button on the top right */
+.view-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #66d399;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.view-button:hover {
+  background-color: #52c187;
+}
+
+/* Image on the right */
+.trip-image {
+  width: 120px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .trip-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 20px;
+  }
+
+  .trip-image {
+    width: 100%;
+    height: 180px;
+  }
+
+  .trip-bottom-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .view-button {
+    position: static;
+    align-self: flex-end;
+  }
+}

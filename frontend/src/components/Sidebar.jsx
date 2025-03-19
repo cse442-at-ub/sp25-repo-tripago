@@ -24,8 +24,8 @@ const Sidebar = ({ username }) => {
 
       <div className="sidebar-menu">
         <button 
-          className={`sidebar-item ${currentPath === '/profile' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/profile')}
+          className={`sidebar-item ${currentPath === '/user-profile' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/user-profile')}
         >
           <FaUser className="sidebar-icon" />
           <span>Profile</span>
@@ -40,8 +40,8 @@ const Sidebar = ({ username }) => {
         </button>
 
         <button 
-          className={`sidebar-item ${currentPath === '/new-trip' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/new-trip')}
+          className={`sidebar-item ${currentPath === '/profile' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/profile')}
         >
           <FaPlus className="sidebar-icon" />
           <span>New trip</span>
