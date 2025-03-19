@@ -40,6 +40,8 @@ const App = () => {
       <Routes>
         <Route path="/settings/*" element={<Sidebar username={user.username} />} />
         <Route path="/profile/*" element={<Sidebar username={user.username} />} />
+        <Route path="/community/*" element={<Sidebar username={user.username} />} />
+
       </Routes>
 
         <main className="content">

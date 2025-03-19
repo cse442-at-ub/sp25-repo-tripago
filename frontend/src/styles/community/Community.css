@@ -1,44 +1,154 @@
-.dashboard-container {
+
+/* General Layout */
+.community-container {
+  /* max-width: 1000px; */
+  /* margin: 0 auto; */
+
   display: flex;
-  width: 100%;
+  width: 80%;
   flex-direction: column;
   background-color: var(--white);
   height: auto;
   min-height: 100vh;
   margin-top: 100px;
-  padding-top: 20px;
+  margin-left: 150px;
+  padding: 100px;
 }
 
-.dashboard-container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--white); /* Adjust this */
-  z-index: -1;
-}
-
-.dashboard-header {
+/* Top Section */
+.community-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
 }
 
-.dashboard-content {
-  display: flex;
-  flex: 1;
+/* Search Input */
+.search-input {
+  width: 300px;
+  padding: 10px;
+  border: .9px solid var(--medium-grey);
+  border-radius: 8px;
+  font-size: 16px;
 }
 
-.profile-content {
-  flex: 1;
-  padding: 30px;
+.find-friends {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  margin-bottom: 10px;
+  align-items: flex-start;
+
+}
+
+.find-friends-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555555;
+  margin-bottom: 5px;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Incoming Requests */
+.incoming-requests {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 40px;
+}
+
+.incoming-requests h3 {
+  font-size: 18px;
+  color: #555555;
+  margin-bottom: 5px;
+}
+
+.incoming-requests ul {
+  list-style: none;
+  padding: 0;
+}
+
+.incoming-requests li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  color: var(--primary-color)
+}
+
+/* Accept Button */
+.accept-btn {
+  background-color: #52DDA2;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Trip Cards */
+.trip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.trip-card {
+  background-color: var(--lightest-grey);
+  /* border: 2px solid #795BF1; */
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.trip-card h2 {
+  font-size: 20px;
+  color: #555555;
+  margin-bottom: 5px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.highlight {
+  color: var(--primary-color);
+}
+
+
+/* Comment */
+.trip-comment {
+  font-style: italic;
+  color: #555555;
+  margin-bottom: 10px;
+}
+
+/* Buttons */
+.send-request-btn {
+  background-color: #52DDA2;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.view-more-btn {
+  background-color: #795BF1;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Hover Effects */
+.send-request-btn:hover {
+  background-color: #42c58a;
+}
+
+.view-more-btn:hover {
+  background-color: #684ad6;
 }
