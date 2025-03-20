@@ -23,7 +23,7 @@ const TripHeader = ({
         />
       </div>
 
-      <div className="header-info">
+      {/* <div className="header-info">
         <h1>
           {firstName} {lastName}
         </h1>
@@ -31,7 +31,7 @@ const TripHeader = ({
         <button className="edit-name-btn" onClick={() => navigate("/settings/profile-details")}>
           <FaEdit /> Edit Name
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -273,6 +273,49 @@
   height: 40%;
 }
 
+.edit-name-btn:hover {
+  text-decoration: none;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+  position: relative;
+}
+
+.profile-avatar:hover {
+  opacity: 0.8;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Show Edit Icon on Hover */
+.profile-avatar-container:hover {
+  opacity: 1; /* Show when hovering */
+}
+
+
+/* Click to update text */
+.update-text {
+  font-size: 10px;
+  color: var(--dark-grey);
+  margin-top: 0px;
+  text-align: center;
+}
+
 /* Responsiveness */
 @media screen and (max-width: 868px) {
   .trips-container {
@@ -281,9 +324,5 @@
 
   .trip-card {
     width: 100%;
-  }
-
-  .profile-container {
-    /* padding: 1rem; */
   }
 }
