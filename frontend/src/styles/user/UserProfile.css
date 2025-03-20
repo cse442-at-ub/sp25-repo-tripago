@@ -1,198 +1,289 @@
-/* General Styles */
+/* General Layout */
 .profile-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--white);
-  height: auto;
-  min-height: 100vh;
-  margin-top: 100px;
-  padding-top: 100px;
-  padding-bottom: 100px;
+  justify-content: flex-start; 
+  padding: 50px 100px;
+  background-color: var(--background-color);
+  max-width: 1200px;
+  margin: 0 auto; 
+  min-height: 100vh; 
+  /* width: calc(100% - 250px);  */
+  padding-top: 0px; 
+  margin-top: 230px; 
+  margin-left: 120px;
+  background-size: cover;
+}
+.profile-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background: var(--background-color); 
+  z-index: -1;
 }
 
-/* Restrict Content Width */
-.trips-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-/* User Profile Section */
+/* User Profile Header */
 .profile-header {
   text-align: center;
-  margin-bottom: 20px;
-  margin-top: 40px;
+  padding: 20px;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
 .profile-avatar {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
 }
 
 .profile-name {
-  font-size: 22px;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin: 8px 0;
+  color: var(--black);
+  margin-top: 10px;
 }
 
-.edit-link {
-  color: blue;
-  text-decoration: none;
+.edit-name-btn {
+  display: inline-block;
+  margin-top: 5px;
+  color: var(--primary-color);
   font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-.edit-link:hover {
+.edit-name-btn:hover {
   text-decoration: underline;
 }
 
-/* All Trips Header */
+/* Travel Bucket List */
+.bucket-list {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.bucket-list h3 {
+  font-size: 1.3rem;
+  color: var(--black);
+}
+
+.bucket-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.bucket-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--medium-grey);
+  color: var(--dark-grey);
+}
+
+.add-destination {
+  display: flex;
+  margin-top: 10px;
+}
+
+.add-destination input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--medium-grey);
+  border-radius: 5px;
+}
+
+.add-btn {
+  background: var(--secondary-color);
+  color: var(--white);
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 8px;
+  margin-top: 10px;
+  height: 100%;
+}
+
+
+/* Trip Stats */
+.trip-stats {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.trip-stats h3 {
+  font-size: 1.3rem;
+  color: var(--black);
+}
+
+.trip-stats p {
+  font-size: 1rem;
+  color: var(--dark-grey);
+  margin: 5px 0;
+}
+
+/* Friends List */
+.friends-list {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.friends-list h3 {
+  font-size: 1.3rem;
+  color: var(--black);
+}
+
+.friends-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.friends-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--medium-grey);
+  color: var(--dark-grey)
+}
+
+/* All Trips Section */
 .trips-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  max-width: 800px;
-  margin: 30px auto 15px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
-}
-
-.trips-header h3 {
-  font-size: 18px;
-  font-weight: bold;
+  background: var(--white);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
 .start-trip-btn {
-  background-color: #28a745;
-  color: white;
-  padding: 8px 14px;
+  background: var(--secondary-color);
+  color: var(--white);
+  padding: 10px 15px;
   border: none;
   border-radius: 5px;
-  font-size: 14px;
   cursor: pointer;
+  font-size: 14px;
 }
 
-.start-trip-btn:hover {
-  background-color: #218838;
+/* Sort & Filter */
+.sort-options {
+  display: flex;
+  align-items: center;
+}
+
+.sort-options label {
+  font-size: 14px;
+  margin-right: 8px;
+  color: var(--dark-grey);
+}
+
+.sort-options select {
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid var(--medium-grey);
 }
 
 /* Trip Cards */
-.trip-card {
+.trips-container {
   display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   justify-content: space-between;
-  align-items: center;
-  border: 2px solid #a67cfc; /* Purple border like the screenshot */
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  background-color: white;
-  padding: 12px;
-  position: relative; /* For positioning the "View" button */
+  margin-bottom: 100px;
 }
 
-/* Left side (Text + Icons) */
-.trip-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
+.trip-card {
+  background: var(--white);
+  /* border: 0.9px solid var(--primary-color); */
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  /* width: 300px; */
+  height: 300px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+  position: relative;
+  width: 40%;
 }
 
-/* Make destination larger & bold */
-.trip-destination {
-  font-size: 24px;
+.trip-card .view-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--secondary-color);
+  color: var(--white);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+
+
+.trip-card .trip-destination {
+  font-size: 1.2rem;
   font-weight: bold;
-  color: #6a1b9a;
-  margin-bottom: 5px;
+  color: var(--primary-color);
 }
 
-/* Dates should be smaller */
-.trip-dates {
+.trip-card .trip-dates {
   font-size: 14px;
-  color: #666;
-  margin-bottom: 10px;
+  color: var(--dark-grey);
 }
 
-/* Icons and price on the same row */
 .trip-bottom-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
-  width: 100%;
+  margin-top: 10px;
 }
 
-/* Icons row */
-.trip-icons {
-  display: flex;
-  gap: 8px;
+.trip-icons img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }
 
-.icon {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-}
-
-/* Price should be bold */
 .trip-price {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: var(--black);
 }
 
-/* View button on the top right */
-.view-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #66d399;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.view-button:hover {
-  background-color: #52c187;
-}
-
-/* Image on the right */
 .trip-image {
-  width: 120px;
-  height: 100px;
-  border-radius: 8px;
-  object-fit: cover;
+  width: 100%;
+  height: 40%;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Responsiveness */
+@media screen and (max-width: 868px) {
+  .trips-container {
+    justify-content: center;
+  }
+
   .trip-card {
-    flex-direction: column;
-    align-items: flex-start;
-    padding-bottom: 20px;
-  }
-
-  .trip-image {
     width: 100%;
-    height: 180px;
   }
 
-  .trip-bottom-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .view-button {
-    position: static;
-    align-self: flex-end;
+  .profile-container {
+    /* padding: 1rem; */
   }
 }
