@@ -114,6 +114,7 @@ const UserProfile = () => {
             <button
               className="edit-name-btn"
               onClick={() => navigate("/settings/profile-details")}
+              
             >
               <FaEdit /> Edit Name
             </button>
@@ -168,7 +169,7 @@ const UserProfile = () => {
         {/* All Trips Header with Sorting */}
         <div className="trips-header">
           <h3>All Trips</h3>
-          <button className="start-trip-btn">Start new trip</button>
+          <button className="start-trip-btn" onClick={() => navigate("/profile/new-destination")}>Start new trip</button>
           <div className="sort-options">
             <label>Sort By: </label>
             <select value={sortBy} onChange={handleSortChange}>

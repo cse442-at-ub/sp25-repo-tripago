@@ -24,6 +24,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
 import UserProfile from "./pages/user/UserProfile.jsx";
+import NewDestination from "./pages/profile/NewDestination.jsx";
 
 const App = () => {
   const [user] = useState({
@@ -56,6 +57,7 @@ const App = () => {
 
           {/* Protected Routes: Only logged in users can access these pages */}
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/new-destination" element={<NewDestination />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
