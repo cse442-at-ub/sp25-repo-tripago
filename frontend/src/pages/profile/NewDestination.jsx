@@ -16,6 +16,15 @@ const NewDestination = () => {
     console.log("Searching for:", destination);
   };
 
+  const handleCategoryClick = () => {
+    navigate("/loading-screen", {
+      state: {
+        headerText: "Scanning the map for your ideal getaway",
+        redirectTo: "/profile/accept-reject",
+      },
+    });
+  };
+
   return (
     <div className="new-trip-container">
       <h2 className="trip-header">
@@ -43,7 +52,7 @@ const NewDestination = () => {
       <div className="recommendation-list">
         {["Relaxation", "Culture", "Adventure", "Nature", "Choose for me", "Recommendations"].map(
           (category, index) => (
-            <div key={index} className="recommendation-item">
+            <div key={index} className="recommendation-item" onClick={handleCategoryClick}>
               <span className="category-text">{category}</span>
               <span className="arrow">&gt;</span>
             </div>

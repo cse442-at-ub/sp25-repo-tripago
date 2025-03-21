@@ -25,6 +25,7 @@ import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
 import UserProfile from "./pages/user/UserProfile.jsx";
 import NewDestination from "./pages/profile/NewDestination.jsx";
+import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
 
 const App = () => {
   const [user] = useState({
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/new-password/:key" element={<NewPassword />} />
             <Route path="/style-guide" element={<StyleGuide />} />
             <Route path="/loading-screen" element={<LoadingScreen />} />
+            <Route path="/profile/accept-reject" element={<AcceptRejectDest />} />
 
           {/* Protected Routes: Only logged in users can access these pages */}
             <Route path="/profile" element={<Profile />} />
