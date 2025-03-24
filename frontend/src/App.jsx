@@ -58,9 +58,9 @@ const App = () => {
             <Route path="/profile/accept-reject" element={<AcceptRejectDest />} />
 
           {/* Protected Routes: Only logged in users can access these pages */}
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/new-destination" element={<NewDestination />} />
-            <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/profile/new-destination" element={<ProtectedRoute><NewDestination /></ProtectedRoute>} />
+            <Route path="/user-profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />

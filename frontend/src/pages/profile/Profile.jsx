@@ -1,9 +1,9 @@
 import { useState } from "react";
 import TripHeader from '../../components/trip/TripHeader.jsx'
 import TripDetails from '../../components/trip/TripDetails.jsx'
+import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 import "../../styles/Profile.css";
 import parisPicture from "../../assets/paris.jpg";
-import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 
 const Profile = () => {
   const [user] = useState({

@@ -12,33 +12,15 @@ if ($data == null){
   echo json_encode(["success"=>false,"message"=>"Error with data recieved"]);
 }
 
-$firstName = $data['firstName'];
-$lastName = $data['lastName'];
+$displayName = $data['displayName'];
 $email = $data['email'];
-$password = $data['password'];
-$confirmPassword = $data['confirmPassword'];
-
-
-if (
-  !preg_match('/[A-Z]/', $password) ||
-  !preg_match('/[0-9!@#$%^&*(),.?":{}|<>]/', $password) ||
-  strlen($password) < 6
-) {
- //send json error and exit;
- echo json_encode(["success"=>false,"message"=>"Passwords requirements not met"]);
- exit();
-} 
-
-//hashes password from user
-$hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
-
 
 //establish connection to sql DATABASE
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 
 //return error if there is connection issue to database
 if ($mysqli->connection_status != 0){
-  echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connection_status]);
+  echo json_encode(["success"=>false,"message"=>"Database connection failed". $mysqli->connection_status]);
 }
 
 //prepare
@@ -56,29 +38,41 @@ $result = $stmt->get_result();
 //gets next result in object (will be null if doesn't return anything)
 $result = $result->fetch_assoc();
 
+$token = $_COOKIE['authCookie'];
 
-if ($result == null){//user does not exist
-  
-  //prepare statement to make new user record
-  $stmt = $mysqli->prepare("INSERT INTO users(first_name,last_name,email,password_hash) VALUES (?,?,?,?)");
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
 
-  //enter params from frontend
-  $stmt->bind_param("ssss",$firstName,$lastName,$email,$hashed_p_word);
+$old = $stmt->get_result();
+$old = $old->fetch_assoc();
 
-  //add user record
+$oldEmail = $old["email"];
+
+if ($result == null){ //email is available
+
+  $stmt = $mysqli->prepare("UPDATE users SET email=? WHERE token=?");
+  $stmt->bind_param("ss", $email, $token);
   $stmt->execute();
 
-  $response = ["success"=>true,"message"=>"User registered successfully!"];
+  $expiration = (new DateTime())->getTimestamp() + 3600;
+  setcookie("user",$email,$expiration,"/","",true,true);
+
+  $response = ["success"=>true, "message"=>"Changed profile details successfully!"];
+  echo json_encode($response);
+  
+} elseif ($email == $oldEmail) {
+
+  $response = ["success"=>false, "message"=>"New email is the same as old email"];
 
   echo json_encode($response);
 
-}else{
+} else {
 
-  $response = ["success"=>false,"message"=>"This email is already taken"];
+  $response = ["success"=>false, "message"=>"This email is already taken"];
 
   echo json_encode($response);
+
 }
-
-
 
 ?>

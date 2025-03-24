@@ -1,22 +1,22 @@
 <?php
 
-if (isset($_COOKIE['authCookie']) && isset($_COOKIE['user'])){
+if (isset($_COOKIE['authCookie'])){
 
-    $email = $_COOKIE['user'];
+    $token = $_COOKIE['authCookie'];
 
     $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
     if ($mysqli->connect_error != 0){
         echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
     }
 
-    $stmt = $mysqli->prepare("SELECT * FROM users WHERE email=?");
-    $stmt->bind_param("s",$email);
+    $stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+    $stmt->bind_param("s",$token);
     $stmt->execute();
 
     $result = $stmt->get_result();
     $result = $result->fetch_assoc();
 
-    //did not find a user with associated email
+    //did not find a user with associated auth token
     if ($result==null){
         fail();    
     }
