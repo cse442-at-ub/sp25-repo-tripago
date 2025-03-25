@@ -93,6 +93,6 @@ if (count($approved_requests) > 0){
 //here $appoved_names and $pending_names should have corresponding data
 
 //send list of approved names and pending names. List of two lists
-echo json_encode([$appoved_names,$pending_names]);
+echo json_encode([$approved_names,$pending_names]);
 
 ?>
