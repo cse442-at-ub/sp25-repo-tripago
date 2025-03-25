@@ -76,28 +76,49 @@ const Community = () => {
 
     }catch(error){
       console.log("Error during search: ");
-
        if (error.response) {
-    // The request was made and the server responded with a status code
-    // that falls out of the range of 2xx
-           console.error("Server responded with:", error.response.data);
-    console.error("Status code:", error.response.status);
-    console.error("Headers:", error.response.headers);
-  } else if (error.request) {
-    // The request was made but no response was received
-    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-    // http.ClientRequest in node.js
-    console.error("No response received. Request:", error.request);
-  } else {
-    // Something happened in setting up the request that triggered an Error
-    console.error("Error setting up the request:", error.message);
-  }
-  console.error("Original error:", error); // Log the full error for debugging.
+         console.error("Server responded with:", error.response.data);
+         console.error("Status code:", error.response.status);
+         console.error("Headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("No response received. Request:", error.request);
+      } else {  
+        console.error("Error setting up the request:", error.message);
+      }
+        console.error("Original error:", error); // Log the full error for debugging.
     }
   }
 
-  const getPendingSent = async(e) => {
+  //called when you click "view sent requests" button
+  const getSentRequests = async(e) => {
     e.preventDefault();
+    try {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+      const result = response.data;
+
+      console.log(result);
+
+      //result should have a list of lists of names??
+
+
+
+    } catch (error){
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+     } else if (error.request) {
+       console.error("No response received. Request:", error.request);
+     } else {  
+       console.error("Error setting up the request:", error.message);
+     }
+       console.error("Original error:", error); // Log the full error for debugging.
+    }
 
   }
 
@@ -164,7 +185,7 @@ const Community = () => {
           <button className="view-requests-btn" onClick={() => setModalType("incoming")}>
             View Incoming Requests
           </button>
-          <button className="view-requests-btn" onClick={() => {setModalType("sent"); }}>
+          <button className="view-requests-btn" onClick={() => {setModalType("sent"); getSentRequests()}}>
             View Sent Requests
           </button>
         </div>
