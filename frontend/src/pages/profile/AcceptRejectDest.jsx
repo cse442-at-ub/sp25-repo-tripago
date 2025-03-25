@@ -26,6 +26,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import fallbackImg from '../../assets/paris.jpg';
 import '../../styles/trip/AcceptRejectDest.css';
 
 const AcceptRejectDest = () => {
@@ -38,18 +39,29 @@ const AcceptRejectDest = () => {
 
   useEffect(() => {
     if (recommendations.length > 0) {
-      const topRecommendation = recommendations[0];
-      const cityName = topRecommendation?.name || "Paris";
+      // const topRecommendation = recommendations[0];
+      // const cityName = topRecommendation?.name || "Paris";
+      // setCity(cityName);
+      // console.log("Setting city:", cityName);
+      const randomIndex = Math.floor(Math.random() * recommendations.length);
+      const randomRecommendation = recommendations[randomIndex];
+      const cityName = randomRecommendation?.name || "Paris";
+  
+      console.log("🎲 Random city picked:", cityName);
       setCity(cityName);
-
       // Fetch image for the city
       const fetchImage = async () => {
         try {
-          const res = await fetch(`http://localhost/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(cityName)}`);
+          const res = await fetch(`http://localhost:8000/api/images/pexelsSearch.php?query=${encodeURIComponent(cityName)}`);
           const data = await res.json();
+          console.log("Pexels response:", data);
           const photo = data.photos?.[0]?.src?.large || null;
+          console.log("Extracted photo URL:", photo);
           if (photo) {
             setImageUrl(photo);
+          }
+          else {
+            console.warn("No photo found for:", cityName);
           }
         } catch (err) {
           console.error("Failed to load image from Pexels:", err);
@@ -66,9 +78,7 @@ const AcceptRejectDest = () => {
       </h2>
       
       <img
-        src={imageUrl || require('../../assets/paris.jpg')}
-        alt={city}
-        className="destination-image"
+        src={imageUrl || fallbackImg} alt={city} className="destination-image"
       />
       
       <button className="accept-button" onClick={() => navigate('/profile')}>

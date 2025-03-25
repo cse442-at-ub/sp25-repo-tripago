@@ -69,7 +69,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import '../../styles/trip/NewDestination.css';
+import "../../styles/trip/NewDestination.css";
 
 const NewDestination = () => {
   const navigate = useNavigate();
@@ -79,7 +79,6 @@ const NewDestination = () => {
     setDestination(e.target.value);
   };
 
-
   const handleSearch = () => {
     console.log("Searching for:", destination);
   };
@@ -88,21 +87,44 @@ const NewDestination = () => {
   const handleCategoryClick = async (category) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(category)}`
+        `http://localhost:8000/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
+          category
+        )}`
       );
-      const data = await response.json();
 
-      if (data?.data) {
+      // Add this to debug the raw response:
+      const text = await response.text();
+      console.log("Raw response:", text);
+
+      // const data = await response.json();
+
+      // if (data?.data) {
+      //   navigate("/loading-screen", {
+      //     state: {
+      //       headerText: "Scanning the map for your ideal getaway",
+      //       redirectTo: "/profile/accept-reject",
+      //       recommendations: data.data, // pass recommendations to next screen
+      //     },
+      //   });
+      try {
+        const data = JSON.parse(text);
+        if (!data || !data.data) throw new Error("No recommendations found");
+      
         navigate("/loading-screen", {
           state: {
             headerText: "Scanning the map for your ideal getaway",
             redirectTo: "/profile/accept-reject",
-            recommendations: data.data, // pass recommendations to next screen
+            recommendations: data.data,
           },
         });
-      } else {
-        alert("No recommendations found. Please try a different category.");
+      } catch (err) {
+        console.error("Error parsing response:", err);
       }
+  
+      // } 
+      // else {
+      //   alert("No recommendations found. Please try a different category.");
+      // }
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       alert("Something went wrong while fetching recommendations.");
@@ -132,7 +154,9 @@ const NewDestination = () => {
 
       {/* Recommendation Categories */}
       <div className="recommendation-list-container">
-        <p className="recommendation-header">I'm not sure, but I'm looking for...</p>
+        <p className="recommendation-header">
+          I'm not sure, but I'm looking for...
+        </p>
         <div className="recommendation-list">
           {[
             "Relaxation",
@@ -140,7 +164,7 @@ const NewDestination = () => {
             "Adventure",
             "Nature",
             "Choose for me",
-            "Recommendations"
+            "Recommendations",
           ].map((category, index) => (
             <div
               key={index}
@@ -158,4 +182,3 @@ const NewDestination = () => {
 };
 
 export default NewDestination;
-

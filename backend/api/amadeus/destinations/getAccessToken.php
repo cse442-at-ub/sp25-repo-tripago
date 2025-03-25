@@ -1,5 +1,4 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 function getAccessToken() {
     $clientId = 'Av20Yizlm0D5Nh0YO01LJ7LvXUvhgoEN';
     $clientSecret = 'n80E84OCqJAsYELp';
@@ -17,14 +16,22 @@ function getAccessToken() {
             'content' => $data,
         ],
     ];
+
     $context  = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
 
     if ($result === FALSE) {
+        error_log(" Failed to get access token from Amadeus.");
         return null;
     }
 
     $response = json_decode($result, true);
+
+    // Debug log:
+    if (!$response || !isset($response['access_token'])) {
+        error_log(" Invalid token response: " . $result);
+    }
+
     return $response['access_token'] ?? null;
 }
 ?>

@@ -1,7 +1,19 @@
 <?php
+// display errors for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
-require_once 'getAccessToken.php';
+
+
+$tokenPath = __DIR__ . '/getAccessToken.php';
+if (!file_exists($tokenPath)) {
+    echo json_encode(['error' => 'Token file not found: ' . $tokenPath]);
+    exit;
+}
+require_once $tokenPath;
 
 // get category name from query param
 $category = $_GET['category'] ?? null;
