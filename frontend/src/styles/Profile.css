@@ -43,7 +43,14 @@
   text-align: center;
 }
 
-.cart-button {
-  margin-top: 2%;
+.cart-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 5%;
+}
+
+.cart-button {
+  margin-top: 3%;
+  width: 520px;
 }

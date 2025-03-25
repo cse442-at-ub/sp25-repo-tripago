@@ -64,7 +64,9 @@ const Profile = () => {
 
           {trip && <ShareTripButton />}
           {(trip && (trip.startDate && trip.endDate)) &&
-            <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
+            <div className="cart-buttons">
+              <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
+            </div>
           }
         </div>
       </div>

@@ -150,9 +150,11 @@ const Budgeting = ({ trip, editable }) => {
       <div className="budget-info">
         <div className="budget-header">
           <h2>Budgeting</h2>
-          <button className="edit-budget-btn" onClick={handleEditBudget}>
-            <FaEdit /> Edit budget
-          </button>
+          {editable &&
+            <button className="edit-budget-btn" onClick={handleEditBudget}>
+              <FaEdit /> Edit budget
+            </button>
+          }
         </div>
 
         <div className="budget-overview">
@@ -171,7 +173,7 @@ const Budgeting = ({ trip, editable }) => {
 
       <div className="expenses-section">
         <h3>Expenses</h3>
-        <button onClick={() => setShowExpenseModal(true)}>+ Add expense</button>
+        {editable && <button onClick={() => setShowExpenseModal(true)}>+ Add expense</button>}
         <div className="expenses-list">
           {expenses.map((expense, index) => (
             <div key={index} className="expense-item">
