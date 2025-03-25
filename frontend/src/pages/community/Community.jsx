@@ -60,9 +60,6 @@ const Community = () => {
     e.preventDefault();
     console.log("Search term:", searchTerm);
     setSearchTerm("");
-
-    
-
     try {
       const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",{ searchTerm: searchTerm },{
         headers:{
@@ -97,6 +94,11 @@ const Community = () => {
   }
   console.error("Original error:", error); // Log the full error for debugging.
     }
+  }
+
+  const getPendingSent = async(e) => {
+    e.preventDefault();
+
   }
 
   return (
@@ -162,7 +164,7 @@ const Community = () => {
           <button className="view-requests-btn" onClick={() => setModalType("incoming")}>
             View Incoming Requests
           </button>
-          <button className="view-requests-btn" onClick={() => setModalType("sent")}>
+          <button className="view-requests-btn" onClick={() => {setModalType("sent"); }}>
             View Sent Requests
           </button>
         </div>
