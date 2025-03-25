@@ -48,11 +48,7 @@ const Community = () => {
     { id: 2, name: "Michael" },
   ];
 
-  const sentRequests = [
-    { id: 1, name: "Sophia", status: "Pending" },
-    { id: 2, name: "David", status: "Accepted" },
-    { id: 3, name:"Joe", status: "pending"}
-  ];
+  const [sentRequests, setSentRequests] = useState([]); // Initialize as empty array
 
 
   const handleSend = async(e) => {
@@ -94,7 +90,7 @@ const Community = () => {
     
     try {
       console.log("hello!");
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/getSentRequests.php",{},{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/getSentRequests.php",{test:"empty"},{
         headers:{
           'Content-Type':'application/json'
         }
@@ -103,6 +99,25 @@ const Community = () => {
       const result = response.data;
 
       console.log(result);
+
+      let newSentRequests = []; // Create a new array
+
+      //handle accepted names
+      if (result[0].length > 0){
+
+      }
+      //handle pending names
+      if (result[1].length > 0){
+        result[1].forEach((name) => {
+          newSentRequests.push({
+            id: Date.now() + Math.random(),
+            name: name,
+            status: "Pending",
+          });
+        });
+      }
+
+      setSentRequests(newSentRequests); // Update sentRequests with the new array
 
       //result should have a list of lists of names??
 
