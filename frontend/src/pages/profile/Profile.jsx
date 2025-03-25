@@ -4,8 +4,11 @@ import TripDetails from "../../components/trip/TripDetails.jsx";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 import "../../styles/Profile.css";
 import parisPicture from "../../assets/paris.jpg";
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   const [user] = useState({
     firstName: "Jane",
     lastName: "Doe",
@@ -56,6 +59,7 @@ const Profile = () => {
           <TripDetails trip={trip} />
 
           {trip && <ShareTripButton />}
+          <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
         </div>
       </div>
     </div>

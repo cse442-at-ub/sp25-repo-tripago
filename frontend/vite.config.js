@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/CSE442/2025-Spring/cse-442aj/frontend/',
+  base: '/CSE442/2025-Spring/cse-442aj/owentest/',
   server: {
     proxy: {
 

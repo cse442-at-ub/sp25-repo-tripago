@@ -23,6 +23,7 @@ import Profile from "./pages/profile/Profile.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
+import Cart from "./pages/profile/Cart.jsx";
 
 const App = () => {
   const [user] = useState({
@@ -54,6 +55,7 @@ const App = () => {
 
           {/* Protected Routes: Only logged in users can access these pages */}
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/profile/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
             <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />
