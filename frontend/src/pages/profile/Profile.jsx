@@ -54,6 +54,7 @@ const Profile = () => {
             firstName={user.firstName}
             lastName={user.lastName}
             picture={trip?.picture}
+            editable={true}
           />
 
           <TripDetails trip={trip} />

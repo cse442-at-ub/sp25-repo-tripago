@@ -8,6 +8,7 @@ const TripHeader = ({
   firstName,
   lastName,
   picture = airplaneIllustration,
+  editable,
 }) => {
   const isCustomPicture = picture !== airplaneIllustration;
 
@@ -28,9 +29,11 @@ const TripHeader = ({
           {firstName} {lastName}
         </h1>
 
-        <button className="edit-name-btn" onClick={() => navigate("/settings/profile-details")}>
-          <FaEdit /> Edit Name
-        </button>
+        {editable &&
+          <button className="edit-name-btn" onClick={() => navigate("/settings/profile-details")}>
+            <FaEdit /> Edit Name
+          </button>
+        }
       </div>
     </div>
   );
@@ -40,6 +43,7 @@ TripHeader.propTypes = {
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
   picture: PropTypes.string,
+  editable: PropTypes.bool.isRequired,
 };
 
 export default TripHeader;
