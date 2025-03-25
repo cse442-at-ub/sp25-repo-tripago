@@ -84,6 +84,6 @@ foreach ($result as $names){
 //here $appoved_names and $pending_names should have corresponding data
 
 //send list of approved names and pending names. List of two lists
-json_encode(array($appoved_names,$pending_names));
+echo json_encode([$appoved_names,$pending_names]);
 
 ?>
