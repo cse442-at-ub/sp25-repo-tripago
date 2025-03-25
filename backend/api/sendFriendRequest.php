@@ -16,8 +16,8 @@ if ($data == null){
   exit();
 }
 
-$sender = $data['sender'];
-$recipient = $data['recipient'];
+$sender = $_COOKIE['user'];
+$recipient = $data['searchTerm'];
 
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 
