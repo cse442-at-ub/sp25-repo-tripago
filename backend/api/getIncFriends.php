@@ -4,7 +4,7 @@ header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
 $jsonData = file_get_contents("php://input");
-/*
+
 $data = json_decode($jsonData,true);
 
 if ($data == null){
@@ -12,9 +12,9 @@ if ($data == null){
   exit();
 }
 
-$recipient = $data['recipient'];
-*/
-$recipient = "romanswi@gmail.com";
+//set recipient as user who sent the request
+$recipient = $_COOKIE['user'];
+
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 
 if ($mysqli->connect_error != 0){
