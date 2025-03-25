@@ -32,6 +32,7 @@ $stmt = $mysqli->prepare("UPDATE `friends` SET approved=1 WHERE sender=? AND rec
 $stmt->bind_param("ss",$sender,$recipient);
 $stmt->execute();
 
+//errno is non zero if an error occurred
 if ($stmt->errno){
     echo json_encode(["success"=>false,"message"=>"There was an error approving the request"]);
     exit();
