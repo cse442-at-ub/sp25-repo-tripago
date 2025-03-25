@@ -91,8 +91,9 @@ const Community = () => {
 
   //called when you click "view sent requests" button
   const getSentRequests = async(e) => {
-    e.preventDefault();
+    
     try {
+      console.log("hello!");
       const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/getSentRequests.php",{},{
         headers:{
           'Content-Type':'application/json'
