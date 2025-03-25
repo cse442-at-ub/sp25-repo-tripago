@@ -93,7 +93,7 @@ const Community = () => {
   const getSentRequests = async(e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",{},{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/getSentRequests.php",{},{
         headers:{
           'Content-Type':'application/json'
         }
@@ -185,7 +185,7 @@ const Community = () => {
           <button className="view-requests-btn" onClick={() => setModalType("incoming")}>
             View Incoming Requests
           </button>
-          <button className="view-requests-btn" onClick={() => {setModalType("sent"); getSentRequests()}}>
+          <button className="view-requests-btn" onClick={() => {setModalType("sent"); getSentRequests();}}>
             View Sent Requests
           </button>
         </div>
