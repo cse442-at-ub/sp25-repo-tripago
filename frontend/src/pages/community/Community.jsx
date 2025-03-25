@@ -64,7 +64,7 @@ const Community = () => {
     
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",searchTerm,{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",{ searchTerm: searchTerm },{
         headers:{
           'Content-Type':'application/json'
         }
@@ -107,7 +107,7 @@ const Community = () => {
           <label className="find-friends-label">Find Friends</label>
           <input
             type="text"
-            placeholder="Search by name"
+            placeholder="Search by email"
             className="search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
