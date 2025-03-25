@@ -29,7 +29,7 @@ $stmt->execute();
 
 $result = $stmt->get_result();
 $result = $result->fetch_all();
-$pending_requests;
+$pending_requests = [];
 //populate pending requests with emails pending requests are sent to
 foreach ($result as $email){
     $pending_requests[] = $email[0];
@@ -42,44 +42,53 @@ $stmt->execute();
 
 $result = $stmt->get_result();
 $result = $result->fetch_all();
-$approved_requests;
+$approved_requests = [];
 //populate pending requests with emails pending requests are sent to
 foreach ($result as $email){
     $approved_requests[] = $email[0];
 }
 
-//at this point, we should have two lists, each containing email strings. One has approved emails, and the other pending
-$in = str_repeat('?,',count($pending_requests)-1). '?';
-//get first and last names of emails from users table
-$stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
-$types = str_repeat('s',count($pending_requests));
-$stmt->bind_param($types,...$pending_requests);
-$stmt->execute();
-$result = $stmt->get_result();
-$result = $result->fetch_all();
 
-//$result should have list of lists
-//this should get a list of first names and last names from the users table
 $pending_names;
-foreach ($result as $names){
-    $full_name = $names[0] . ' ' . $names[1];
-    $pending_names[] = $full_name;
-}
-//here, $pending_names has list of names which are pending 
+if (count($pending_requests) > 0){
+    //at this point, we should have two lists, each containing email strings. One has approved emails, and the other pending
+    $in = str_repeat('?,',count($pending_requests)-1). '?';
+    //get first and last names of emails from users table
+    $stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
+    $types = str_repeat('s',count($pending_requests));
+    $stmt->bind_param($types,...$pending_requests);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $result = $result->fetch_all();
 
-//now get approved names 
-$in = str_repeat('?,',count($approved_requests)-1). '?';
-$stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
-$types = str_repeat('s',count($approved_requests));
-$stmt->bind_param($types,...$approved_requests);
-$stmt->execute();
-$result = $stmt->get_result();
-$result = $result->fetch_all();
-$approved_names;
-foreach ($result as $names){
-    $full_name = $names[0] . ' ' . $names[1];
-    $approved_names[] = $full_name;
+    //$result should have list of lists
+    //this should get a list of first names and last names from the users table
+    foreach ($result as $names){
+        $full_name = $names[0] . ' ' . $names[1];
+        $pending_names[] = $full_name;
+    }
+} else {
+    $pending_names = [];
 }
+
+$approved_names;
+if (count($approved_requests) > 0){
+    //now get approved names 
+    $in = str_repeat('?,',count($approved_requests)-1). '?';
+    $stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
+    $types = str_repeat('s',count($approved_requests));
+    $stmt->bind_param($types,...$approved_requests);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $result = $result->fetch_all();
+    foreach ($result as $names){
+        $full_name = $names[0] . ' ' . $names[1];
+        $approved_names[] = $full_name;
+    }
+} else {
+    $approved_names = [];
+}
+
 
 //here $appoved_names and $pending_names should have corresponding data
 
