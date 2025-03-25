@@ -93,7 +93,7 @@ const Community = () => {
   const getSentRequests = async(e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",{},{
         headers:{
           'Content-Type':'application/json'
         }
