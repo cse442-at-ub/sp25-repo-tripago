@@ -4,6 +4,8 @@ import paris from "../../assets/paris.jpg";
 import sandiego from "../../assets/sandiego.jpg";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
 import RequestsModal from "../../components/community/RequestsModal.jsx";
+import axios from 'axios'
+
 
 const trips = [
   {
@@ -59,6 +61,8 @@ const Community = () => {
     console.log("Search term:", searchTerm);
     setSearchTerm("");
 
+    
+
     try {
       const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",searchTerm,{
         headers:{
@@ -74,7 +78,24 @@ const Community = () => {
       }
 
     }catch(error){
-      console.log("Error during search: ",error.response);
+      console.log("Error during search: ");
+
+       if (error.response) {
+    // The request was made and the server responded with a status code
+    // that falls out of the range of 2xx
+           console.error("Server responded with:", error.response.data);
+    console.error("Status code:", error.response.status);
+    console.error("Headers:", error.response.headers);
+  } else if (error.request) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    console.error("No response received. Request:", error.request);
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    console.error("Error setting up the request:", error.message);
+  }
+  console.error("Original error:", error); // Log the full error for debugging.
     }
   }
 
