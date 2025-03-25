@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 function getAccessToken() {
     $clientId = 'Av20Yizlm0D5Nh0YO01LJ7LvXUvhgoEN';
     $clientSecret = 'n80E84OCqJAsYELp';
