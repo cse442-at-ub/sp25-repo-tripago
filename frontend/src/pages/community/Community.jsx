@@ -49,7 +49,34 @@ const Community = () => {
   const sentRequests = [
     { id: 1, name: "Sophia", status: "Pending" },
     { id: 2, name: "David", status: "Accepted" },
+    { id: 3, name:"Joe", status: "pending"}
   ];
+
+
+  const handleSend = async(e) => {
+
+    e.preventDefault();
+    console.log("Search term:", searchTerm);
+    setSearchTerm("");
+
+    try {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",searchTerm,{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      const result = response.data
+      console.log("Send reponse: ",response.data);
+      if (result.success){
+        alert(result.message);
+      } else {
+        alert(result.message);
+      }
+
+    }catch(error){
+      console.log("Error during search: ",error.response);
+    }
+  }
 
   return (
     <div className="community-container">
@@ -64,6 +91,7 @@ const Community = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+        <button style={{ marginLeft: '10px' }} onClick={handleSend}>Send</button> 
         </div>
         {/* <div className="requests-list">
           <div className="incoming-requests">
