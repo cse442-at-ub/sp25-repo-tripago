@@ -27,6 +27,18 @@ if ($mysqli->connect_error != 0){
     exit();
 }
 
+
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE email=? ");
+$stmt->bind_param("s",$recipient);
+$stmt->execute();
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+//checks if recipient of request exists in user table
+if ($result == null){
+  echo json_encode(["success"=>false,"message"=>"User does not exist"]);
+  exit();
+}
+
 $stmt = $mysqli->prepare("SELECT * FROM friends WHERE sender=? AND recipient=?");
 $stmt->bind_param("ss",$sender,$recipient);
 $stmt->execute();
