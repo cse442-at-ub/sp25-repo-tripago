@@ -57,10 +57,15 @@ const Profile = () => {
             editable={true}
           />
 
-          <TripDetails trip={trip} />
+          <TripDetails
+            trip={trip}
+            editable={true}
+          />
 
           {trip && <ShareTripButton />}
-          <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
+          {(trip && (trip.startDate && trip.endDate)) &&
+            <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
+          }
         </div>
       </div>
     </div>
