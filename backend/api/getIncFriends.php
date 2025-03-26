@@ -71,6 +71,6 @@ if (count($emails) > 0){
 
 
 //in theory, sends list of first and last name strings to front end 
-json_encode($names);
+echo json_encode($names);
 
 ?>
