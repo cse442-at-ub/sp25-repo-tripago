@@ -94,6 +94,7 @@ const NewDestination = () => {
           state: {
             headerText: "Scanning the map for your ideal getaway",
             redirectTo: "/profile/accept-reject",
+            category,
             recommendations: data.data.map((rec) => ({
               name: rec.name,
               countryCode: getCountryFromCity(rec.name),
