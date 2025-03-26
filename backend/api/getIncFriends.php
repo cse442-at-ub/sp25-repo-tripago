@@ -39,7 +39,6 @@ $result = $result->fetch_all();
 $emails = [];
 foreach ($result as $email){
     $emails[] = $email[0];
-    echo($email[0]);
 }
 
 
