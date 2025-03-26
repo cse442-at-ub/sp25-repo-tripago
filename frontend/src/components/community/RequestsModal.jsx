@@ -1,11 +1,12 @@
 import React from "react";
 import "../../styles/community/RequestsModal.css";
+import axios from 'axios'
+
 
 const RequestsModal = ({ isOpen, onClose, type, incomingRequests, sentRequests }) => {
   if (!isOpen) return null;
 
   const approveRequest = async(name) => {
-    e.preventDefault();
 
     //name should have name of person, first and last
 
@@ -24,6 +25,16 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests, sentRequests }
         }
       })
 
+      const result = response.data;
+
+      if (result.success){
+        //if we get here, it means that the users friend has been set successfully
+        //delete the entry, and alert that the friend has been added
+
+        alert(result.message);
+      } else {
+        alert(result.message);
+      }
       
     } catch (error){
 
