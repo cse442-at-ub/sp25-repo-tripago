@@ -6,32 +6,54 @@ import "../../styles/trip/NewDestination.css";
 const NewDestination = () => {
   const navigate = useNavigate();
   const [destination, setDestination] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleDestinationChange = async (e) => {
     const value = e.target.value;
     setDestination(value);
-  
-    if (value.length < 2) {
+
+    if (value.length < 3) {
       setSuggestions([]);
       return;
     }
-  
+
     try {
-      const res = await fetch(`http://localhost:8000/api/amadeus/destinations/searchCities.php?keyword=${encodeURIComponent(value)}`);
+      const res = await fetch(
+        `http://localhost:8000/api/amadeus/destinations/searchCities.php?keyword=${encodeURIComponent(
+          value
+        )}`
+      );
       const data = await res.json();
-  
+      console.log();
+
       const cities = data.data.map((loc) => ({
         name: loc.name,
         iataCode: loc.iataCode,
-        country: loc.address?.countryName || "",
+        countryCode:
+          loc.address?.countryCode || loc.address?.CountryCode || "N/A",
       }));
-  
+
       setSuggestions(cities);
       setShowSuggestions(true);
     } catch (err) {
       console.error("Error fetching city suggestions:", err);
     }
   };
+
+  const COUNTRY_MAP = {
+    US: "United States",
+    FR: "France",
+    CA: "Canada",
+    JP: "Japan",
+    IT: "Italy",
+    BR: "Brazil",
+    // Add more as needed
+  };
+
+  function getCountryName(code) {
+    return COUNTRY_MAP[code] || code;
+  }
 
   // Handles when a category (e.g., "Relaxation") is clicked
   const handleCategoryClick = async (category) => {
@@ -49,7 +71,7 @@ const NewDestination = () => {
       try {
         const data = JSON.parse(text);
         if (!data || !data.data) throw new Error("No recommendations found");
-      
+
         navigate("/loading-screen", {
           state: {
             headerText: "Scanning the map for your ideal getaway",
@@ -60,7 +82,6 @@ const NewDestination = () => {
       } catch (err) {
         console.error("Error parsing response:", err);
       }
-
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       alert("Something went wrong while fetching recommendations.");
@@ -72,20 +93,40 @@ const NewDestination = () => {
       <h2 className="trip-header">
         Tell us your dream destination, or let us pick one for you!
       </h2>
-
-      {/* Enter a destination manually */}
-      <div className="destination-input-container">
-        <p className="destination-link">I have a destination in mind.</p>
-        <div className="destination-input-wrapper">
-          <FaMapMarkerAlt className="location-icon" />
-          <input
-            type="text"
-            placeholder="Enter city, country"
-            value={destination}
-            onChange={handleDestinationChange}
-            className="destination-input"
-          />
-        </div>
+      
+      <p className="recommendation-header">I have a destination in mind.</p>
+      <div
+        className="destination-input-wrapper"
+        style={{ position: "relative" }}
+      >
+        <FaMapMarkerAlt className="location-icon" />
+        <input
+          type="text"
+          placeholder="Enter city, country"
+          value={destination}
+          onChange={handleDestinationChange}
+          className="destination-input"
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+        />
+        {showSuggestions && suggestions.length > 0 && (
+          <ul className="autocomplete-dropdown">
+            {suggestions.map((city, idx) => (
+              <li
+                key={idx}
+                className="autocomplete-option"
+                onClick={() => {
+                  setDestination(
+                    `${city.name}, ${getCountryName(city.countryCode)}`
+                  );
+                  setShowSuggestions(false);
+                }}
+              >
+                {city.name}, {getCountryName(city.countryCode)}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Recommendation Categories */}

@@ -109,6 +109,59 @@
   border: none
 }
 
+/* .autocomplete-dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  width: 50%;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 999;
+  margin-top: 5px;
+  border-radius: 8px;
+  list-style: none;         
+  padding-left: 0; 
+  top: 100%;
+}
+
+.autocomplete-option {
+  padding: 10px;
+  cursor: pointer;
+} */
+
+.autocomplete-dropdown {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 100%; /* appears below input */
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 999;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-option {
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.autocomplete-option:hover {
+  background-color: #f0f0f0;
+}
+
+.autocomplete-dropdown li {
+  color: var(--dark-grey);
+}
+
+
 @media screen and (max-width: 868px) {
   .new-trip-container {
     margin-left: 150px;
