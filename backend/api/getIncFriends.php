@@ -36,34 +36,39 @@ $result = $stmt->get_result();
 //each inner list should have an email string
 //use a loop to aggregate them all into a single list
 $result = $result->fetch_all();
-$emails;
+$emails = [];
 foreach ($result as $email){
     $emails[] = $email[0];
 }
 
-
-$in = str_repeat('?,',count($emails)-1). '?';
-
-
-//get first and last names of emails from users table
-$stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
-$types = str_repeat('s',count($emails));
-$stmt->bind_param($types,...$emails);
-$stmt->execute();
-$result = $stmt->get_result();
-$result = $result->fetch_all();
-
-if ($result == null){
-    echo "result was null!";
-}
-
-//$result should have list of lists
-//this should get a list of first names and last names from the users table
 $names;
-foreach ($result as $names){
-    $full_name = $names[0] . ' ' . $names[1];
-    $names[] = $full_name;
+if (count($emails) > 0){
+    $in = str_repeat('?,',count($emails)-1). '?';
+
+
+    //get first and last names of emails from users table
+    $stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
+    $types = str_repeat('s',count($emails));
+    $stmt->bind_param($types,...$emails);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $result = $result->fetch_all();
+
+    if ($result == null){
+        echo "result was null!";
+    }
+
+    //$result should have list of lists
+    //this should get a list of first names and last names from the users table
+    foreach ($result as $names){
+        $full_name = $names[0] . ' ' . $names[1];
+        $names[] = $full_name;
+    }
+} else {
+    $names = [];
 }
+
+
 
 //in theory, sends list of first and last name strings to front end 
 json_encode($names);
