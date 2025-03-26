@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import "../../styles/trip/NewDestination.css";
+import traveler from '../../assets/tripagoTraveler.png'
+import suitcase from '../../assets/tripagoSuitcase.png'
 
 const NewDestination = () => {
   const navigate = useNavigate();
@@ -55,8 +57,24 @@ const NewDestination = () => {
     return COUNTRY_MAP[code] || code;
   }
 
+  function getCountryFromCity(city) {
+    const normalizedCity = city.toLowerCase();
+    const CITY_COUNTRY_MAP = {
+      rome: "IT",
+      milan: "IT",
+      madrid: "ES",
+      barcelona: "ES",
+      london: "GB",
+      paris: "FR",
+    };
+    return CITY_COUNTRY_MAP[normalizedCity] || "N/A";
+  }
+  
+
   // Handles when a category (e.g., "Relaxation") is clicked
   const handleCategoryClick = async (category) => {
+    localStorage.removeItem("trip"); 
+
     try {
       const response = await fetch(
         `http://localhost:8000/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
@@ -76,7 +94,10 @@ const NewDestination = () => {
           state: {
             headerText: "Scanning the map for your ideal getaway",
             redirectTo: "/profile/accept-reject",
-            recommendations: data.data,
+            recommendations: data.data.map((rec) => ({
+              name: rec.name,
+              countryCode: getCountryFromCity(rec.name),
+            })),
           },
         });
       } catch (err) {
@@ -88,17 +109,18 @@ const NewDestination = () => {
     }
   };
 
+  
   return (
     <div className="new-trip-container">
+      {/* Positioned background images */}
+     
+  
       <h2 className="trip-header">
         Tell us your dream destination, or let us pick one for you!
       </h2>
-
+  
       <p className="recommendation-header">I have a destination in mind.</p>
-      <div
-        className="destination-input-wrapper"
-        style={{ position: "relative" }}
-      >
+      <div className="destination-input-wrapper" style={{ position: "relative" }}>
         <FaMapMarkerAlt className="location-icon" />
         <input
           type="text"
@@ -111,9 +133,12 @@ const NewDestination = () => {
           onKeyDown={(e) => {
             if (e.key === "Enter" && destination.trim().length > 0) {
               e.preventDefault();
+              localStorage.removeItem("trip");
+              const [cityName, countryName] = destination.split(",").map((s) => s.trim());
               navigate("/profile", {
                 state: {
-                  destination, // send the selected destination
+                  name: cityName,
+                  countryCode: countryName,
                 },
               });
             }
@@ -138,8 +163,7 @@ const NewDestination = () => {
           </ul>
         )}
       </div>
-
-      {/* Recommendation Categories */}
+  
       <div className="recommendation-list-container">
         <p className="recommendation-header">
           I'm not sure, but I'm looking for...
@@ -164,8 +188,11 @@ const NewDestination = () => {
           ))}
         </div>
       </div>
+      <img src={traveler} alt="Traveler" className="bg-img left-img" />
+      <img src={suitcase} alt="Suitcase" className="bg-img right-img" />
     </div>
   );
+
 };
 
 export default NewDestination;

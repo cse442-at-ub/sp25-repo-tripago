@@ -9,11 +9,12 @@
   max-width: 1200px;
   margin: 0 auto; 
   min-height: 100vh; 
-  /* width: calc(100% - 250px);  */
   padding-top: 0px; 
   margin-top: 230px; 
   margin-left: 360px;
   background-size: cover;
+
+
 }
 .new-trip-container::after {
   content: "";
@@ -24,6 +25,32 @@
   height: 100%;
   background: var(--background-color); 
   z-index: -1;
+}
+
+.bg-img {
+  position: absolute;
+  width: 180px;
+  height: auto;
+  z-index: 0;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.left-img {
+  margin-top: 0;
+
+  position: relative;
+  bottom: 50%;
+  left: -60%;
+  z-index: 1;
+}
+
+.right-img {
+  position: relative;
+  margin-top: 0;
+  top: -130%;
+  right: -60%;
+  z-index: 1;
 }
 
 .trip-header {
@@ -160,6 +187,26 @@
 .autocomplete-dropdown li {
   color: var(--dark-grey);
 }
+
+.new-destination-layout {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  overflow-x: hidden;
+}
+
+.side-img {
+  position: absolute;
+  width: 180px;
+  height: auto;
+  opacity: 0.9;
+  z-index: 0;
+  pointer-events: none;
+}
+
+
 
 
 @media screen and (max-width: 868px) {

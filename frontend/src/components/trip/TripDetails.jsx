@@ -8,6 +8,7 @@ import { FaEdit, FaTimes } from "react-icons/fa";
 const Itinerary = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
   const generateDayAccordions = () => {
+    if (!trip.startDate || !trip.endDate) return [];
     const startDate = new Date(trip.startDate);
     const endDate = new Date(trip.endDate);
     const dayAccordions = [];
@@ -57,6 +58,8 @@ const Itinerary = ({ trip, setShowModal }) => {
                 type="text"
                 placeholder="Enter location"
                 className="location-input"
+                value={""} 
+                onChange={() => {}} 
               />
               <button className="add-activity-btn">+ Add activity</button>
             </div>
@@ -70,7 +73,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
   return (
     <div className="itinerary-container">
-      {trip.startDate == null || trip.endDate == null ? (
+      {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
           <div>
             <p>
@@ -79,9 +82,22 @@ const Itinerary = ({ trip, setShowModal }) => {
             <p>Get started below.</p>
           </div>
 
-          <div className="plan-trip-create-section">
-            <button className="add-dates-btn">+ Add trip dates</button>
+          {/* <div className="plan-trip-create-section">
+             
             <p className="create-for-me-text">Create the sections for me.</p>
+          </div>  */}
+          <div className="trip-dates-edit">
+            <div className="trip-dates-bar">
+              <h3>Trip Dates:</h3>
+
+              <button
+                className="edit-budget-btn"
+                onClick={() => setShowModal(true)}
+              >
+                <FaEdit /> Edit dates
+              </button>
+            </div>
+            <div className="days-container">{generateDayAccordions()}</div>
           </div>
         </div>
       ) : (
@@ -108,10 +124,6 @@ const Itinerary = ({ trip, setShowModal }) => {
               </button>
             </div>
           </div>
-          {/* <div className="days-container">
-
-            {generateDayAccordions()}
-          </div> */}
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
             <h3>Trip Dates:</h3>
@@ -375,7 +387,7 @@ const TripDetails = ({ trip, setShowModal }) => {
           <div className="title-container divider">
             <h2>
               Your trip to{" "}
-              <span className="title-accent">{trip.location}.</span>
+              <span className="title-accent">{trip.name}.</span>
             </h2>
             <p>Select a different trip</p>
           </div>
@@ -399,7 +411,9 @@ const TripDetails = ({ trip, setShowModal }) => {
           </div>
 
           <div className="tab-content">
-            {currentTab === "itinerary" && <Itinerary trip={trip} setShowModal={setShowModal}/>}
+            {currentTab === "itinerary" && (
+              <Itinerary trip={trip} setShowModal={setShowModal} />
+            )}
             {currentTab === "budgeting" && <Budgeting trip={trip} />}
           </div>
         </div>
@@ -425,9 +439,10 @@ const TripDetails = ({ trip, setShowModal }) => {
 
 const tripProps = PropTypes.shape({
   name: PropTypes.string.isRequired,
-  startDate: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
+  // location: PropTypes.string.isRequired,
+  countryCode: PropTypes.string,
   days: PropTypes.arrayOf(
     PropTypes.shape({
       activities: PropTypes.arrayOf(
