@@ -248,7 +248,7 @@ const Community = () => {
           {/* Requests Section */}
           <div className="requests-section">
           <h3>Requests</h3>
-          <button className="view-requests-btn" onClick={() => {setModalType("incoming"); }}>
+          <button className="view-requests-btn" onClick={() => {setModalType("incoming"); getIncomingRequests();}}>
             View Incoming Requests
           </button>
           <button className="view-requests-btn" onClick={() => {setModalType("sent"); getSentRequests();}}>
