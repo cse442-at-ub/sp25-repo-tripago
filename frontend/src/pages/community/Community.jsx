@@ -43,10 +43,14 @@ const Community = () => {
     setSelectedTrip(null);
   };
 
+  /*
   const incomingRequests = [
     { id: 1, name: "Anna" },
     { id: 2, name: "Michael" },
   ];
+*/
+
+  const [incomingRequests,setIncomingRequests] = useState([]); 
 
   const [sentRequests, setSentRequests] = useState([]); // Initialize as empty array
 
@@ -104,7 +108,13 @@ const Community = () => {
 
       //handle accepted names
       if (result[0].length > 0){
-
+        result[0].forEach((name) => {
+          newSentRequests.push({
+            id: Date.now() + Math.random(),
+            name: name,
+            status: "Accepted",
+          });
+        });
       }
       //handle pending names
       if (result[1].length > 0){
@@ -120,9 +130,6 @@ const Community = () => {
       setSentRequests(newSentRequests); // Update sentRequests with the new array
 
       //result should have a list of lists of names??
-
-
-
     } catch (error){
       if (error.response) {
         console.error("Server responded with:", error.response.data);
@@ -137,6 +144,49 @@ const Community = () => {
     }
 
   }
+
+  const getIncomingRequests = async(e) => {
+
+    try {
+
+
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/getIncFriends.php",{test:"empty"},{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+      const result = response.data;
+      console.log(result);
+      
+      let newIncFriends = [];
+
+      if (result.length > 0){
+        result.forEach((name) => {
+          newIncFriends.push({
+            id: Date.now() + Math.random(),
+            name: name,
+          });
+        });
+      }
+
+      setIncomingRequests(newIncFriends);
+
+    } catch (error){
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+     } else if (error.request) {
+       console.error("No response received. Request:", error.request);
+     } else {  
+       console.error("Error setting up the request:", error.message);
+     }
+       console.error("Original error:", error); // Log the full error for debugging.
+    }
+  }
+
+
 
   return (
     <div className="community-container">
@@ -198,7 +248,7 @@ const Community = () => {
           {/* Requests Section */}
           <div className="requests-section">
           <h3>Requests</h3>
-          <button className="view-requests-btn" onClick={() => setModalType("incoming")}>
+          <button className="view-requests-btn" onClick={() => {setModalType("incoming"); }}>
             View Incoming Requests
           </button>
           <button className="view-requests-btn" onClick={() => {setModalType("sent"); getSentRequests();}}>
