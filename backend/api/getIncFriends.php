@@ -39,9 +39,11 @@ $result = $result->fetch_all();
 $emails = [];
 foreach ($result as $email){
     $emails[] = $email[0];
+    echo($email[0]);
 }
 
-$names;
+
+$names = [];
 if (count($emails) > 0){
     $in = str_repeat('?,',count($emails)-1). '?';
 
@@ -60,15 +62,13 @@ if (count($emails) > 0){
 
     //$result should have list of lists
     //this should get a list of first names and last names from the users table
-    foreach ($result as $names){
-        $full_name = $names[0] . ' ' . $names[1];
+    foreach ($result as $Names){
+        $full_name = $Names[0] . ' ' . $Names[1];
         $names[] = $full_name;
     }
 } else {
     $names = [];
 }
-
-
 
 //in theory, sends list of first and last name strings to front end 
 echo json_encode($names);
