@@ -93,7 +93,7 @@ const NewDestination = () => {
       <h2 className="trip-header">
         Tell us your dream destination, or let us pick one for you!
       </h2>
-      
+
       <p className="recommendation-header">I have a destination in mind.</p>
       <div
         className="destination-input-wrapper"
@@ -108,6 +108,16 @@ const NewDestination = () => {
           className="destination-input"
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && destination.trim().length > 0) {
+              e.preventDefault();
+              navigate("/profile", {
+                state: {
+                  destination, // send the selected destination
+                },
+              });
+            }
+          }}
         />
         {showSuggestions && suggestions.length > 0 && (
           <ul className="autocomplete-dropdown">

@@ -116,8 +116,8 @@ const Itinerary = ({ trip }) => {
 };
 
 const Budgeting = ({ trip }) => {
-  const [budget, setBudget] = useState(trip.budget?.amount);
-  const [expenses, setExpenses] = useState(trip.budget?.expenses);
+  const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
+  const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
 
