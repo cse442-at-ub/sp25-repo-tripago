@@ -157,10 +157,10 @@ const Community = () => {
       })
 
       const result = response.data;
-      console.log(result);
+      console.log(result );
       
       let newIncFriends = [];
-
+      /*
       if (result.length > 0){
         result.forEach((name) => {
           newIncFriends.push({
@@ -171,6 +171,7 @@ const Community = () => {
       }
 
       setIncomingRequests(newIncFriends);
+      */
 
     } catch (error){
       if (error.response) {
