@@ -30,7 +30,7 @@ if ($mysqli->connect_error != 0){
 //get the email associated with sender first and last name
 
 $stmt = $mysqli->prepare("SELECT `email` FROM users WHERE first_name=? AND last_name = ?");
-$stmt->bind_param("ss",$sender,$recipient);
+$stmt->bind_param("ss",$first_name,$last_name);
 $stmt->execute();
 
 $result = $stmt->get_result();
