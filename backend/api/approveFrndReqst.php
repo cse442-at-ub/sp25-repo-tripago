@@ -52,6 +52,6 @@ if ($stmt->errno){
     exit();
 }
 
-
+echo json_encode(["success"=>true,"message"=>$sender_email . " is now your friend!"]);
 
 ?>
