@@ -18,6 +18,7 @@ const Profile = () => {
 
   const [trip, setTrip] = useState(null);
   const [showModal, setShowModal] = useState(!!incomingDestination);
+  const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
   // Fetch image to display and cache it
@@ -35,8 +36,8 @@ const Profile = () => {
         days: [],
         budget: {
           amount: 0,
-          expenses: []
-        }
+          expenses: [],
+        },
       });
       return;
     }
@@ -70,23 +71,51 @@ const Profile = () => {
         <div className="profile-content">
           {showModal && (
             <div className="modal-example">
-              <div className="modal">
-                <h3>Pick your trip end date</h3>
+              <div className="modal travel-dates-modal">
+                <h3>
+                  <span>When</span> are you planning to travel?
+                </h3>
+
+                <label>Start Date:</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                <div className="travel-dates-modal">
+
+                <label>End Date:</label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
+                </div>
+
                 <button
                   onClick={() => {
+                    if (!startDate || !endDate) {
+                      alert("Please select both start and end dates.");
+                      return;
+                    }
+
+                    if (new Date(startDate) > new Date(endDate)) {
+                      alert("End date cannot be before start date.");
+                      return;
+                    }
+
                     setTrip((prev) => ({
                       ...prev,
-                      endDate: endDate,
+                      startDate,
+                      endDate,
+                      // optionally initialize budgeting for safety
+                      budget: prev.budget || { amount: 0, expenses: [] },
                     }));
+
                     setShowModal(false);
                   }}
                 >
-                  Save Date
+                  Save Dates
                 </button>
               </div>
             </div>

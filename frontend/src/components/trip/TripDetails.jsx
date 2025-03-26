@@ -108,7 +108,9 @@ const Itinerary = ({ trip }) => {
               </button>
             </div>
           </div>
-          <div className="days-container">{generateDayAccordions()}</div>
+          <div className="days-container">
+            {/* Add section to allow user to modify dates */}
+            {generateDayAccordions()}</div>
         </div>
       )}
     </div>

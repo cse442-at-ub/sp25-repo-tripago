@@ -42,3 +42,12 @@
   align-items: center;
   text-align: center;
 }
+
+
+.travel-dates-modal h3 span {
+  color: var(--primary-color);
+}
+
+.travel-dates-modal label {
+  color: var(--dark-grey)
+}
