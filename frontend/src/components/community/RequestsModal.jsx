@@ -3,7 +3,7 @@ import "../../styles/community/RequestsModal.css";
 import axios from 'axios'
 
 
-const RequestsModal = ({ isOpen, onClose, type, incomingRequests, sentRequests }) => {
+const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequests, sentRequests }) => {
   if (!isOpen) return null;
 
   const approveRequest = async(name) => {
@@ -30,6 +30,9 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests, sentRequests }
       if (result.success){
         //if we get here, it means that the users friend has been set successfully
         //delete the entry, and alert that the friend has been added
+
+
+        setIncomingRequests(prevRequests => prevRequests.filter(req => req.name !== name));
 
         alert(result.message);
       } else {

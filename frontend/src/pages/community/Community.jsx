@@ -311,6 +311,7 @@ const Community = () => {
         onClose={() => setModalType(null)}
         type={modalType}
         incomingRequests={incomingRequests}
+        setIncomingRequests={setIncomingRequests}
         sentRequests={sentRequests}
       />
     </div>
