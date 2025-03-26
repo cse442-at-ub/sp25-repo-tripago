@@ -16,8 +16,21 @@ const Profile = () => {
   const location = useLocation();
   const incomingDestination = location.state?.destination || null;
 
-  const [trip, setTrip] = useState(null);
-  const [showModal, setShowModal] = useState(!!incomingDestination);
+  // const [trip, setTrip] = useState(null);
+  const [trip, setTrip] = useState(() => {
+    const saved = localStorage.getItem("trip");
+    return saved
+      ? JSON.parse(saved)
+      : {
+          location: "Paris, France",
+          startDate: null,
+          endDate: null,
+          picture: parisPicture,
+          days: [],
+          budget: { amount: 0, expenses: [] },
+        };
+  });
+  const [showModal, setShowModal] = useState(!incomingDestination);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -75,6 +88,7 @@ const Profile = () => {
                 <h3>
                   <span>When</span> are you planning to travel?
                 </h3>
+                <p>You can change this later on!</p>
 
                 <label>Start Date:</label>
                 <input
@@ -93,25 +107,47 @@ const Profile = () => {
                 </div>
 
                 <button
+                  // onClick={() => {
+                  //   if (!startDate || !endDate) {
+                  //     alert("Please select both start and end dates.");
+                  //     return;
+                  //   }
+
+                  //   if (new Date(startDate) > new Date(endDate)) {
+                  //     alert("End date cannot be before start date.");
+                  //     return;
+                  //   }
+
+                  //   setTrip((prev) => ({
+                  //     ...prev,
+                  //     startDate,
+                  //     endDate,
+                  //     // optionally initialize budgeting for safety
+                  //     budget: prev.budget || { amount: 0, expenses: [] },
+                  //   }));
+
+                  //   setShowModal(false);
+                  // }}
                   onClick={() => {
                     if (!startDate || !endDate) {
                       alert("Please select both start and end dates.");
                       return;
                     }
-
+                  
                     if (new Date(startDate) > new Date(endDate)) {
                       alert("End date cannot be before start date.");
                       return;
                     }
-
-                    setTrip((prev) => ({
-                      ...prev,
+                  
+                    const updatedTrip = {
+                      ...trip,
                       startDate,
                       endDate,
-                      // optionally initialize budgeting for safety
-                      budget: prev.budget || { amount: 0, expenses: [] },
-                    }));
-
+                      budget: trip.budget || { amount: 0, expenses: [] },
+                    };
+                  
+                    setTrip(updatedTrip);
+                    localStorage.setItem("trip", JSON.stringify(updatedTrip));
                     setShowModal(false);
                   }}
                 >
@@ -127,7 +163,7 @@ const Profile = () => {
             picture={trip?.picture}
           />
 
-          <TripDetails trip={trip} />
+          <TripDetails trip={trip} setShowModal={setShowModal}/>
           {trip && <ShareTripButton />}
         </div>
       </div>

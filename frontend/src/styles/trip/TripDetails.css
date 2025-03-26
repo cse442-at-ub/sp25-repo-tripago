@@ -475,6 +475,19 @@ p {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.trip-dates-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.trip-dates-bar h3 {
+  color: var(--black);
+  margin-bottom: 5px;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
   .title-container {

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 
-const Itinerary = ({ trip }) => {
+const Itinerary = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
   const generateDayAccordions = () => {
     const startDate = new Date(trip.startDate);
@@ -108,9 +108,20 @@ const Itinerary = ({ trip }) => {
               </button>
             </div>
           </div>
-          <div className="days-container">
-            {/* Add section to allow user to modify dates */}
-            {generateDayAccordions()}</div>
+          {/* <div className="days-container">
+
+            {generateDayAccordions()}
+          </div> */}
+          <div className="trip-dates-edit">
+            <div className="trip-dates-bar">
+            <h3>Trip Dates:</h3>
+
+              <button className="edit-budget-btn" onClick={() => setShowModal(true)}>
+            <FaEdit /> Edit dates
+          </button>
+            </div>
+            <div className="days-container">{generateDayAccordions()}</div>
+          </div>
         </div>
       )}
     </div>
@@ -351,7 +362,7 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
-const TripDetails = ({ trip }) => {
+const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
 
   const [currentTab, setCurrentTab] = useState("itinerary");
@@ -388,7 +399,7 @@ const TripDetails = ({ trip }) => {
           </div>
 
           <div className="tab-content">
-            {currentTab === "itinerary" && <Itinerary trip={trip} />}
+            {currentTab === "itinerary" && <Itinerary trip={trip} setShowModal={setShowModal}/>}
             {currentTab === "budgeting" && <Budgeting trip={trip} />}
           </div>
         </div>
@@ -441,9 +452,11 @@ const tripProps = PropTypes.shape({
 
 TripDetails.propTypes = {
   trip: tripProps,
+  setShowModal: PropTypes.func.isRequired,
 };
 Itinerary.propTypes = {
   trip: tripProps,
+  setShowModal: PropTypes.func.isRequired,
 };
 Budgeting.propTypes = {
   trip: tripProps,
