@@ -172,7 +172,7 @@ const Profile = () => {
                     setShowModal(false);
 
                     const endpoint =
-                      trip.name && trip.startDate && trip.endDate
+                      updatedTrip.startDate && updatedTrip.endDate
                         ? "updateTripDates.php"
                         : "saveTrip.php";
 
