@@ -181,6 +181,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+  margin-left: 150px;
 }
 
 /* Sort & Filter */
@@ -324,5 +325,20 @@
 
   .trip-card {
     width: 100%;
+  }
+
+  .start-trip-btn {
+    margin-left: 0px;
+    font-size: 10px;
+    padding: 5px;
+  }
+
+  .trips-header h3 {
+    font-size: 12px;
+
+  }
+  .sort-options select {
+    width: 70px;
+
   }
 }

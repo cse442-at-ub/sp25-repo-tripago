@@ -82,10 +82,6 @@ const Itinerary = ({ trip, setShowModal }) => {
             <p>Get started below.</p>
           </div>
 
-          {/* <div className="plan-trip-create-section">
-             
-            <p className="create-for-me-text">Create the sections for me.</p>
-          </div>  */}
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
               <h3>Trip Dates:</h3>

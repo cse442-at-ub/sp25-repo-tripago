@@ -29,7 +29,7 @@
 
 .bg-img {
   position: absolute;
-  width: 180px;
+  width: 280px;
   height: auto;
   z-index: 0;
   opacity: 0.95;
@@ -48,8 +48,8 @@
 .right-img {
   position: relative;
   margin-top: 0;
-  top: -130%;
-  right: -60%;
+  top: -160%;
+  right: -70%;
   z-index: 1;
 }
 
@@ -136,26 +136,6 @@
   border: none
 }
 
-/* .autocomplete-dropdown {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  width: 50%;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 999;
-  margin-top: 5px;
-  border-radius: 8px;
-  list-style: none;         
-  padding-left: 0; 
-  top: 100%;
-}
-
-.autocomplete-option {
-  padding: 10px;
-  cursor: pointer;
-} */
-
 .autocomplete-dropdown {
   list-style: none;
   padding: 0;
@@ -212,5 +192,30 @@
 @media screen and (max-width: 868px) {
   .new-trip-container {
     margin-left: 150px;
+  }
+
+  .bg-img {
+    position: absolute;
+    width: 180px;
+    height: auto;
+    z-index: 0;
+    opacity: 0.95;
+    pointer-events: none;
+  }
+  
+  .left-img {
+    margin-top: 0;
+  
+    position: relative;
+    bottom: 50%;
+    left: -40%;
+    z-index: 0;
+  }
+  
+  .right-img {
+    position: relative;
+    margin-top: 0;
+    top: -140%;
+    right: -50%;
   }
 }
