@@ -67,7 +67,7 @@ const NewDestination = () => {
       london: "GB",
       paris: "FR",
     };
-    return CITY_COUNTRY_MAP[normalizedCity] || "N/A";
+    return CITY_COUNTRY_MAP[normalizedCity] || "";
   }
   
 
@@ -135,11 +135,12 @@ const NewDestination = () => {
             if (e.key === "Enter" && destination.trim().length > 0) {
               e.preventDefault();
               localStorage.removeItem("trip");
-              const [cityName, countryName] = destination.split(",").map((s) => s.trim());
+              const [cityName, countryNameRaw] = destination.split(",").map((s) => s.trim());
+              const countryCode = countryNameRaw || ""; // <- FIX HERE
               navigate("/profile", {
                 state: {
                   name: cityName,
-                  countryCode: countryName,
+                  countryCode
                 },
               });
             }

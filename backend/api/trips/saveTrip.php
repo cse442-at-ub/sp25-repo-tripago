@@ -5,61 +5,105 @@ header("Content-Type: application/json");
 
 // Get email from cookie
 $email = $_COOKIE['user'] ?? null;
-
 if (!$email) {
   echo json_encode(["success" => false, "message" => "User not logged in"]);
   exit();
 }
 
 $raw = file_get_contents("php://input");
-file_put_contents("debug_input.log", $raw . "\n", FILE_APPEND);
 $data = json_decode($raw, true);
 
-// Parse incoming data
-$data = json_decode(file_get_contents("php://input"), true);
 if (!$data) {
   echo json_encode([
     "success" => false,
-    "message" => "Invalid input",
-    "raw" => $raw,
-    "json_error" => json_last_error_msg()
+    "message" => "Invalid input"
   ]);
   exit();
 }
 
-$city = $data["city_name"];
-$country = $data["country_name"];
-$start = $data["start_date"];
-$end = $data["end_date"];
-
 // Connect to DB
 $mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-// $mysqli = new mysqli("localhost", "tuyisabe", "50393405", "cse442_2025_spring_team_aj_db");
-
 if ($mysqli->connect_errno) {
   echo json_encode(["success" => false, "message" => "Database connection error"]);
   exit();
 }
 
-// Get user info
-$stmt = $mysqli->prepare("SELECT first_name, last_name FROM users WHERE email=?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+// 1. First check for EXACT duplicate
+$checkStmt = $mysqli->prepare("
+  SELECT id FROM trips 
+  WHERE email = ? 
+  AND city_name = ? 
+  AND country_name <=> ? 
+  AND start_date <=> ? 
+  AND end_date <=> ?
+  LIMIT 1
+");
+
+// Use NULL-safe comparison operator <=>
+$checkStmt->bind_param(
+  "sssss", 
+  $email,
+  $data["city_name"],
+  $data["country_name"],
+  $data["start_date"],
+  $data["end_date"]
+);
+
+$checkStmt->execute();
+$result = $checkStmt->get_result();
+
+// If duplicate exists
+if ($result->num_rows > 0) {
+  $row = $result->fetch_assoc();
+  echo json_encode([
+    "success" => false, 
+    "message" => "Duplicate trip - already exists",
+    "existing_id" => $row['id'] // Return existing trip ID
+  ]);
+  exit();
+}
+
+// 2. Get user info
+$userStmt = $mysqli->prepare("SELECT first_name, last_name FROM users WHERE email=?");
+$userStmt->bind_param("s", $email);
+$userStmt->execute();
+$userResult = $userStmt->get_result();
+$user = $userResult->fetch_assoc();
 
 if (!$user) {
   echo json_encode(["success" => false, "message" => "User not found"]);
   exit();
 }
 
-$firstName = $user["first_name"];
-$lastName = $user["last_name"];
+// 3. Save new trip
+$insertStmt = $mysqli->prepare("
+  INSERT INTO trips 
+  (email, first_name, last_name, city_name, country_name, start_date, end_date) 
+  VALUES (?, ?, ?, ?, ?, ?, ?)
+");
 
-// Save trip
-$stmt = $mysqli->prepare("INSERT INTO trips (email, first_name, last_name, city_name, country_name, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssssss", $email, $firstName, $lastName, $city, $country, $start, $end);
-$stmt->execute();
+$insertStmt->bind_param(
+  "sssssss", 
+  $email, 
+  $user["first_name"], 
+  $user["last_name"],
+  $data["city_name"],
+  $data["country_name"],
+  $data["start_date"],
+  $data["end_date"]
+);
 
-echo json_encode(["success" => true, "message" => "Trip saved successfully!"]);
+if ($insertStmt->execute()) {
+  echo json_encode([
+    "success" => true, 
+    "message" => "Trip saved successfully!",
+    "trip_id" => $insertStmt->insert_id
+  ]);
+} else {
+  echo json_encode([
+    "success" => false, 
+    "message" => "Failed to save trip",
+    "error" => $insertStmt->error
+  ]);
+}
 ?>

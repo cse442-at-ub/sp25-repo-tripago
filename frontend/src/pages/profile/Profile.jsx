@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TripHeader from "../../components/trip/TripHeader.jsx";
 import TripDetails from "../../components/trip/TripDetails.jsx";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
@@ -13,14 +13,15 @@ const Profile = () => {
     username: "Jane",
   });
 
+  const navigate = useNavigate();
   const location = useLocation();
-  const incomingDestination = location.state || null;
+  let incomingDestination = location.state || null;
 
   const [trip, setTrip] = useState({
     name: "",
     countryCode: "",
-    startDate: "",
-    endDate: "",
+    startDate: null,
+    endDate: null,
     picture: airplaneIllustration,
     days: [],
     budget: { amount: 0, expenses: [] },
@@ -29,9 +30,6 @@ const Profile = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  // const [showModal, setShowModal] = useState(() => {
-  //   return !!incomingDestination;
-  // });
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -58,27 +56,32 @@ const Profile = () => {
     };
 
     const loadTrip = async () => {
+      console.log("LOAD TRIP FUNCTION STARTED!");
       let tripData = null;
 
-      const isNewTrip = !!incomingDestination?.name;
+      // Maybe, the incoming destination should be
+      // console.log("incomingDestination when load trip function begins: ", incomingDestination);
+      // const isNewTrip = !!incomingDestination?.name;
+      console.log(
+        "incomingDestination when load trip function begins: ",
+        location.state
+      );
+      const isNewTrip = !!location.state?.name;
 
-      // 1. Use incomingDestination if available
-      // if (incomingDestination?.name) {
-      //   tripData = {
-      //     name: incomingDestination.name,
-      //     countryCode: incomingDestination.countryCode || "",
-      //     startDate: new Date().toISOString().slice(0, 10),
-      //     endDate: null,
-      //   };
+      if (isNewTrip) {
+        tripData = {
+          name: incomingDestination.name,
+          countryCode: incomingDestination.countryCode || "",
+          startDate: "", // allow empty
+          endDate: "",
+        };
 
-        if (isNewTrip) {
-          tripData = {
-            name: incomingDestination.name,
-            countryCode: incomingDestination.countryCode || "",
-            startDate: "", // allow empty
-            endDate: "",
-          };
-
+        console.log("Sending to saveTrip.php:", {
+          city_name: tripData.name,
+          country_name: tripData.countryCode,
+          start_date: "",
+          end_date: "",
+        });
         // Immediately save this new trip to DB
         fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
           method: "POST",
@@ -87,36 +90,64 @@ const Profile = () => {
           },
           body: JSON.stringify({
             city_name: tripData.name,
-            country_name: tripData.countryCode || "",
-            start_date: "", // no dates yet
-            end_date: "",
+            country_name: tripData.countryCode || null,
+            start_date: null, // no dates yet
+            end_date: null,
           }),
         })
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data.success) {
-            console.error("Trip save failed:", data.message);
-          } else {
-            console.log("Trip saved with no dates.");
-          }
-        })
-        .catch((err) => {
-          console.error("Trip save error:", err);
-        });
+          .then((res) => {
+            if (!res.ok) {
+              return res.text().then((text) => {
+                throw new Error(text);
+              });
+            }
+            return res.json();
+          })
+          .then((data) => {
+            if (!data.success) {
+              if (data.message.includes("Duplicate")) {
+                // Use data.existing_id to update the existing trip
+                console.log("Using existing trip:", data.existing_id);
+              } else {
+                console.error("Error:", data.message);
+              }
+            } else {
+              console.log("New trip saved:", data.trip_id);
+            }
+          });
+
+        // Clear the navigation state after using it
+        navigate(location.pathname, { replace: true, state: null });
+        console.log("Cleared location state");
+
+        console.log(
+          "incomingDestination when load trip function ends after change: ",
+          incomingDestination
+        );
       } else {
         // 2. Else, fetch most recent trip from backend
+        console.log("FETCH LATEST TRIP FUNCTION STARTED!");
         try {
           const res = await fetch(
             "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getLatestTrip.php"
           );
           const data = await res.json();
+          console.log("API RESPONSE DATA:", data);
+          console.log("TRIP OBJECT FROM API:", {
+            city: data.trip?.city_name,
+            country: data.trip?.country_name,
+            start: data.trip?.start_date,
+            end: data.trip?.end_date,
+          });
           if (data.success) {
             tripData = {
               name: data.trip.city_name,
-              countryCode: data.trip.country_name || "",
+              countryCode: data.trip.country_name,
               startDate: data.trip.start_date,
               endDate: data.trip.end_date,
             };
+
+            console.log("PROCESSED TRIP DATA:", tripData);
           } else {
             console.warn("No trip found in DB");
             return;
@@ -136,8 +167,8 @@ const Profile = () => {
         budget: { amount: 0, expenses: [] },
       });
 
-      setStartDate(tripData.startDate || "");
-  setEndDate(tripData.endDate || "");
+      setStartDate(tripData.startDate || null);
+      setEndDate(tripData.endDate || null);
 
       if (!tripData.startDate || !tripData.endDate) {
         setShowModal(true);
@@ -214,7 +245,7 @@ const Profile = () => {
                     //     ? "updateTripDates.php"
                     //     : "saveTrip.php";
 
-                        const endpoint = "updateTripDates.php";
+                    const endpoint = "updateTripDates.php";
 
                     fetch(
                       `/CSE442/2025-Spring/cse-442aj/backend/api/trips/${endpoint}`,
@@ -225,9 +256,9 @@ const Profile = () => {
                         },
                         body: JSON.stringify({
                           city_name: updatedTrip.name,
-                          country_name: updatedTrip.countryCode || "",
-                          start_date: updatedTrip.startDate,
-                          end_date: updatedTrip.endDate,
+                          country_name: updatedTrip.countryCode || null,
+                          start_date: updatedTrip.startDate || null,
+                          end_date: updatedTrip.endDate || null,
                         }),
                       }
                     )

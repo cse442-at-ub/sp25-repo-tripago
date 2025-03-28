@@ -20,7 +20,7 @@ if ($mysqli->connect_errno) {
 $stmt = $mysqli->prepare("
   SELECT * FROM trips 
   WHERE email = ? 
-  ORDER BY end_date DESC, start_date DESC, id DESC 
+  ORDER BY created_at DESC 
   LIMIT 1
 ");
 $stmt->bind_param("s", $email);
