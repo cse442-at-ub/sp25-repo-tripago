@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import "../../styles/trip/NewDestination.css";
@@ -7,6 +7,7 @@ import suitcase from '../../assets/tripagoSuitcase.png'
 
 const NewDestination = () => {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
   const [destination, setDestination] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -42,6 +43,43 @@ const NewDestination = () => {
       console.error("Error fetching city suggestions:", err);
     }
   };
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      // Only proceed if Enter is pressed and not already in input
+      if (e.key === 'Enter' && document.activeElement !== inputRef.current) {
+        e.preventDefault();
+        validateAndNavigate();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [destination]);
+
+  const validateAndNavigate = () => {
+    if (destination.trim().length === 0) return;
+
+    localStorage.removeItem("trip");
+    const [cityName, countryNameRaw] = destination.split(",").map(s => s.trim());
+    const countryCode = countryNameRaw || "";
+
+    // Check if this matches any suggestion
+    const isValid = suggestions.some(suggestion => 
+      `${suggestion.name}, ${getCountryName(suggestion.countryCode)}`.toLowerCase() === 
+      destination.toLowerCase()
+    );
+
+    if (isValid || confirm("This destination wasn't found in our suggestions. Continue anyway?")) {
+      navigate("/profile", {
+        state: {
+          name: cityName,
+          countryCode
+        },
+      });
+    }
+  };
+
 
   const COUNTRY_MAP = {
     US: "United States",
@@ -109,12 +147,9 @@ const NewDestination = () => {
       alert("Something went wrong while fetching recommendations.");
     }
   };
-
   
   return (
-    <div className="new-trip-container">
-      {/* Positioned background images */}
-     
+    <div className="new-trip-container">     
   
       <h2 className="trip-header">
         Tell us your dream destination, or let us pick one for you!
@@ -124,6 +159,7 @@ const NewDestination = () => {
       <div className="destination-input-wrapper" style={{ position: "relative" }}>
         <FaMapMarkerAlt className="location-icon" />
         <input
+        ref={inputRef}
           type="text"
           placeholder="Enter city, country"
           value={destination}
@@ -132,17 +168,9 @@ const NewDestination = () => {
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && destination.trim().length > 0) {
+            if (e.key === "Enter") {
               e.preventDefault();
-              localStorage.removeItem("trip");
-              const [cityName, countryNameRaw] = destination.split(",").map((s) => s.trim());
-              const countryCode = countryNameRaw || ""; // <- FIX HERE
-              navigate("/profile", {
-                state: {
-                  name: cityName,
-                  countryCode
-                },
-              });
+              validateAndNavigate();
             }
           }}
         />
