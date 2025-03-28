@@ -11,10 +11,19 @@ if (!$email) {
   exit();
 }
 
+$raw = file_get_contents("php://input");
+file_put_contents("debug_input.log", $raw . "\n", FILE_APPEND);
+$data = json_decode($raw, true);
+
 // Parse incoming data
 $data = json_decode(file_get_contents("php://input"), true);
 if (!$data) {
-  echo json_encode(["success" => false, "message" => "Invalid input"]);
+  echo json_encode([
+    "success" => false,
+    "message" => "Invalid input",
+    "raw" => $raw,
+    "json_error" => json_last_error_msg()
+  ]);
   exit();
 }
 

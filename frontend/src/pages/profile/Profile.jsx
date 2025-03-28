@@ -34,14 +34,13 @@ const Profile = () => {
   // });
   const [showModal, setShowModal] = useState(false);
 
-
   useEffect(() => {
     const fetchTripImage = async (cityName) => {
       const cacheKey = `tripImage-${cityName}`;
       const cached = localStorage.getItem(cacheKey);
-  
+
       if (cached) return cached;
-  
+
       try {
         const res = await fetch(
           `/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(
@@ -57,22 +56,59 @@ const Profile = () => {
         return airplaneIllustration;
       }
     };
-  
+
     const loadTrip = async () => {
       let tripData = null;
-  
+
+      const isNewTrip = !!incomingDestination?.name;
+
       // 1. Use incomingDestination if available
-      if (incomingDestination?.name) {
-        tripData = {
-          name: incomingDestination.name,
-          countryCode: incomingDestination.countryCode || "",
-          startDate: new Date().toISOString().slice(0, 10),
-          endDate: null,
-        };
+      // if (incomingDestination?.name) {
+      //   tripData = {
+      //     name: incomingDestination.name,
+      //     countryCode: incomingDestination.countryCode || "",
+      //     startDate: new Date().toISOString().slice(0, 10),
+      //     endDate: null,
+      //   };
+
+        if (isNewTrip) {
+          tripData = {
+            name: incomingDestination.name,
+            countryCode: incomingDestination.countryCode || "",
+            startDate: "", // allow empty
+            endDate: "",
+          };
+
+        // Immediately save this new trip to DB
+        fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            city_name: tripData.name,
+            country_name: tripData.countryCode || "",
+            start_date: "", // no dates yet
+            end_date: "",
+          }),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.success) {
+            console.error("Trip save failed:", data.message);
+          } else {
+            console.log("Trip saved with no dates.");
+          }
+        })
+        .catch((err) => {
+          console.error("Trip save error:", err);
+        });
       } else {
         // 2. Else, fetch most recent trip from backend
         try {
-          const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getLatestTrip.php");
+          const res = await fetch(
+            "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getLatestTrip.php"
+          );
           const data = await res.json();
           if (data.success) {
             tripData = {
@@ -90,7 +126,7 @@ const Profile = () => {
           return;
         }
       }
-  
+
       // 3. Get image and set trip
       const image = await fetchTripImage(tripData.name);
       setTrip({
@@ -100,14 +136,16 @@ const Profile = () => {
         budget: { amount: 0, expenses: [] },
       });
 
-      // if (!tripData.startDate || !tripData.endDate) {
-      //   setShowModal(true);
-      // }
+      setStartDate(tripData.startDate || "");
+  setEndDate(tripData.endDate || "");
+
+      if (!tripData.startDate || !tripData.endDate) {
+        setShowModal(true);
+      }
     };
-  
+
     loadTrip();
   }, [incomingDestination]);
-  
 
   return (
     <div className="dashboard-container">
@@ -171,23 +209,28 @@ const Profile = () => {
                     setTrip(updatedTrip);
                     setShowModal(false);
 
-                    const endpoint =
-                      updatedTrip.startDate && updatedTrip.endDate
-                        ? "updateTripDates.php"
-                        : "saveTrip.php";
+                    // const endpoint =
+                    //   updatedTrip.startDate && updatedTrip.endDate
+                    //     ? "updateTripDates.php"
+                    //     : "saveTrip.php";
 
-                    fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/trips/${endpoint}`, {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        city_name: updatedTrip.name,
-                        country_name: updatedTrip.countryCode || "",
-                        start_date: updatedTrip.startDate,
-                        end_date: updatedTrip.endDate,
-                      }),
-                    })
+                        const endpoint = "updateTripDates.php";
+
+                    fetch(
+                      `/CSE442/2025-Spring/cse-442aj/backend/api/trips/${endpoint}`,
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          city_name: updatedTrip.name,
+                          country_name: updatedTrip.countryCode || "",
+                          start_date: updatedTrip.startDate,
+                          end_date: updatedTrip.endDate,
+                        }),
+                      }
+                    )
                       .then((res) => res.json())
                       .then((data) => {
                         if (!data.success) {
