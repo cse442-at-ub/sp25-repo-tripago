@@ -32,8 +32,8 @@ const Sidebar = ({ username }) => {
         </button>
 
         <button 
-          className={`sidebar-item ${currentPath === '/trips' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/trips')}
+          className={`sidebar-item ${currentPath === '/all-trips' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/all-trips')}
         >
           <FaPlaneDeparture className="sidebar-icon" />
           <span>All trips</span>

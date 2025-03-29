@@ -15,6 +15,8 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const [selectedTrip, setSelectedTrip] = useState(null);
+
   let incomingDestination = location.state || null;
 
   const [trip, setTrip] = useState({
@@ -29,7 +31,6 @@ const Profile = () => {
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -57,18 +58,55 @@ const Profile = () => {
 
     const loadTrip = async () => {
       console.log("LOAD TRIP FUNCTION STARTED!");
+      const tempStored = localStorage.getItem("selectedTrip")
+      console.log("right when loading, localStorage has:", tempStored)
       let tripData = null;
 
-      // Maybe, the incoming destination should be
-      // console.log("incomingDestination when load trip function begins: ", incomingDestination);
-      // const isNewTrip = !!incomingDestination?.name;
-      console.log(
-        "incomingDestination when load trip function begins: ",
-        location.state
-      );
-      const isNewTrip = !!location.state?.name;
+      // 1. Check localStorage first (from AllTrips)
+      const stored = localStorage.getItem("selectedTrip");
+      // if (stored) {
+      //   console.log("Fetching from localStorage")
+      //   try {
+      //     const parsed = JSON.parse(stored);
+      //     tripData = {
+      //       name: parsed.destination,
+      //       countryCode: parsed.country_name || "",
+      //       startDate: parsed.start_date || "",
+      //       endDate: parsed.end_date || "",
+      //       imageUrl: parsed.image_url || null,
+      //     };
+      //     console.log("Loaded trip from localStorage:", tripData);
+      //     localStorage.removeItem("selectedTrip");
+      //   } catch (err) {
+      //     console.warn("Invalid JSON in localStorage");
+      //   }
+      // }
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          tripData = {
+            name: parsed.name,
+            countryCode: parsed.countryCode || "",
+            startDate: parsed.startDate || "",
+            endDate: parsed.endDate || "",
+            imageUrl: parsed.imageUrl || null,
+          };
+          console.log("Loaded trip from localStorage:", tripData);
+          // localStorage.removeItem("selectedTrip");
+        } catch (err) {
+          console.warn("Invalid JSON in localStorage");
+        }
+      }
 
-      if (isNewTrip) {
+
+      // console.log(
+      //   "incomingDestination when load trip function begins: ",
+      //   location.state
+      // );
+      // const isNewTrip = !!location.state?.name;
+
+      // Else if NewTrip via location.state
+      else if (location.state?.name) {
         tripData = {
           name: incomingDestination.name,
           countryCode: incomingDestination.countryCode || "",

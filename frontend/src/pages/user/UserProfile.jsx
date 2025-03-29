@@ -121,7 +121,6 @@ const UserProfile = () => {
           </div>
         </div>
 
-
         {/* Travel Bucket List */}
         <div className="bucket-list">
           <h3>Travel Bucket List</h3>

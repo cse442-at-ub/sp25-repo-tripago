@@ -26,6 +26,7 @@ import LoadingScreen from "./pages/LoadingScreen.jsx";
 import UserProfile from "./pages/user/UserProfile.jsx";
 import NewDestination from "./pages/profile/NewDestination.jsx";
 import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
+import AllTrips from "./pages/alltrips/AllTrips.jsx";
 
 const App = () => {
   const [user] = useState({
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/settings/*" element={<Sidebar username={user.username} />} />
         <Route path="/profile/*" element={<Sidebar username={user.username} />} />
         <Route path="/user-profile/*" element={<Sidebar username={user.username} />} />
+        <Route path="/all-trips/*" element={<Sidebar username={user.username} />} />
       </Routes>
 
         <main className="content">
@@ -59,6 +61,7 @@ const App = () => {
 
           {/* Protected Routes: Only logged in users can access these pages */}
             <Route path="/profile" element={<Profile />} />
+            <Route path="/all-trips" element={<AllTrips />} />
             {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
             <Route path="/profile/new-destination" element={<NewDestination />} />
             {/* <Route path="/profile/new-destination" element={<ProtectedRoute><NewDestination /></ProtectedRoute>} /> */}

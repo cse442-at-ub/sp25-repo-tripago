@@ -373,11 +373,13 @@ const ExpenseModal = ({ onClose, onSave }) => {
 const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
 
+  console.log("Trip is:", trip)
+
   const [currentTab, setCurrentTab] = useState("itinerary");
 
   return (
     <div className="trip-details">
-      {trip ? (
+      {trip.name ? (
         // if trip is selected
         <div className="trips-status">
           <div className="title-container divider">
@@ -385,7 +387,10 @@ const TripDetails = ({ trip, setShowModal }) => {
               Your trip to{" "}
               <span className="title-accent">{trip.name}.</span>
             </h2>
-            <p>Select a different trip</p>
+            {/* <p>Select a different trip</p> */}
+            <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
+  Select a different trip
+</p>
           </div>
           <div className="itin-budget-container">
             <p
@@ -422,10 +427,10 @@ const TripDetails = ({ trip, setShowModal }) => {
           <p>Get started below.</p>
 
           <button
-            className="plan-trip-btn"
-            onClick={() => navigate("/new-trip")}
+            className="start-trip-btn-all-trips"
+            onClick={() => navigate("/profile/new-destination")}
           >
-            Plan my trip
+            Start new trip
           </button>
         </div>
       )}
