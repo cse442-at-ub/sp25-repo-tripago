@@ -22,16 +22,6 @@ const TripHeader = ({
           className={`header-image ${isCustomPicture && "custom-picture"}`}
         />
       </div>
-
-      {/* <div className="header-info">
-        <h1>
-          {firstName} {lastName}
-        </h1>
-
-        <button className="edit-name-btn" onClick={() => navigate("/settings/profile-details")}>
-          <FaEdit /> Edit Name
-        </button>
-      </div> */}
     </div>
   );
 };

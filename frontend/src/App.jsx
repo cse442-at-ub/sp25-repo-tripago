@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, HashRouter } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -20,70 +20,142 @@ import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
 import UserProfile from "./pages/user/UserProfile.jsx";
 import NewDestination from "./pages/profile/NewDestination.jsx";
 import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
 import AllTrips from "./pages/alltrips/AllTrips.jsx";
+import { UserProvider } from "./context/UserContext.jsx";
 
 const App = () => {
-  const [user] = useState({
-    firstName: "Jane",
-    lastName: "Doe",
-    username: "Jane",
-  });
 
   return (
-    <HashRouter>
-      <div className="app-container">
-        <Navbar />
-
-      <Routes>
-        <Route path="/settings/*" element={<Sidebar username={user.username} />} />
-        <Route path="/profile/*" element={<Sidebar username={user.username} />} />
-        <Route path="/user-profile/*" element={<Sidebar username={user.username} />} />
-        <Route path="/all-trips/*" element={<Sidebar username={user.username} />} />
-      </Routes>
-
-        <main className="content">
+    <UserProvider>
+      <HashRouter>
+        <div className="app-container">
+          <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<PasswordReset />} />
-            <Route path="/new-password" element={<NewPassword />} />
-            <Route path="/new-password/:key" element={<NewPassword />} />
-            <Route path="/style-guide" element={<StyleGuide />} />
-            <Route path="/loading-screen" element={<LoadingScreen />} />
-            <Route path="/profile/accept-reject" element={<AcceptRejectDest />} />
-
-          {/* Protected Routes: Only logged in users can access these pages */}
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/all-trips" element={<AllTrips />} />
-            {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
-            <Route path="/profile/new-destination" element={<NewDestination />} />
-            {/* <Route path="/profile/new-destination" element={<ProtectedRoute><NewDestination /></ProtectedRoute>} /> */}
-            <Route path="/user-profile" element={<UserProfile />} />
-            {/* <Route path="/user-profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} /> */}
-            <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
-            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />
-            <Route path="/settings/accessibility" element={<ProtectedRoute><SettingsAccessibility /></ProtectedRoute>} />
-            <Route path="/settings/language-and-region" element={<ProtectedRoute><SettingsLanguageAndRegion /></ProtectedRoute>} />
-            <Route path="/settings/manage-password" element={<ProtectedRoute><SettingsManagePassword /></ProtectedRoute>} />
-            <Route path="/settings/recent-activity" element={<ProtectedRoute><SettingsRecentActivity /></ProtectedRoute>} />
-            <Route path="/settings/my-data" element={<ProtectedRoute><SettingsMyData /></ProtectedRoute>} />
-            <Route path="/settings/terms-of-service" element={<ProtectedRoute><SettingsTermsOfService /></ProtectedRoute>} />
-            <Route path="/settings/privacy-policy" element={<ProtectedRoute><SettingsPrivacyPolicy /></ProtectedRoute>} />
-
+            <Route path="/settings/*" element={<Sidebar />} />
+            <Route path="/profile/*" element={<Sidebar />} />
+            <Route path="/user-profile/*" element={<Sidebar />} />
+            <Route path="/all-trips/*" element={<Sidebar />} />
           </Routes>
-        </main>
 
-        <Footer />
-      </div>
-    </HashRouter>
+          <main className="content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<PasswordReset />} />
+              <Route path="/new-password" element={<NewPassword />} />
+              <Route path="/new-password/:key" element={<NewPassword />} />
+              <Route path="/style-guide" element={<StyleGuide />} />
+              <Route path="/loading-screen" element={<LoadingScreen />} />
+              <Route
+                path="/profile/accept-reject"
+                element={<AcceptRejectDest />}
+              />
+
+              {/* Protected Routes: Only logged in users can access these pages */}
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/all-trips" element={<AllTrips />} />
+              {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
+              <Route
+                path="/profile/new-destination"
+                element={<NewDestination />}
+              />
+              {/* <Route path="/profile/new-destination" element={<ProtectedRoute><NewDestination /></ProtectedRoute>} /> */}
+              <Route path="/user-profile" element={<UserProfile />} />
+              {/* <Route path="/user-profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} /> */}
+              <Route
+                path="/browse-hotels"
+                element={
+                  <ProtectedRoute>
+                    <Hotels />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/profile-details"
+                element={
+                  <ProtectedRoute>
+                    <SettingsProfileDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/accessibility"
+                element={
+                  <ProtectedRoute>
+                    <SettingsAccessibility />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/language-and-region"
+                element={
+                  <ProtectedRoute>
+                    <SettingsLanguageAndRegion />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/manage-password"
+                element={
+                  <ProtectedRoute>
+                    <SettingsManagePassword />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/recent-activity"
+                element={
+                  <ProtectedRoute>
+                    <SettingsRecentActivity />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/my-data"
+                element={
+                  <ProtectedRoute>
+                    <SettingsMyData />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/terms-of-service"
+                element={
+                  <ProtectedRoute>
+                    <SettingsTermsOfService />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/privacy-policy"
+                element={
+                  <ProtectedRoute>
+                    <SettingsPrivacyPolicy />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </main>
+
+          <Footer />
+        </div>
+      </HashRouter>
+    </UserProvider>
   );
 };
 

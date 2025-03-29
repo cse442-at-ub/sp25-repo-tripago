@@ -1,61 +1,116 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/user/UserProfile.css";
 import UserAvatar from "../../assets/UserAvatar.png";
-import parisPicture from "../../assets/paris.jpg";
-import charlestonPicture from "../../assets/charleston.jpg";
-import plane from "../../assets/plane.png";
-import house from "../../assets/house.png";
-import car from "../../assets/car.png";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 
-// Sample trip data
-const tripsData = [
-  {
-    id: 1,
-    destination: "Paris",
-    dates: "1/24 - 1/27",
-    price: 1358,
-    imageUrl: parisPicture,
-  },
-  {
-    id: 2,
-    destination: "Charleston",
-    dates: "1/24 - 1/27",
-    price: 1030,
-    imageUrl: charlestonPicture,
-  },
-];
-
-// Sample friends data
+// Hardcoded friends data
 const friendsData = ["Alice Johnson", "Michael Smith", "Samantha Lee"];
 
 const UserProfile = () => {
-  const [user] = useState({
-    firstName: "Jane",
-    lastName: "Doe",
-    username: "Jane",
+  const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
+    profilePic: UserAvatar,
   });
 
-  const [profilePic, setProfilePic] = useState(
-    localStorage.getItem("profilePic") || UserAvatar
-  );
+  const [stats, setStats] = useState({
+    totalTrips: 0,
+    countriesVisited: 0,
+  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        console.log("User data received:", data);
+
+        if (data.success) {
+          setUser({
+            firstName: data.user.first_name,
+            lastName: data.user.last_name,
+            profilePic: data.user.user_image_url || UserAvatar,
+          });
+        } else {
+          console.warn("Could not fetch user info:", data.message);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+      }
+    };
+  
+    fetchUserInfo();
+
+    const fetchStats = async () => {
+      try {
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php",
+          {
+            credentials: "include",
+          }
+        );
+        const data = await res.json();
+        if (data.success) {
+          setStats({
+            totalTrips: data.totalTrips,
+            countriesVisited: data.countriesVisited,
+          });
+        } else {
+          console.error("Failed to fetch stats:", data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   const [isHovered, setIsHovered] = useState(false);
 
-   // Handle image selection and save to localStorage
-   const handleImageChange = (event) => {
+  // Handle image selection and save to localStorage
+  const handleImageChange = async (event) => {
+    console.log("Trying to handle image change...")
     const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfilePic(imageUrl);
-      localStorage.setItem("profilePic", imageUrl); // Save to localStorage
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("image", file);
+  
+    try {
+      const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+  
+      const data = await res.json();
+      console.log("Data recieved on image change: ", data)
+
+     
+
+      if (data.success) {
+        // setUser((prev) => ({ ...prev, profilePic: data.imageUrl }));
+        console.log("Success recieved in image change.")
+        setUser((prev) => ({
+          ...prev,
+          profilePic: `${data.imageUrl}?t=${Date.now()}`, // prevents browser cache
+        }));
+        const tempUser = user.imageUrl
+        console.log("temp user is:", tempUser)
+      } else {
+        console.error("Upload failed:", data.message);
+      }
+    } catch (err) {
+      console.error("Image upload error:", err);
     }
   };
 
   const [bucketList, setBucketList] = useState([]);
   const [newDestination, setNewDestination] = useState("");
-  const [sortBy, setSortBy] = useState(""); // Sorting option
-  const [trips, setTrips] = useState(tripsData);
 
   // Handle adding a destination to the bucket list
   const addDestination = () => {
@@ -65,152 +120,95 @@ const UserProfile = () => {
     }
   };
 
-  // Sort trips by selected criteria
-  const handleSortChange = (event) => {
-    const value = event.target.value;
-    setSortBy(value);
-
-    let sortedTrips = [...trips];
-    if (value === "date") {
-      sortedTrips.sort((a, b) => new Date(b.dates) - new Date(a.dates));
-    } else if (value === "price") {
-      sortedTrips.sort((a, b) => a.price - b.price);
-    }
-
-    setTrips(sortedTrips);
-  };
-
   const navigate = useNavigate();
 
   return (
     <div className="profile-container">
-      <div className="user-profile-main-content">
-        {/* User Profile Section */}
-          <div className="profile-header">
-          {/* Profile Picture Upload */}
-          <label htmlFor="profile-pic-upload" className="profile-pic-label"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}>
-            <img
-              src={profilePic}
-              alt="User Avatar"
-              className="profile-avatar"
-            />
-          </label>
+      {/* User Profile Section */}
+      <div className="profile-header user-profile-section">
+        {/* Profile Picture Upload */}
+        <label
+          htmlFor="profile-pic-upload"
+          className="profile-pic-label"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <img src={user.profilePic} alt="User Avatar" className="profile-avatar" />
+        </label>
+        <input
+          type="file"
+          id="profile-pic-upload"
+          accept="image/*"
+          onChange={handleImageChange}
+          style={{ display: "none" }} // Hide input field
+        />
+        <p className="update-text">Click image to update</p>
+
+        <div className="header-info">
+          <h1>
+            {user.firstName} {user.lastName}
+          </h1>
+
+          <button
+            className="edit-name-btn"
+            onClick={() => navigate("/settings/profile-details")}
+          >
+            <FaEdit /> Edit Name
+          </button>
+        </div>
+      </div>
+
+      {/* View All Trips Section */}
+      <div className="view-all-trips user-profile-section">
+        <div className="view-all-trips-section">
+          <h3>Trips</h3>
+          <button
+            className="view-all-trips-btn"
+            onClick={() => navigate("/all-trips")}
+          >
+            View Your Trips →
+          </button>
+        </div>
+      </div>
+
+      {/* Travel Bucket List */}
+      <div className="bucket-list user-profile-section">
+        <h3>Travel Bucket List</h3>
+        <ul>
+          {bucketList.length === 0 ? (
+            <p>No destinations added yet.</p>
+          ) : (
+            bucketList.map((place, index) => <li key={index}>{place}</li>)
+          )}
+        </ul>
+        <div className="add-destination">
           <input
-            type="file"
-            id="profile-pic-upload"
-            accept="image/*"
-            onChange={handleImageChange}
-            style={{ display: "none" }} // Hide input field
+            type="text"
+            value={newDestination}
+            onChange={(e) => setNewDestination(e.target.value)}
+            placeholder="Add a new destination..."
           />
-          <p className="update-text">Click image to update</p>
-
-          <div className="header-info">
-            <h1>
-              {user.firstName} {user.lastName}
-            </h1>
-
-            <button
-              className="edit-name-btn"
-              onClick={() => navigate("/settings/profile-details")}
-              
-            >
-              <FaEdit /> Edit Name
-            </button>
-          </div>
+          <button onClick={addDestination} className="add-new-dest-btn">
+            Add
+          </button>
         </div>
+      </div>
 
-        {/* Travel Bucket List */}
-        <div className="bucket-list">
-          <h3>Travel Bucket List</h3>
-          <ul>
-            {bucketList.length === 0 ? (
-              <p>No destinations added yet.</p>
-            ) : (
-              bucketList.map((place, index) => <li key={index}>{place}</li>)
-            )}
-          </ul>
-          <div className="add-destination">
-            <input
-              type="text"
-              value={newDestination}
-              onChange={(e) => setNewDestination(e.target.value)}
-              placeholder="Add a new destination..."
-            />
-            <button onClick={addDestination} className="add-btn">
-              Add
-            </button>
-          </div>
-        </div>
+      {/* Trip Stats */}
+      <div className="trip-stats user-profile-section">
+        <h3>Trip Stats</h3>
+        <p>Total Trips Taken: {stats.totalTrips}</p>
+        <p>Countries Visited: {stats.countriesVisited}</p>
+      </div>
 
-        {/* Trip Stats */}
-        <div className="trip-stats">
-          <h3>Trip Stats</h3>
-          <p>Total Trips Taken: {trips.length}</p>
-          <p>
-            Countries Visited:{" "}
-            {new Set(trips.map((trip) => trip.destination)).size}
-          </p>
-          <p>Miles Traveled: 4,500 mi</p> {/* Placeholder */}
-        </div>
-
-        {/* Friends List */}
-        <div className="friends-list">
-          <h3>Friends</h3>
-          <ul>
-            {friendsData.map((friend, index) => (
-              <li key={index}>{friend}</li>
-            ))}
-          </ul>
-        </div>
-
-        {/* All Trips Header with Sorting */}
-        <div className="trips-header">
-          <h3>All Trips</h3>
-          <button className="start-trip-btn" onClick={() => navigate("/profile/new-destination")}>Start new trip</button>
-          <div className="sort-options">
-            <label>Sort By: </label>
-            <select value={sortBy} onChange={handleSortChange}>
-              <option value="">Select</option>
-              <option value="date">Date (Newest → Oldest)</option>
-              <option value="price">Price (Lowest → Highest)</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Trip Cards */}
-        <div className="trips-container">
-          {trips.map((trip) => (
-            <div key={trip.id} className="trip-card">
-              {/* View Button */}
-              <button className="view-button">View</button>
-
-              {/* Trip Info */}
-              <div className="trip-info">
-                <h4 className="trip-destination">{trip.destination}</h4>
-                <p className="trip-dates">{trip.dates}</p>
-
-                {/* Bottom Row: Icons + Price */}
-                <div className="trip-bottom-row">
-                  <div className="trip-icons">
-                    <img src={plane} alt="Plane" className="icon" />
-                    <img src={house} alt="House" className="icon" />
-                    <img src={car} alt="Car" className="icon" />
-                  </div>
-                  <p className="trip-price">${trip.price}</p>
-                </div>
-              </div>
-
-              {/* Trip Image */}
-              <img
-                src={trip.imageUrl}
-                alt={trip.destination}
-                className="trip-image"
-              />
-            </div>
+      {/* Friends List */}
+      <div className="friends-list user-profile-section">
+        <h3>Friends</h3>
+        <ul>
+          {friendsData.map((friend, index) => (
+            <li key={index}>{friend}</li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );

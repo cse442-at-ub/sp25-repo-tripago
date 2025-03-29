@@ -21,6 +21,9 @@ if (!$data) {
   exit();
 }
 
+// Default fallback image if none provided
+$image_url = $data["image_url"] ?? "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
+
 // Connect to DB
 $mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
 if ($mysqli->connect_errno) {
@@ -78,19 +81,20 @@ if (!$user) {
 // 3. Save new trip
 $insertStmt = $mysqli->prepare("
   INSERT INTO trips 
-  (email, first_name, last_name, city_name, country_name, start_date, end_date) 
-  VALUES (?, ?, ?, ?, ?, ?, ?)
+  (email, first_name, last_name, city_name, country_name, start_date, end_date, image_url) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
 $insertStmt->bind_param(
-  "sssssss", 
+  "ssssssss", 
   $email, 
   $user["first_name"], 
   $user["last_name"],
   $data["city_name"],
   $data["country_name"],
   $data["start_date"],
-  $data["end_date"]
+  $data["end_date"],
+  $image_url
 );
 
 if ($insertStmt->execute()) {

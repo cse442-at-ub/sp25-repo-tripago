@@ -7,12 +7,21 @@ import {
   FaUsers,
   FaCog,
 } from 'react-icons/fa';
-import PropTypes from 'prop-types';
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext.jsx";
 
-const Sidebar = ({ username }) => {
+const Sidebar = () => {
+  const { user } = useContext(UserContext);
+  if (!user) return null;
+  console.log("The user is,", user)
+
+  // const username = user.username;
+  const username = user?.username || "";
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+
+  
 
   return (
     <div className="sidebar">
@@ -41,7 +50,9 @@ const Sidebar = ({ username }) => {
 
         <button 
           className={`sidebar-item ${currentPath === '/profile' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate('/profile', {
+            state: { fromLogin: true }
+          })}
         >
           <FaPlus className="sidebar-icon" />
           <span>New trip</span>
@@ -65,10 +76,6 @@ const Sidebar = ({ username }) => {
       </div>
     </div>
   );
-};
-
-Sidebar.propTypes = {
-  username: PropTypes.string.isRequired,
 };
 
 export default Sidebar;

@@ -16,7 +16,9 @@ const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  let incomingDestination = location.state || null;
+  // let incomingDestination = location.state || null;
+  const incomingDestination = location.state || {};
+const isFromLogin = incomingDestination.fromLogin === true;
   console.log("at very top, incomingDest is", incomingDestination)
 
   const [trip, setTrip] = useState({
@@ -37,9 +39,8 @@ const Profile = () => {
     const fetchTripImage = async (cityName) => {
       const cacheKey = `tripImage-${cityName}`;
       const cached = localStorage.getItem(cacheKey);
-
       if (cached) return cached;
-
+  
       try {
         const res = await fetch(
           `/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(
@@ -55,186 +56,87 @@ const Profile = () => {
         return airplaneIllustration;
       }
     };
-
+  
     const loadTrip = async () => {
       console.log("LOAD TRIP FUNCTION STARTED!");
-      const tempStored = localStorage.getItem("selectedTrip")
-      console.log("right when loading, localStorage has:", tempStored)
-      console.log("and location.state is:", location.state)
+
+      // If user is coming from login page, get latest trip.
+
+      const stored = !isFromLogin ? localStorage.getItem("selectedTrip") : null;
       let tripData = null;
-
-      // 1. Check localStorage first (from AllTrips)
-      const stored = localStorage.getItem("selectedTrip");
-
-      // If NewTrip via location.state
-      // Possibly can delete later.
-      // if (location.state?.name) {
-      //   tripData = {
-      //     name: incomingDestination.name,
-      //     countryCode: incomingDestination.countryCode || "",
-      //     startDate: "", // allow empty
-      //     endDate: "",
-      //   };
-
-      //   console.log("Sending to saveTrip.php:", {
-      //     city_name: tripData.name,
-      //     country_name: tripData.countryCode,
-      //     start_date: "",
-      //     end_date: "",
-      //   });
-      //   // Immediately save this new trip to DB
-      //   fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       city_name: tripData.name,
-      //       country_name: tripData.countryCode || null,
-      //       start_date: null, // no dates yet
-      //       end_date: null,
-      //     }),
-      //   })
-      //     .then((res) => {
-      //       if (!res.ok) {
-      //         return res.text().then((text) => {
-      //           throw new Error(text);
-      //         });
-      //       }
-      //       return res.json();
-      //     })
-      //     .then((data) => {
-      //       if (!data.success) {
-      //         if (data.message.includes("Duplicate")) {
-      //           // Use data.existing_id to update the existing trip
-      //           console.log("Using existing trip:", data.existing_id);
-      //         } else {
-      //           console.error("Error:", data.message);
-      //         }
-      //       } else {
-      //         console.log("New trip saved:", data.trip_id);
-      //       }
-      //     });
-
-      //   // Clear the navigation state after using it
-      //   navigate(location.pathname, { replace: true, state: null });
-      //   console.log("Cleared location state");
-
-      //   console.log(
-      //     "incomingDestination when load trip function ends after change: ",
-      //     incomingDestination
-      //   );
-      // } 
-
-       if (stored) {
-        console.log("Checking stored", stored)
-        // try {
-        //   const parsed = JSON.parse(stored);
-        //   const isNewTrip = parsed.newTrip === true;
-
-        //   tripData = {
-        //     name: parsed.name,
-        //     countryCode: parsed.countryCode || "",
-        //     startDate: parsed.startDate || "",
-        //     endDate: parsed.endDate || "",
-        //     imageUrl: parsed.imageUrl || null,
-        //   };
-        //   console.log("Loaded trip from localStorage:", tripData);
-        //   // localStorage.removeItem("selectedTrip");
-        // } catch (err) {
-        //   console.warn("Invalid JSON in localStorage");
-        // }
-          try {
-            const parsed = JSON.parse(stored);
-            const isNewTrip = parsed.newTrip === true;
-        
-            tripData = {
-              name: parsed.name,
-              countryCode: parsed.countryCode || "",
-              startDate: parsed.startDate || "",
-              endDate: parsed.endDate || "",
-            };
-        
-            const image = parsed.imageUrl || airplaneIllustration;
-        
-            setTrip({
-              ...tripData,
-              picture: image,
-              days: [],
-              budget: { amount: 0, expenses: [] },
-            });
-        
-            setStartDate(tripData.startDate || null);
-            setEndDate(tripData.endDate || null);
-        
-            // ⬇Save to database if this is a new trip
-            if (isNewTrip) {
-              console.log("Saving new trip to database...");
-        
-              fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  city_name: tripData.name,
-                  country_name: tripData.countryCode || null,
-                  start_date: null,
-                  end_date: null,
-                }),
+  
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          const isNewTrip = parsed.newTrip === true;
+  
+          tripData = {
+            name: parsed.name,
+            countryCode: parsed.countryCode || "",
+            startDate: parsed.startDate || "",
+            endDate: parsed.endDate || "",
+          };
+  
+          let image = parsed.imageUrl || airplaneIllustration;
+  
+          if (isNewTrip) {
+            console.log("Fetching Pexels image for new trip...");
+            image = await fetchTripImage(tripData.name);
+  
+            // Save trip to database
+            fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                city_name: tripData.name,
+                country_name: tripData.countryCode || null,
+                start_date: null,
+                end_date: null,
+                image_url: image || "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
+              }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (!data.success && !data.message.includes("Duplicate")) {
+                  console.error("Trip save error:", data.message);
+                } else {
+                  console.log("Trip saved or already exists");
+                }
               })
-                .then((res) => res.json())
-                .then((data) => {
-                  if (!data.success) {
-                    if (data.message.includes("Duplicate")) {
-                      console.log("Trip already exists, using existing trip.");
-                    } else {
-                      console.error("Trip save error:", data.message);
-                    }
-                  } else {
-                    console.log("New trip saved with ID:", data.trip_id);
-                  }
-                })
-                .catch((err) => {
-                  console.error("Failed to save new trip:", err);
-                });
-            }
-        
-            // optional: clear flag so it's not saved again on refresh
+              .catch((err) => {
+                console.error("Failed to save trip:", err);
+              });
+  
+            // Update localStorage to clear the newTrip flag
             localStorage.setItem(
               "selectedTrip",
               JSON.stringify({
                 ...tripData,
-                imageUrl: parsed.imageUrl || "",
+                imageUrl: image,
                 newTrip: false,
               })
             );
-
-            const tocheck = localStorage.getItem(
-              "selectedTrip")
-
-              console.log("We are saving: ", tocheck)
-
-          } catch (err) {
-            console.warn("Invalid JSON in localStorage");
           }
-      }
-      
-      else {
-        // 2. Else, fetch most recent trip from backend
-        console.log("FETCH LATEST TRIP FUNCTION STARTED!");
+  
+          setTrip({
+            ...tripData,
+            picture: image,
+            days: [],
+            budget: { amount: 0, expenses: [] },
+          });
+  
+          setStartDate(tripData.startDate || null);
+          setEndDate(tripData.endDate || null);
+        } catch (err) {
+          console.warn("Invalid trip data in localStorage.");
+        }
+      } else {
+        // Load latest trip from DB
         try {
           const res = await fetch(
             "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getLatestTrip.php"
           );
           const data = await res.json();
-          console.log("API RESPONSE DATA:", data);
-          console.log("TRIP OBJECT FROM API:", {
-            city: data.trip?.city_name,
-            country: data.trip?.country_name,
-            start: data.trip?.start_date,
-            end: data.trip?.end_date,
-          });
           if (data.success) {
             tripData = {
               name: data.trip.city_name,
@@ -242,37 +144,39 @@ const Profile = () => {
               startDate: data.trip.start_date,
               endDate: data.trip.end_date,
             };
-
-            console.log("PROCESSED TRIP DATA:", tripData);
+  
+            const image = data.trip.image_url || "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
+  
+            setTrip({
+              ...tripData,
+              picture: image,
+              days: [],
+              budget: { amount: 0, expenses: [] },
+            });
+  
+            setStartDate(tripData.startDate || null);
+            setEndDate(tripData.endDate || null);
           } else {
-            console.warn("No trip found in DB");
-            return;
+            console.warn("No trip found in DB.");
           }
         } catch (err) {
-          console.error("Error fetching latest trip:", err);
-          return;
+          console.error("Error loading latest trip:", err);
         }
       }
-
-      // 3. Get image and set trip
-      const image = await fetchTripImage(tripData.name);
-      setTrip({
-        ...tripData,
-        picture: image,
-        days: [],
-        budget: { amount: 0, expenses: [] },
-      });
-
-      setStartDate(tripData.startDate || null);
-      setEndDate(tripData.endDate || null);
-
-      if (!tripData.startDate || !tripData.endDate) {
+  
+      if (!tripData?.startDate || !tripData?.endDate) {
         setShowModal(true);
       }
-    };
 
+      if (!tripData?.name) {
+        setShowModal(false);
+      }
+
+    };
+  
     loadTrip();
   }, [incomingDestination]);
+  
 
   return (
     <div className="dashboard-container">
