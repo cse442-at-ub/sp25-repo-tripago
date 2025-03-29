@@ -100,12 +100,12 @@ const AcceptRejectDest = () => {
       <button
         className="accept-button"
         onClick={() =>
-          navigate("/profile", {
-            state: {
-              name: city,
-              countryCode,
-            },
-          })
+          {localStorage.setItem(
+            "selectedTrip",
+            JSON.stringify({ name: city, countryCode, newTrip: true})
+          );
+          navigate("/profile");
+        }
         }
       >
         Sounds great!

@@ -15,9 +15,9 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedTrip, setSelectedTrip] = useState(null);
 
   let incomingDestination = location.state || null;
+  console.log("at very top, incomingDest is", incomingDestination)
 
   const [trip, setTrip] = useState({
     name: "",
@@ -60,109 +60,167 @@ const Profile = () => {
       console.log("LOAD TRIP FUNCTION STARTED!");
       const tempStored = localStorage.getItem("selectedTrip")
       console.log("right when loading, localStorage has:", tempStored)
+      console.log("and location.state is:", location.state)
       let tripData = null;
 
       // 1. Check localStorage first (from AllTrips)
       const stored = localStorage.getItem("selectedTrip");
-      // if (stored) {
-      //   console.log("Fetching from localStorage")
-      //   try {
-      //     const parsed = JSON.parse(stored);
-      //     tripData = {
-      //       name: parsed.destination,
-      //       countryCode: parsed.country_name || "",
-      //       startDate: parsed.start_date || "",
-      //       endDate: parsed.end_date || "",
-      //       imageUrl: parsed.image_url || null,
-      //     };
-      //     console.log("Loaded trip from localStorage:", tripData);
-      //     localStorage.removeItem("selectedTrip");
-      //   } catch (err) {
-      //     console.warn("Invalid JSON in localStorage");
-      //   }
-      // }
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          tripData = {
-            name: parsed.name,
-            countryCode: parsed.countryCode || "",
-            startDate: parsed.startDate || "",
-            endDate: parsed.endDate || "",
-            imageUrl: parsed.imageUrl || null,
-          };
-          console.log("Loaded trip from localStorage:", tripData);
-          // localStorage.removeItem("selectedTrip");
-        } catch (err) {
-          console.warn("Invalid JSON in localStorage");
-        }
+
+      // If NewTrip via location.state
+      // Possibly can delete later.
+      // if (location.state?.name) {
+      //   tripData = {
+      //     name: incomingDestination.name,
+      //     countryCode: incomingDestination.countryCode || "",
+      //     startDate: "", // allow empty
+      //     endDate: "",
+      //   };
+
+      //   console.log("Sending to saveTrip.php:", {
+      //     city_name: tripData.name,
+      //     country_name: tripData.countryCode,
+      //     start_date: "",
+      //     end_date: "",
+      //   });
+      //   // Immediately save this new trip to DB
+      //   fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       city_name: tripData.name,
+      //       country_name: tripData.countryCode || null,
+      //       start_date: null, // no dates yet
+      //       end_date: null,
+      //     }),
+      //   })
+      //     .then((res) => {
+      //       if (!res.ok) {
+      //         return res.text().then((text) => {
+      //           throw new Error(text);
+      //         });
+      //       }
+      //       return res.json();
+      //     })
+      //     .then((data) => {
+      //       if (!data.success) {
+      //         if (data.message.includes("Duplicate")) {
+      //           // Use data.existing_id to update the existing trip
+      //           console.log("Using existing trip:", data.existing_id);
+      //         } else {
+      //           console.error("Error:", data.message);
+      //         }
+      //       } else {
+      //         console.log("New trip saved:", data.trip_id);
+      //       }
+      //     });
+
+      //   // Clear the navigation state after using it
+      //   navigate(location.pathname, { replace: true, state: null });
+      //   console.log("Cleared location state");
+
+      //   console.log(
+      //     "incomingDestination when load trip function ends after change: ",
+      //     incomingDestination
+      //   );
+      // } 
+
+       if (stored) {
+        console.log("Checking stored", stored)
+        // try {
+        //   const parsed = JSON.parse(stored);
+        //   const isNewTrip = parsed.newTrip === true;
+
+        //   tripData = {
+        //     name: parsed.name,
+        //     countryCode: parsed.countryCode || "",
+        //     startDate: parsed.startDate || "",
+        //     endDate: parsed.endDate || "",
+        //     imageUrl: parsed.imageUrl || null,
+        //   };
+        //   console.log("Loaded trip from localStorage:", tripData);
+        //   // localStorage.removeItem("selectedTrip");
+        // } catch (err) {
+        //   console.warn("Invalid JSON in localStorage");
+        // }
+          try {
+            const parsed = JSON.parse(stored);
+            const isNewTrip = parsed.newTrip === true;
+        
+            tripData = {
+              name: parsed.name,
+              countryCode: parsed.countryCode || "",
+              startDate: parsed.startDate || "",
+              endDate: parsed.endDate || "",
+            };
+        
+            const image = parsed.imageUrl || airplaneIllustration;
+        
+            setTrip({
+              ...tripData,
+              picture: image,
+              days: [],
+              budget: { amount: 0, expenses: [] },
+            });
+        
+            setStartDate(tripData.startDate || null);
+            setEndDate(tripData.endDate || null);
+        
+            // ⬇Save to database if this is a new trip
+            if (isNewTrip) {
+              console.log("Saving new trip to database...");
+        
+              fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  city_name: tripData.name,
+                  country_name: tripData.countryCode || null,
+                  start_date: null,
+                  end_date: null,
+                }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (!data.success) {
+                    if (data.message.includes("Duplicate")) {
+                      console.log("Trip already exists, using existing trip.");
+                    } else {
+                      console.error("Trip save error:", data.message);
+                    }
+                  } else {
+                    console.log("New trip saved with ID:", data.trip_id);
+                  }
+                })
+                .catch((err) => {
+                  console.error("Failed to save new trip:", err);
+                });
+            }
+        
+            // optional: clear flag so it's not saved again on refresh
+            localStorage.setItem(
+              "selectedTrip",
+              JSON.stringify({
+                ...tripData,
+                imageUrl: parsed.imageUrl || "",
+                newTrip: false,
+              })
+            );
+
+            const tocheck = localStorage.getItem(
+              "selectedTrip")
+
+              console.log("We are saving: ", tocheck)
+
+          } catch (err) {
+            console.warn("Invalid JSON in localStorage");
+          }
       }
-
-
-      // console.log(
-      //   "incomingDestination when load trip function begins: ",
-      //   location.state
-      // );
-      // const isNewTrip = !!location.state?.name;
-
-      // Else if NewTrip via location.state
-      else if (location.state?.name) {
-        tripData = {
-          name: incomingDestination.name,
-          countryCode: incomingDestination.countryCode || "",
-          startDate: "", // allow empty
-          endDate: "",
-        };
-
-        console.log("Sending to saveTrip.php:", {
-          city_name: tripData.name,
-          country_name: tripData.countryCode,
-          start_date: "",
-          end_date: "",
-        });
-        // Immediately save this new trip to DB
-        fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            city_name: tripData.name,
-            country_name: tripData.countryCode || null,
-            start_date: null, // no dates yet
-            end_date: null,
-          }),
-        })
-          .then((res) => {
-            if (!res.ok) {
-              return res.text().then((text) => {
-                throw new Error(text);
-              });
-            }
-            return res.json();
-          })
-          .then((data) => {
-            if (!data.success) {
-              if (data.message.includes("Duplicate")) {
-                // Use data.existing_id to update the existing trip
-                console.log("Using existing trip:", data.existing_id);
-              } else {
-                console.error("Error:", data.message);
-              }
-            } else {
-              console.log("New trip saved:", data.trip_id);
-            }
-          });
-
-        // Clear the navigation state after using it
-        navigate(location.pathname, { replace: true, state: null });
-        console.log("Cleared location state");
-
-        console.log(
-          "incomingDestination when load trip function ends after change: ",
-          incomingDestination
-        );
-      } else {
+      
+      else {
         // 2. Else, fetch most recent trip from backend
         console.log("FETCH LATEST TRIP FUNCTION STARTED!");
         try {
@@ -278,11 +336,6 @@ const Profile = () => {
                     setTrip(updatedTrip);
                     setShowModal(false);
 
-                    // const endpoint =
-                    //   updatedTrip.startDate && updatedTrip.endDate
-                    //     ? "updateTripDates.php"
-                    //     : "saveTrip.php";
-
                     const endpoint = "updateTripDates.php";
 
                     fetch(
@@ -306,6 +359,23 @@ const Profile = () => {
                           console.error("Failed to save trip:", data.message);
                         } else {
                           console.log("Trip saved/updated successfully!");
+                         
+                          localStorage.setItem(
+                            "selectedTrip",
+                            JSON.stringify({
+                              name: updatedTrip.name,
+                              countryCode: updatedTrip.countryCode,
+                              startDate: updatedTrip.startDate,
+                              endDate: updatedTrip.endDate,
+                              imageUrl: updatedTrip.picture || "",
+                              newTrip: false,
+                            })
+                          );
+
+                          const checkinglocalSt = localStorage.getItem("selectedTrip")
+                          console.log("prrof is: ", checkinglocalSt)
+
+
                         }
                       })
                       .catch((err) => {

@@ -71,12 +71,11 @@ const NewDestination = () => {
     );
 
     if (isValid || confirm("This destination wasn't found in our suggestions. Continue anyway?")) {
-      navigate("/profile", {
-        state: {
-          name: cityName,
-          countryCode
-        },
-      });
+      localStorage.setItem(
+        "selectedTrip",
+        JSON.stringify({ name: cityName, countryCode, newTrip: true })
+      );
+      navigate("/profile");
     }
   };
 
