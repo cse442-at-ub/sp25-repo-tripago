@@ -5,6 +5,8 @@ import TripDetails from "../../components/trip/TripDetails.jsx";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 import "../../styles/Profile.css";
 import airplaneIllustration from "../../assets/airplane.svg";
+import Sidebar from "../../components/Sidebar.jsx";
+import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 
 const Profile = () => {
   const [user] = useState({
@@ -15,6 +17,8 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+const [isMobile, setIsMobile] = useState(false);
 
   // let incomingDestination = location.state || null;
   const incomingDestination = location.state || {};
@@ -61,8 +65,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
       console.log("LOAD TRIP FUNCTION STARTED!");
 
       // If user is coming from login page, get latest trip.
-
       const stored = !isFromLogin ? localStorage.getItem("selectedTrip") : null;
+
       let tripData = null;
   
       if (stored) {
@@ -173,12 +177,39 @@ const isFromLogin = incomingDestination.fromLogin === true;
       }
 
     };
-  
+
     loadTrip();
-  }, [incomingDestination]);
+
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth <= 480;
+      console.log("Window width:", window.innerWidth, "| isMobile:", isNowMobile);
+      setIsMobile(isNowMobile);
+    };
+  
+    handleResize(); // Run on first load
+    window.addEventListener("resize", handleResize); // Watch for resizes
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  
+   
+  }, []);
   
 
   return (
+    <>
+    {/* Hamburger toggle for mobile */}
+{isMobile && (
+  <MobileSidebarToggle
+    isOpen={isSidebarOpen}
+    toggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+  />
+)}
+
+{/* Sidebar: always visible on desktop, toggled on mobile */}
+<Sidebar isOpen={!isMobile || isSidebarOpen} />
+
     <div className="dashboard-container">
       <div className="dashboard-content">
         <div className="profile-content">
@@ -304,6 +335,7 @@ const isFromLogin = incomingDestination.fromLogin === true;
         </div>
       </div>
     </div>
+    </>
   );
 };
 

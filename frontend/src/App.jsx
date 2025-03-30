@@ -38,9 +38,9 @@ const App = () => {
           <Navbar />
           <Routes>
             <Route path="/settings/*" element={<Sidebar />} />
-            <Route path="/profile/*" element={<Sidebar />} />
-            <Route path="/user-profile/*" element={<Sidebar />} />
-            <Route path="/all-trips/*" element={<Sidebar />} />
+            {/* <Route path="/profile/*" element={<Sidebar />} /> */}
+            {/* <Route path="/user-profile/*" element={<Sidebar />} /> */}
+            {/* <Route path="/all-trips/*" element={<Sidebar />} /> */}
           </Routes>
 
           <main className="content">

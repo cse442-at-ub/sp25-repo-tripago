@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import fallbackImg from '../../assets/paris.jpg';
 import '../../styles/trip/AcceptRejectDest.css';
+import Sidebar from '../../components/Sidebar';
+import MobileSidebarToggle from '../../components/MobileSidebarToggle';
 
 const AcceptRejectDest = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const recommendations = location.state?.recommendations || [];
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+const [isMobile, setIsMobile] = useState(false);
 
   const category = location.state?.category || 'default';
 
@@ -78,8 +82,34 @@ const AcceptRejectDest = () => {
     }
   }, [recommendations, category]);
   
+  useEffect(() => {
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth <= 480;
+      console.log("Window width:", window.innerWidth, "| isMobile:", isNowMobile);
+      setIsMobile(isNowMobile);
+    };
+  
+    handleResize(); // Run on first load
+    window.addEventListener("resize", handleResize); // Watch for resizes
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
+    <>
+    {/* Hamburger toggle for mobile */}
+
+{isMobile && (
+  <MobileSidebarToggle
+    isOpen={isSidebarOpen}
+    toggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+  />
+)}
+
+{/* Sidebar: always visible on desktop, toggled on mobile */}
+<Sidebar isOpen={!isMobile || isSidebarOpen} />
     <div className="accept-reject-container">
       <h2>
         How does a trip to <span className="destination-name">{city}</span> sound?
@@ -118,6 +148,7 @@ const AcceptRejectDest = () => {
         I want something else.
       </p>
     </div>
+    </>
   );
 };
 

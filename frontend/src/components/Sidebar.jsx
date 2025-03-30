@@ -10,10 +10,11 @@ import {
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext.jsx";
 
-const Sidebar = () => {
+const Sidebar = ({isOpen = true}) => {
   const { user } = useContext(UserContext);
-  if (!user) return null;
-  console.log("The user is,", user)
+  // if (!user) return null;
+
+  console.log("Sidebar is rendered,")
 
   // const username = user.username;
   const username = user?.username || "";
@@ -24,7 +25,8 @@ const Sidebar = () => {
   
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+    {/* <div className="sidebar"> */}
       <div className="sidebar-header">
         <p>
           Hello, <span className="username">{username}</span>.
