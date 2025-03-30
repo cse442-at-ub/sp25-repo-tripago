@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../styles/community/Community.css";
 import paris from "../../assets/paris.jpg";
 import sandiego from "../../assets/sandiego.jpg";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
 import RequestsModal from "../../components/community/RequestsModal.jsx";
 import axios from 'axios'
-
+import Sidebar from "../../components/Sidebar.jsx";
+import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 
 const trips = [
   {
@@ -29,6 +30,23 @@ const Community = () => {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const friendsList = ["John"]; //  Assume user is only friends with John
   const [modalType, setModalType] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth <= 480;
+      console.log("Window width:", window.innerWidth, "| isMobile:", isNowMobile);
+      setIsMobile(isNowMobile);
+    };
+  
+    handleResize(); // Run on first load
+    window.addEventListener("resize", handleResize); // Watch for resizes
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const isFriend = selectedTrip
     ? friendsList.includes(selectedTrip.user)
@@ -190,11 +208,23 @@ const Community = () => {
 
 
   return (
+    <>
+        {/* Hamburger toggle for mobile */}
+{isMobile && (
+  <MobileSidebarToggle
+    isOpen={isSidebarOpen}
+    toggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+  />
+)}
+
+{/* Sidebar: always visible on desktop, toggled on mobile */}
+<Sidebar isOpen={!isMobile || isSidebarOpen} />
     <div className="community-container">
       {/* Top Section */}
       <div className="community-top">
         <div className="find-friends">
           <label className="find-friends-label">Find Friends</label>
+          <div className="find-friends-inputs">
           <input
             type="text"
             placeholder="Search by email"
@@ -202,7 +232,9 @@ const Community = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        <button style={{ marginLeft: '10px' }} onClick={handleSend}>Send</button> 
+        <button style={{ marginLeft: '10px' }} 
+        onClick={handleSend}>Send</button> 
+        </div>
         </div>
         {/* <div className="requests-list">
           <div className="incoming-requests">
@@ -315,7 +347,7 @@ const Community = () => {
         sentRequests={sentRequests}
       />
     </div>
-
+    </>
   );
 };
 

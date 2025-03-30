@@ -6,7 +6,6 @@ export default defineConfig({
   base: '/CSE442/2025-Spring/cse-442aj/romanTest/frontend/',
   server: {
     proxy: {
-
       '/api': {
         target: 'https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/romanTest/backend/', // PHP server address
         changeOrigin: true,

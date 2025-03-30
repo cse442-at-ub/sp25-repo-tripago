@@ -1,13 +1,13 @@
 .community-container {
   display: flex;
-  width: 80%;
+  width: 60%;
   flex-direction: column;
   background-color: var(--white);
   height: auto;
   min-height: 100vh;
   margin-top: 100px;
-  margin-left: 150px;
-  padding: 100px;
+  margin-left: 350px;
+  padding: 300px;
 }
 
 .community-top {
@@ -28,7 +28,7 @@
 .search-input {
   width: 300px;
   padding: 10px;
-  border: .9px solid var(--medium-grey);
+  border: 0.9px solid var(--medium-grey);
   border-radius: 8px;
   font-size: 16px;
 }
@@ -38,7 +38,6 @@
   flex-direction: column;
   margin-bottom: 10px;
   align-items: flex-start;
-
 }
 
 .find-friends-label {
@@ -48,10 +47,9 @@
   margin-bottom: 5px;
   margin-left: 0;
   padding-left: 0;
-
 }
 
- /* Incoming Requests */
+/* Incoming Requests */
 .incoming-requests {
   padding: 10px;
   border-radius: 8px;
@@ -91,7 +89,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .requests-section h3 {
@@ -174,7 +172,7 @@
 }
 
 .send-request-btn {
-  background-color: #52DDA2;
+  background-color: #52dda2;
   color: white;
   padding: 8px 12px;
   border: none;
@@ -193,7 +191,7 @@
 }
 
 .view-more-btn {
-  background:none;
+  background: none;
   color: var(--secondary-text);
   padding: 8px 12px;
   border: none;
@@ -208,18 +206,19 @@
 }
 
 .trip-card {
-  display: flex; 
+  display: flex;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
   background-color: var(--lightest-grey);
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .trip-info {
-  flex: 1; 
+  flex: 1;
 }
 
 .community-image {
@@ -228,8 +227,115 @@
 }
 
 .trip-image {
-  width: 300px; 
+  width: 300px;
   height: 150px;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.find-friends-inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.find-friends-inputs button {
+  margin-top: 10px;
+}
+
+/* MOBILE STYLING */
+
+@media (max-width: 821px) {
+  .community-container {
+    display: flex;
+    width: 50%;
+  }
+
+  .community-top {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .requests-section {
+    margin-left: 0px;
+    margin-bottom: 0px;
+    padding-left: 0px;
+    width: 100%;
+  }
+
+  .find-friends label {
+    font-size: 20px;
+  }
+  .find-friends input {
+    width: 100%;
+    margin-right: 0px;
+  }
+
+  .requests-section h3,
+  .trip-list h3,
+  .trip-card h2
+ {
+    font-size: 20px;
+  }
+  .requests-section button {
+    width: 100%;
+  }
+
+  .trip-card {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .community-container {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+  .find-friends label {
+    font-size: 18px;
+  }
+  .find-friends input {
+    width: 100%;
+    margin-right: 0px;
+  }
+  .find-friends button {
+    width: 100%;
+  }
+  .requests-section h3,
+  .trip-list h3,
+  .trip-card h2,
+  .trip-comment {
+    font-size: 18px;
+  }
+
+  .requests-section button {
+    width: 100%;
+  }
+  .find-friends-inputs {
+    flex-direction: column;
+  }
+  .trip-list {
+    width: 100%;
+  }
+  .trip-card {
+    width: 100%;
+  }
+  .trip-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .community-top {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .requests-section {
+    margin-left: 0px;
+  }
+  .view-more-btn {
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
 }

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Routes, Route, HashRouter } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -20,43 +19,64 @@ import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
+import UserProfile from "./pages/user/UserProfile.jsx";
+import NewDestination from "./pages/profile/NewDestination.jsx";
+import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
+import AllTrips from "./pages/alltrips/AllTrips.jsx";
+import { UserProvider } from "./context/UserContext.jsx";
 import Community from "./pages/community/Community.jsx";
 
 const App = () => {
-  const [user] = useState({
-    firstName: "Jane",
-    lastName: "Doe",
-    username: "Jane",
-  });
-
   return (
+    <UserProvider>
     <HashRouter>
       <div className="app-container">
         <Navbar />
 
-      <Routes>
-        <Route path="/settings/*" element={<Sidebar username={user.username} />} />
-        <Route path="/profile/*" element={<Sidebar username={user.username} />} />
-        <Route path="/community/*" element={<Sidebar username={user.username} />} />
-
-      </Routes>
-
-        <main className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<PasswordReset />} />
-            <Route path="/new-password" element={<NewPassword />} />
-            <Route path="/new-password/:key" element={<NewPassword />} />
-            <Route path="/style-guide" element={<StyleGuide />} />
-            <Route path="/loading-screen" element={<LoadingScreen />} />
+          <main className="content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<PasswordReset />} />
+              <Route path="/new-password" element={<NewPassword />} />
+              <Route path="/new-password/:key" element={<NewPassword />} />
+              <Route path="/style-guide" element={<StyleGuide />} />
+              <Route path="/loading-screen" element={<LoadingScreen />} />
+              <Route
+                path="/profile/accept-reject"
+                element={<AcceptRejectDest />}
+              />
 
           {/* Protected Routes: Only logged in users can access these pages */}
+          <Route
+                path="/all-trips"
+                element={
+                  <ProtectedRoute>
+                    <AllTrips />
+                  </ProtectedRoute>
+                }
+              />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route
+                path="/profile/new-destination"
+                element={
+                  <ProtectedRoute>
+                    <NewDestination />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/user-profile"
+                element={
+                  <ProtectedRoute>
+                    <UserProfile />
+                  </ProtectedRoute>
+                }
+              />
             <Route path="/browse-hotels" element={<ProtectedRoute><Hotels /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/settings/profile-details" element={<ProtectedRoute><SettingsProfileDetails /></ProtectedRoute>} />
@@ -72,9 +92,10 @@ const App = () => {
           </Routes>
         </main>
 
-        <Footer />
-      </div>
-    </HashRouter>
+          <Footer />
+        </div>
+      </HashRouter>
+    </UserProvider>
   );
 };
 
