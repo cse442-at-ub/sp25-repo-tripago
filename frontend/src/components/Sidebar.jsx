@@ -12,21 +12,17 @@ import { UserContext } from "../context/UserContext.jsx";
 
 const Sidebar = ({isOpen = true}) => {
   const { user } = useContext(UserContext);
-  // if (!user) return null;
+  if (!user) return null;
 
   console.log("Sidebar is rendered,")
 
-  // const username = user.username;
   const username = user?.username || "";
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
 
-  
-
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-    {/* <div className="sidebar"> */}
       <div className="sidebar-header">
         <p>
           Hello, <span className="username">{username}</span>.

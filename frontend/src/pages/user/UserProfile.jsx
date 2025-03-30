@@ -90,10 +90,6 @@ const UserProfile = () => {
       setIsMobile(isNowMobile);
       console.log("is mobile: ", isNowMobile);
 
-      //  Close the mobile sidebar when switching to desktop
-      // if (!isNowMobile) {
-      //   setIsSidebarOpen(true); // always show sidebar on desktop
-      // }
     };
 
     handleResize(); // Run on first load

@@ -69,3 +69,10 @@ h2 {
     margin-left: 200px;
   } 
 }
+
+@media (max-width: 480px) {
+  .accept-reject-container {
+    margin-left: 0px;
+  } 
+}
+

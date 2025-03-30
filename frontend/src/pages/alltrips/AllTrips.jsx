@@ -16,7 +16,7 @@ const AllTrips = () => {
   const [sortBy, setSortBy] = useState(""); // Sorting option
   const [trips, setTrips] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
-const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     console.log("Fetching trips...");

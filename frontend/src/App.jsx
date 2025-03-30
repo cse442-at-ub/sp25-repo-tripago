@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Routes, Route, HashRouter } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -30,18 +29,11 @@ import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 
 const App = () => {
-
   return (
     <UserProvider>
       <HashRouter>
         <div className="app-container">
           <Navbar />
-          <Routes>
-            <Route path="/settings/*" element={<Sidebar />} />
-            {/* <Route path="/profile/*" element={<Sidebar />} /> */}
-            {/* <Route path="/user-profile/*" element={<Sidebar />} /> */}
-            {/* <Route path="/all-trips/*" element={<Sidebar />} /> */}
-          </Routes>
 
           <main className="content">
             <Routes>
@@ -59,16 +51,38 @@ const App = () => {
               />
 
               {/* Protected Routes: Only logged in users can access these pages */}
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/all-trips" element={<AllTrips />} />
-              {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
+              <Route
+                path="/all-trips"
+                element={
+                  <ProtectedRoute>
+                    <AllTrips />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/profile/new-destination"
-                element={<NewDestination />}
+                element={
+                  <ProtectedRoute>
+                    <NewDestination />
+                  </ProtectedRoute>
+                }
               />
-              {/* <Route path="/profile/new-destination" element={<ProtectedRoute><NewDestination /></ProtectedRoute>} /> */}
-              <Route path="/user-profile" element={<UserProfile />} />
-              {/* <Route path="/user-profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} /> */}
+              <Route
+                path="/user-profile"
+                element={
+                  <ProtectedRoute>
+                    <UserProfile />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/browse-hotels"
                 element={
