@@ -7,15 +7,22 @@ import {
   FaUsers,
   FaCog,
 } from 'react-icons/fa';
-import PropTypes from 'prop-types';
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext.jsx";
 
-const Sidebar = ({ username }) => {
+const Sidebar = ({isOpen = true}) => {
+  const { user } = useContext(UserContext);
+  if (!user) return null;
+
+  console.log("Sidebar is rendered,")
+
+  const username = user?.username || "";
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <p>
           Hello, <span className="username">{username}</span>.
@@ -24,24 +31,26 @@ const Sidebar = ({ username }) => {
 
       <div className="sidebar-menu">
         <button 
-          className={`sidebar-item ${currentPath === '/profile' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/profile')}
+          className={`sidebar-item ${currentPath === '/user-profile' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/user-profile')}
         >
           <FaUser className="sidebar-icon" />
           <span>Profile</span>
         </button>
 
         <button 
-          className={`sidebar-item ${currentPath === '/trips' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/trips')}
+          className={`sidebar-item ${currentPath === '/all-trips' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/all-trips')}
         >
           <FaPlaneDeparture className="sidebar-icon" />
           <span>All trips</span>
         </button>
 
         <button 
-          className={`sidebar-item ${currentPath === '/new-trip' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/new-trip')}
+          className={`sidebar-item ${currentPath === '/profile' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/profile', {
+            state: { fromLogin: true }
+          })}
         >
           <FaPlus className="sidebar-icon" />
           <span>New trip</span>
@@ -65,10 +74,6 @@ const Sidebar = ({ username }) => {
       </div>
     </div>
   );
-};
-
-Sidebar.propTypes = {
-  username: PropTypes.string.isRequired,
 };
 
 export default Sidebar;

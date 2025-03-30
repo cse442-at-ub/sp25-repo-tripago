@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 
-const Itinerary = ({ trip }) => {
+const Itinerary = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
   const generateDayAccordions = () => {
+    if (!trip.startDate || !trip.endDate) return [];
     const startDate = new Date(trip.startDate);
     const endDate = new Date(trip.endDate);
     const dayAccordions = [];
@@ -57,6 +58,8 @@ const Itinerary = ({ trip }) => {
                 type="text"
                 placeholder="Enter location"
                 className="location-input"
+                value={""} 
+                onChange={() => {}} 
               />
               <button className="add-activity-btn">+ Add activity</button>
             </div>
@@ -70,7 +73,7 @@ const Itinerary = ({ trip }) => {
 
   return (
     <div className="itinerary-container">
-      {trip.startDate == null || trip.endDate == null ? (
+      {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
           <div>
             <p>
@@ -79,9 +82,18 @@ const Itinerary = ({ trip }) => {
             <p>Get started below.</p>
           </div>
 
-          <div className="plan-trip-create-section">
-            <button className="add-dates-btn">+ Add trip dates</button>
-            <p className="create-for-me-text">Create the sections for me.</p>
+          <div className="trip-dates-edit">
+            <div className="trip-dates-bar">
+              <h3>Trip Dates:</h3>
+
+              <button
+                className="edit-budget-btn"
+                onClick={() => setShowModal(true)}
+              >
+                <FaEdit /> Edit dates
+              </button>
+            </div>
+            <div className="days-container">{generateDayAccordions()}</div>
           </div>
         </div>
       ) : (
@@ -108,7 +120,16 @@ const Itinerary = ({ trip }) => {
               </button>
             </div>
           </div>
-          <div className="days-container">{generateDayAccordions()}</div>
+          <div className="trip-dates-edit">
+            <div className="trip-dates-bar">
+            <h3>Trip Dates:</h3>
+
+              <button className="edit-budget-btn" onClick={() => setShowModal(true)}>
+            <FaEdit /> Edit dates
+          </button>
+            </div>
+            <div className="days-container">{generateDayAccordions()}</div>
+          </div>
         </div>
       )}
     </div>
@@ -116,8 +137,8 @@ const Itinerary = ({ trip }) => {
 };
 
 const Budgeting = ({ trip }) => {
-  const [budget, setBudget] = useState(trip.budget?.amount);
-  const [expenses, setExpenses] = useState(trip.budget?.expenses);
+  const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
+  const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
 
@@ -349,22 +370,27 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
-const TripDetails = ({ trip }) => {
+const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
+
+  console.log("Trip is:", trip)
 
   const [currentTab, setCurrentTab] = useState("itinerary");
 
   return (
     <div className="trip-details">
-      {trip ? (
+      {trip.name ? (
         // if trip is selected
         <div className="trips-status">
           <div className="title-container divider">
             <h2>
               Your trip to{" "}
-              <span className="title-accent">{trip.location}.</span>
+              <span className="title-accent">{trip.name}.</span>
             </h2>
-            <p>Select a different trip</p>
+            {/* <p>Select a different trip</p> */}
+            <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
+  Select a different trip
+</p>
           </div>
           <div className="itin-budget-container">
             <p
@@ -386,7 +412,9 @@ const TripDetails = ({ trip }) => {
           </div>
 
           <div className="tab-content">
-            {currentTab === "itinerary" && <Itinerary trip={trip} />}
+            {currentTab === "itinerary" && (
+              <Itinerary trip={trip} setShowModal={setShowModal} />
+            )}
             {currentTab === "budgeting" && <Budgeting trip={trip} />}
           </div>
         </div>
@@ -399,10 +427,10 @@ const TripDetails = ({ trip }) => {
           <p>Get started below.</p>
 
           <button
-            className="plan-trip-btn"
-            onClick={() => navigate("/new-trip")}
+            className="start-trip-btn-all-trips"
+            onClick={() => navigate("/profile/new-destination")}
           >
-            Plan my trip
+            Start new trip
           </button>
         </div>
       )}
@@ -412,9 +440,10 @@ const TripDetails = ({ trip }) => {
 
 const tripProps = PropTypes.shape({
   name: PropTypes.string.isRequired,
-  startDate: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
+  // location: PropTypes.string.isRequired,
+  countryCode: PropTypes.string,
   days: PropTypes.arrayOf(
     PropTypes.shape({
       activities: PropTypes.arrayOf(
@@ -439,9 +468,11 @@ const tripProps = PropTypes.shape({
 
 TripDetails.propTypes = {
   trip: tripProps,
+  setShowModal: PropTypes.func.isRequired,
 };
 Itinerary.propTypes = {
   trip: tripProps,
+  setShowModal: PropTypes.func.isRequired,
 };
 Budgeting.propTypes = {
   trip: tripProps,

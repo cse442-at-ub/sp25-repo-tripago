@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext.jsx";
 import { useNavigate } from "react-router-dom";
 import '../styles/Login.css'
 import axios from 'axios'
@@ -6,7 +8,7 @@ import axios from 'axios'
 
 const Login = () => {
 
-
+  const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate()
 
@@ -35,8 +37,18 @@ const Login = () => {
       
       const result = response.data
       console.log("Login response",result);
-      if (result.success){
-        navigate('/profile')
+      if (result.success) {
+        setUser({
+          firstName: result.first_name,
+          lastName: result.last_name,
+          username: result.first_name,
+        });
+
+        console.log("In login, user is: ", result)
+
+        navigate('/profile', {
+          state: { fromLogin: true }
+        });
       } else {
         alert(result.message)
       }

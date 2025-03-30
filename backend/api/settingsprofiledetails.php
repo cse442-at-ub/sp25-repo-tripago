@@ -19,8 +19,8 @@ $email = $data['email'];
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 
 //return error if there is connection issue to database
-if ($mysqli->connection_status != 0){
-  echo json_encode(["success"=>false,"message"=>"Database connection failed". $mysqli->connection_status]);
+if ($mysqli->connect_errno != 0){
+  echo json_encode(["success"=>false,"message"=>"Database connection failed". $mysqli->connect_errno]);
 }
 
 //prepare
