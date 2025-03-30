@@ -12,7 +12,7 @@ import { UserContext } from "../context/UserContext.jsx";
 
 const Sidebar = ({isOpen = true}) => {
   const { user } = useContext(UserContext);
-  // if (!user) return null;
+  if (!user) return null;
 
   console.log("Sidebar is rendered,")
 
