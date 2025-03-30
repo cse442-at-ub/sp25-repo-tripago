@@ -38,17 +38,16 @@
 
 .left-img {
   margin-top: 0;
-
   position: relative;
-  bottom: 50%;
-  left: -60%;
+  bottom: 40%;
+  left: -50%;
   z-index: 1;
 }
 
 .right-img {
   position: relative;
   margin-top: 0;
-  top: -100%;
+  top: -150%;
   right: -40%;
   z-index: 1;
 }
@@ -211,7 +210,7 @@
   .right-img {
     position: relative;
     margin-top: 0;
-    top: -90%;
+    top: -120%;
     right: -50%;
   }
 }
