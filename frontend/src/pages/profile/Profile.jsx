@@ -10,7 +10,6 @@ import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-  const navigate = useNavigate();
 
   const [user] = useState({
     firstName: "Jane",
