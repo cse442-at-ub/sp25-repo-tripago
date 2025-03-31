@@ -78,7 +78,7 @@ const Itinerary = ({ trip, setShowModal, editable }) => {
     <div className="itinerary-container">
       {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
-          {!editable && <Navigate to="/profile" />}
+          {/* {!editable && <Navigate to="/profile" />} */}
           <div>
             <p>
               Looks like you haven&apos;t selected the dates for your trip yet.
@@ -396,7 +396,7 @@ const TripDetails = ({ trip, setShowModal, editable }) => {
               <span className="title-accent">{trip.name}.</span>
             </h2>
             {/* {editable && <p>Select a different trip</p> */}
-            {ediable && <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
+            {editable && <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
   Select a different trip
 </p>}
           </div>
@@ -429,7 +429,7 @@ const TripDetails = ({ trip, setShowModal, editable }) => {
       ) : (
         // if NO trip is selected
         <div className="trips-status">
-          {!editable && <Navigate to="/profile" />}
+          {/* {!editable && <Navigate to="/profile" />} */}
           <h2 className="divider trip-status-pad">
             Looks like you don&apos;t have any trips scheduled yet.
           </h2>

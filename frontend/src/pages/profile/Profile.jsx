@@ -7,7 +7,6 @@ import "../../styles/Profile.css";
 import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
-import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
 
@@ -330,7 +329,6 @@ const isFromLogin = incomingDestination.fromLogin === true;
             firstName={user.firstName}
             lastName={user.lastName}
             picture={trip?.picture}
-            editable={true}
           />
 
           <TripDetails

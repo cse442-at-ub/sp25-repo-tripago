@@ -68,7 +68,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/profile/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+            <Route path="/profile/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
             <Route
                 path="/profile/new-destination"
                 element={
