@@ -257,6 +257,10 @@
   }
 }
 
+.loading-message {
+  color: var(--dark-grey);
+}
+
 /* No Results and Hint States */
 .location-no-results,
 .location-hint {

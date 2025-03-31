@@ -16,13 +16,12 @@ const HotelCard = ({ hotel }) => {
         <div className="star-rating">
           {"★".repeat(hotel.rating)}{"☆".repeat(5 - hotel.rating)}
         </div>
-        <p className="hotel-reviews">({hotel.reviews} ratings)</p>
+        {/* <p className="hotel-reviews">({hotel.reviews} ratings)</p> */}
 
         {/* Price Info */}
-        <div className="price-details">
-          <p>{hotel.platform1}: <span className="price">${hotel.price1}</span></p>
-          <p>{hotel.platform2}: <span className="price">${hotel.price2}</span></p>
-        </div>
+        {/* <div className="price-details">
+          <p><span className="price">${hotel.bestPrice}</span></p>
+        </div> */}
       </div>
 
       {/* Price + CTA */}

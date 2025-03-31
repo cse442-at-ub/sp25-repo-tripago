@@ -12,6 +12,21 @@ import TravelersModal from "../../components/hotel/TravelersModal";
 
 const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/sambackend/api/amadeus/hotels";
 
+// Haversine formula to calculate distance between two points
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distanceKm = R * c;
+  const distanceMiles = distanceKm * 0.621371; // Convert km to miles
+  return distanceMiles.toFixed(1); // Return distance in miles with 1 decimal place
+};
+
 const Hotels = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   
@@ -124,12 +139,84 @@ const Hotels = () => {
     }
   };
 
+  // Search for hotels when location is selected
+  const searchHotels = async (locationOverride = null) => {
+    const searchLocation = locationOverride || selectedLocation;
+    
+    if (!searchLocation || !checkInDate || !checkOutDate) {
+      setError("Please select a location and dates");
+      return;
+    }
+
+    setError(null);
+    setHotels([]);
+    setHotelOffers({});
+
+    try {
+      // First get hotels in the city
+      setIsLoadingHotels(true);
+      console.log("searchLocation", searchLocation);
+      const hotelsResponse = await fetch(
+        `${API_BASE_URL}/hotels.php?cityCode=${searchLocation.iataCode}`
+      );
+      const hotelsData = await hotelsResponse.json();
+      console.log("hotelsData", hotelsData);
+
+      if (!hotelsData.success) {
+        throw new Error(hotelsData.error || "Failed to fetch hotels");
+      }
+
+      const hotelsList = hotelsData.data.data || [];
+      setHotels(hotelsList);
+      console.log("hotelsList", hotelsList);
+      // Then get offers for these hotels
+      setIsLoadingOffers(true);
+      const hotelIds = hotelsList.map(h => h.hotelId).join(",");
+      console.log("hotelIds", hotelIds);
+      if (hotelIds) {
+        const offersResponse = await fetch(
+          `${API_BASE_URL}/hotel_offers.php?` + new URLSearchParams({
+            hotelIds,
+            checkInDate,
+            checkOutDate,
+            adults: adults.toString(),
+            rooms: rooms.toString()
+          })
+        );
+        const offersData = await offersResponse.json();
+        console.log("offersData", offersData);  
+
+        if (offersData.success) {
+          // Create a map of hotelId to offer
+          const offersMap = {};
+          (offersData.data.data || []).forEach(offer => {
+            offersMap[offer.hotel.hotelId] = offer;
+          });
+          console.log("offersMap", offersMap);
+          setHotelOffers(offersMap);
+        }
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error("Error searching hotels:", err);
+    } finally {
+      setIsLoadingHotels(false);
+      setIsLoadingOffers(false);
+    }
+  };
+
   // Handle URL parameters on mount
   useEffect(() => {
     const locationParam = searchParams.get('location');
+    const checkInParam = searchParams.get('checkIn');
+    const checkOutParam = searchParams.get('checkOut');
     
     if (locationParam && !initialSearchDone.current) {
       initialSearchDone.current = true;
+      
+      // Set the dates immediately
+      if (checkInParam) setCheckInDate(checkInParam);
+      if (checkOutParam) setCheckOutDate(checkOutParam);
       
       // Search for the location
       searchLocations(locationParam).then(results => {
@@ -140,6 +227,11 @@ const Hotels = () => {
           ) || results[0];
           
           handleLocationSelect(exactMatch);
+          
+          // If we have all required parameters, trigger the search immediately with the location
+          if (checkInParam && checkOutParam) {
+            searchHotels(exactMatch);
+          }
         }
       });
     }
@@ -190,6 +282,11 @@ const Hotels = () => {
     setLocationQuery(value);
     setSelectedLocation(null);
     
+    // Clear hotel results and offers when user starts typing
+    setHotels([]);
+    setHotelOffers({});
+    setError(null);
+    
     // Remove location from URL params when input is cleared
     setSearchParams(params => {
       params.delete('location');
@@ -234,72 +331,13 @@ const Hotels = () => {
   const hotelsPerPage = 3;
   const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false);
 
-  // Search for hotels when location is selected
-  const searchHotels = async () => {
-    if (!selectedLocation || !checkInDate || !checkOutDate) {
-      setError("Please select a location and dates");
-      return;
-    }
-
-    setError(null);
-    setHotels([]);
-    setHotelOffers({});
-
-    try {
-      // First get hotels in the city
-      setIsLoadingHotels(true);
-      const hotelsResponse = await fetch(
-        `${API_BASE_URL}/hotels.php?cityCode=${selectedLocation.iataCode}`
-      );
-      const hotelsData = await hotelsResponse.json();
-
-      if (!hotelsData.success) {
-        throw new Error(hotelsData.error || "Failed to fetch hotels");
-      }
-
-      const hotelsList = hotelsData.data.data || [];
-      setHotels(hotelsList);
-
-      // Then get offers for these hotels
-      setIsLoadingOffers(true);
-      const hotelIds = hotelsList.map(h => h.hotelId).join(",");
-      if (hotelIds) {
-        const offersResponse = await fetch(
-          `${API_BASE_URL}/hotel_offers.php?` + new URLSearchParams({
-            hotelIds,
-            checkInDate,
-            checkOutDate,
-            adults: adults.toString(),
-            rooms: rooms.toString()
-          })
-        );
-        const offersData = await offersResponse.json();
-
-        if (offersData.success) {
-          // Create a map of hotelId to offer
-          const offersMap = {};
-          (offersData.data.data || []).forEach(offer => {
-            offersMap[offer.hotel.hotelId] = offer;
-          });
-          setHotelOffers(offersMap);
-        }
-      }
-    } catch (err) {
-      setError(err.message);
-      console.error("Error searching hotels:", err);
-    } finally {
-      setIsLoadingHotels(false);
-      setIsLoadingOffers(false);
-    }
-  };
-
   // Filter and sort hotels
   let filteredHotels = [...hotels];
   
   if (freeBreakfastOnly) {
     filteredHotels = filteredHotels.filter(hotel => {
       const offer = hotelOffers[hotel.hotelId];
-      return offer?.offers?.[0]?.amenities?.includes("BREAKFAST");
+      return offer?.offers?.[0]?.boardType === "BREAKFAST";
     });
   }
 
@@ -325,8 +363,22 @@ const Hotels = () => {
     filteredHotels.sort((a, b) => b.rating - a.rating);
   } else if (sortOption === "Distance") {
     filteredHotels.sort((a, b) => {
-      const distanceA = parseFloat(a.distance) || 0;
-      const distanceB = parseFloat(b.distance) || 0;
+      if (!a.latitude || !a.longitude || !b.latitude || !b.longitude || 
+          !selectedLocation.latitude || !selectedLocation.longitude) {
+        return 0;
+      }
+      const distanceA = parseFloat(calculateDistance(
+        parseFloat(selectedLocation.latitude),
+        parseFloat(selectedLocation.longitude),
+        parseFloat(a.latitude),
+        parseFloat(a.longitude)
+      ));
+      const distanceB = parseFloat(calculateDistance(
+        parseFloat(selectedLocation.latitude),
+        parseFloat(selectedLocation.longitude),
+        parseFloat(b.latitude),
+        parseFloat(b.longitude)
+      ));
       return distanceA - distanceB;
     });
   }
@@ -465,7 +517,7 @@ const Hotels = () => {
             <div className="input-wrapper">
               <div 
                 className="search-container"
-                onClick={searchHotels}
+                onClick={() => searchHotels()}
                 style={{ cursor: 'pointer' }}
               >
                 <img src={searchIcon} alt="Search" className="search-icon" />
@@ -542,30 +594,42 @@ const Hotels = () => {
           )}
 
           {/* Hotel List */}
-          <div className="hotels-list">
+          {(!isLoadingHotels && !isLoadingOffers) && (
+            <div className="hotels-list">
             {currentHotels.length > 0 ? (
               currentHotels.map((hotel) => {
                 const offer = hotelOffers[hotel.hotelId];
+                console.log("hotel", hotel);
+                console.log("hotelOffers", hotelOffers);
+                console.log("offer", offer);
                 const hotelData = {
                   ...hotel,
                   name: hotel.name,
-                  location: `${hotel.address.cityName}, ${hotel.address.countryCode}`,
+                  location: `${formatLocationName(selectedLocation.address.cityName)}, ${selectedLocation.address.countryCode}`,
+                  distance: hotel.geoCode.latitude && hotel.geoCode.longitude && selectedLocation.geoCode.latitude && selectedLocation.geoCode.longitude ? 
+                    `${calculateDistance(
+                      parseFloat(selectedLocation.geoCode.latitude),
+                      parseFloat(selectedLocation.geoCode.longitude),
+                      parseFloat(hotel.geoCode.latitude),
+                      parseFloat(hotel.geoCode.longitude)
+                    )} miles` : "Distance not available",
                   rating: parseInt(hotel.rating),
-                  reviews: hotel.reviews || 0,
+                  reviews: 0,
                   bestPrice: offer?.offers?.[0]?.price?.total,
-                  freeBreakfast: offer?.offers?.[0]?.amenities?.includes("BREAKFAST"),
+                  freeBreakfast: offer?.offers?.[0]?.boardType === "BREAKFAST",
                   image: hotel.media?.[0]?.uri || null,
                 };
                 
                 return <HotelCard key={hotel.hotelId} hotel={hotelData} />;
               })
             ) : !isLoadingHotels && !isLoadingOffers ? (
-              <p>No hotels available with the current filters.</p>
-            ) : null}
-          </div>
+                <p>No hotels available with the current filters.</p>
+              ) : null}
+            </div>
+          )}
 
           {/* Pagination */}
-          {filteredHotels.length > 0 && (
+          {(filteredHotels.length > 0 && !isLoadingHotels && !isLoadingOffers) && (
             <div className="pagination-container">
               <p>
                 Showing {indexOfFirstHotel + 1} -{" "}
