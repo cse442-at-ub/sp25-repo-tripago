@@ -6,9 +6,10 @@ import { Navigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 
-const Itinerary = ({ trip, editable }) => {
+const Itinerary = ({ trip, setShowModal, editable }) => {
   const navigate = useNavigate();
   const generateDayAccordions = () => {
+    if (!trip.startDate || !trip.endDate) return [];
     const startDate = new Date(trip.startDate);
     const endDate = new Date(trip.endDate);
     const dayAccordions = [];
@@ -59,6 +60,8 @@ const Itinerary = ({ trip, editable }) => {
                   type="text"
                   placeholder="Enter location"
                   className="location-input"
+                value={""} 
+                onChange={() => {}} 
                 />
                 <button className="add-activity-btn">+ Add activity</button>
               </div>
@@ -73,7 +76,7 @@ const Itinerary = ({ trip, editable }) => {
 
   return (
     <div className="itinerary-container">
-      {trip.startDate == null || trip.endDate == null ? (
+      {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
           {!editable && <Navigate to="/profile" />}
           <div>
@@ -83,9 +86,18 @@ const Itinerary = ({ trip, editable }) => {
             <p>Get started below.</p>
           </div>
 
-          <div className="plan-trip-create-section">
-            <button className="add-dates-btn">+ Add trip dates</button>
-            <p className="create-for-me-text">Create the sections for me.</p>
+          <div className="trip-dates-edit">
+            <div className="trip-dates-bar">
+              <h3>Trip Dates:</h3>
+
+              <button
+                className="edit-budget-btn"
+                onClick={() => setShowModal(true)}
+              >
+                <FaEdit /> Edit dates
+              </button>
+            </div>
+            <div className="days-container">{generateDayAccordions()}</div>
           </div>
         </div>
       ) : (
@@ -114,7 +126,16 @@ const Itinerary = ({ trip, editable }) => {
               }
             </div>
           </div>
-          <div className="days-container">{generateDayAccordions()}</div>
+          <div className="trip-dates-edit">
+            <div className="trip-dates-bar">
+            <h3>Trip Dates:</h3>
+
+              <button className="edit-budget-btn" onClick={() => setShowModal(true)}>
+            <FaEdit /> Edit dates
+          </button>
+            </div>
+            <div className="days-container">{generateDayAccordions()}</div>
+          </div>
         </div>
       )}
     </div>
@@ -122,8 +143,8 @@ const Itinerary = ({ trip, editable }) => {
 };
 
 const Budgeting = ({ trip, editable }) => {
-  const [budget, setBudget] = useState(trip.budget?.amount);
-  const [expenses, setExpenses] = useState(trip.budget?.expenses);
+  const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
+  const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
 
@@ -357,22 +378,27 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
-const TripDetails = ({ trip, editable }) => {
+const TripDetails = ({ trip, setShowModal, editable }) => {
   const navigate = useNavigate();
+
+  console.log("Trip is:", trip)
 
   const [currentTab, setCurrentTab] = useState("itinerary");
 
   return (
     <div className="trip-details">
-      {trip ? (
+      {trip.name ? (
         // if trip is selected
         <div className="trips-status">
           <div className="title-container divider">
             <h2>
               Your trip to{" "}
-              <span className="title-accent">{trip.location}.</span>
+              <span className="title-accent">{trip.name}.</span>
             </h2>
-            {editable && <p>Select a different trip</p>}
+            {/* {editable && <p>Select a different trip</p> */}
+            {ediable && <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
+  Select a different trip
+</p>}
           </div>
           <div className="itin-budget-container">
             <p
@@ -394,7 +420,9 @@ const TripDetails = ({ trip, editable }) => {
           </div>
 
           <div className="tab-content">
-            {currentTab === "itinerary" && <Itinerary trip={trip} editable={editable} />}
+            {currentTab === "itinerary" && (
+              <Itinerary trip={trip} setShowModal={setShowModal} editable={editable} />
+            )}
             {currentTab === "budgeting" && <Budgeting trip={trip} editable={editable} />}
           </div>
         </div>
@@ -408,10 +436,10 @@ const TripDetails = ({ trip, editable }) => {
           <p>Get started below.</p>
 
           <button
-            className="plan-trip-btn"
-            onClick={() => navigate("/new-trip")}
+            className="start-trip-btn-all-trips"
+            onClick={() => navigate("/profile/new-destination")}
           >
-            Plan my trip
+            Start new trip
           </button>
         </div>
       )}
@@ -421,9 +449,10 @@ const TripDetails = ({ trip, editable }) => {
 
 const tripProps = PropTypes.shape({
   name: PropTypes.string.isRequired,
-  startDate: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
+  // location: PropTypes.string.isRequired,
+  countryCode: PropTypes.string,
   days: PropTypes.arrayOf(
     PropTypes.shape({
       activities: PropTypes.arrayOf(
@@ -448,10 +477,12 @@ const tripProps = PropTypes.shape({
 
 TripDetails.propTypes = {
   trip: tripProps,
+  setShowModal: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };
 Itinerary.propTypes = {
   trip: tripProps,
+  setShowModal: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };
 Budgeting.propTypes = {

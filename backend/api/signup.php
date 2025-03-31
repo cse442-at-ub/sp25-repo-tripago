@@ -1,11 +1,11 @@
 <?php
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
 $jsonData = file_get_contents("php://input");
 
-//DATA SHOULD HAVE DICTIONARY THING FROM SIGNUP PAGE
 $data = json_decode($jsonData,true);
 
 if ($data == null){
@@ -35,10 +35,11 @@ $hashed_p_word = password_hash($password,PASSWORD_BCRYPT);
 
 //establish connection to sql DATABASE
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+// $mysqli = new mysqli("localhost","tuyisabe","50393405","cse442_2025_spring_team_aj_db");
 
 //return error if there is connection issue to database
-if ($mysqli->connection_status != 0){
-  echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connection_status]);
+if ($mysqli->connect_errno != 0){
+  echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_errno]);
 }
 
 //prepare

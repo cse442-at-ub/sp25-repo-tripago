@@ -16,7 +16,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--white); /* Adjust this */
+  background: var(--white); 
   z-index: -1;
 }
 
@@ -41,6 +41,44 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+
+
+.travel-dates-modal h3 span {
+  color: var(--primary-color);
+}
+
+.travel-dates-modal label {
+  color: var(--dark-grey)
+}
+
+.travel-dates-modal p {
+  color: var(--secondary-text);
+  font-size: 11px;
+}
+
+
+
+@media (max-width: 1007px) { 
+  .dashboard-container {
+    margin-top: 150px;
+  }
+
+  .profile-content{
+    padding-left: 250px;
+  }
+
+  .start-trip-btn-all-trips {
+    width: 100px;
+    height: 40px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) { 
+  .profile-content{
+    padding-left: 50px;
+  }
 }
 
 .cart-buttons {
