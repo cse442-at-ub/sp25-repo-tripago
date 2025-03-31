@@ -6,7 +6,7 @@ This documentation describes how to use the main API endpoints for hotel searchi
 
 ## 1. Location Search
 
-**Endpoint:** `/api/locations.php`
+**Endpoint:** `/api/amadeus/hotels/locations.php`
 
 Search for city or airport locations by keyword.
 
@@ -24,7 +24,7 @@ https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/sambackend/api/loc
 
 ## 2. Hotel Search
 
-**Endpoint:** `/api/hotels.php`
+**Endpoint:** `/api/amadeus/hotels/hotels.php`
 
 Find hotels in a specific city.
 
@@ -43,7 +43,7 @@ https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/sambackend/api/hot
 
 ## 3. Hotel Offers
 
-**Endpoint:** `/api/hotel_offers.php`
+**Endpoint:** `/api/amadeus/hotels/hotel_offers.php`
 
 Get pricing and availability for specific hotels.
 
@@ -64,7 +64,7 @@ https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/sambackend/api/hot
 
 ## 4. Hotel Offer Details
 
-**Endpoint:** `/api/hotel_offer_details.php`
+**Endpoint:** `/api/amadeus/hotels/hotel_offer_details.php`
 
 Get detailed information about a specific hotel offer.
 

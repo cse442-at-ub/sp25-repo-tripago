@@ -1,5 +1,5 @@
 <?php
-require_once('../config/amadeus_config.php');
+require_once('amadeus_config.php');
 
 
 // Common error handling function for all Amadeus endpoints

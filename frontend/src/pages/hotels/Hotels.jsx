@@ -10,7 +10,7 @@ import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
 
-const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/sambackend/api";
+const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/sambackend/api/amadeus/hotels";
 
 const Hotels = () => {
   const [searchParams, setSearchParams] = useSearchParams();
