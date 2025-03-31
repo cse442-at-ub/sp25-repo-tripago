@@ -27,7 +27,6 @@ import NewDestination from "./pages/profile/NewDestination.jsx";
 import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
 import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
-import Cart from "./pages/profile/Cart.jsx";
 
 const App = () => {
   return (
@@ -64,11 +63,18 @@ const App = () => {
                 path="/profile"
                 element={
                   <ProtectedRoute>
-                    <Profile />
+                    <Profile editable={true} />
                   </ProtectedRoute>
                 }
               />
-            <Route path="/profile/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+              <Route
+                path="/profile/cart"
+                element={
+                  <ProtectedRoute>
+                    <Profile editable={false} />
+                  </ProtectedRoute>
+                }
+              />
             <Route
                 path="/profile/new-destination"
                 element={

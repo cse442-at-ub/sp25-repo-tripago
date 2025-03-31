@@ -8,7 +8,7 @@ import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 
-const Profile = () => {
+const Profile = ({editable}) => {
 
   const [user] = useState({
     firstName: "Jane",
@@ -19,11 +19,11 @@ const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
-const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // let incomingDestination = location.state || null;
   const incomingDestination = location.state || {};
-const isFromLogin = incomingDestination.fromLogin === true;
+  const isFromLogin = incomingDestination.fromLogin === true;
   console.log("at very top, incomingDest is", incomingDestination)
 
   const [trip, setTrip] = useState({
@@ -334,14 +334,23 @@ const isFromLogin = incomingDestination.fromLogin === true;
           <TripDetails
             trip={trip}
             setShowModal={setShowModal}
-            editable={true}
+            editable={editable}
           />
           {trip && <ShareTripButton />}
+
           {(trip && (trip.startDate && trip.endDate)) &&
-            <div className="cart-buttons">
-              <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
-            </div>
+              <div className="cart-buttons">
+              {editable ? (
+                  <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
+                ) : (
+                  <div className="cart-buttons">
+                <button className="cart-button">Confirm Trip Details</button>
+                <button className="cart-button" onClick={() => navigate("/profile")}>Edit Trip Details</button>
+                </div>
+              )}
+              </div>
           }
+
         </div>
       </div>
     </div>
