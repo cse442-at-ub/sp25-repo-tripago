@@ -17,8 +17,8 @@ const Hotels = () => {
   
   // Search form state
   const [locationQuery, setLocationQuery] = useState(searchParams.get('location') || "");
-  const [checkInDate, setCheckInDate] = useState("");
-  const [checkOutDate, setCheckOutDate] = useState("");
+  const [checkInDate, setCheckInDate] = useState(searchParams.get('checkIn') || "");
+  const [checkOutDate, setCheckOutDate] = useState(searchParams.get('checkOut') || "");
   const [locationResults, setLocationResults] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [error, setError] = useState(null);
@@ -152,9 +152,35 @@ const Hotels = () => {
     setFocusedLocationIndex(-1);
     setLocationResults([]);
     
-    // Update URL search params
+    // Update URL search params while preserving other params
     setSearchParams(params => {
       params.set('location', location.name);
+      return params;
+    });
+  };
+
+  const handleCheckInChange = (e) => {
+    const value = e.target.value;
+    setCheckInDate(value);
+    setSearchParams(params => {
+      if (value) {
+        params.set('checkIn', value);
+      } else {
+        params.delete('checkIn');
+      }
+      return params;
+    });
+  };
+
+  const handleCheckOutChange = (e) => {
+    const value = e.target.value;
+    setCheckOutDate(value);
+    setSearchParams(params => {
+      if (value) {
+        params.set('checkOut', value);
+      } else {
+        params.delete('checkOut');
+      }
       return params;
     });
   };
@@ -401,7 +427,7 @@ const Hotels = () => {
                 <input
                   type="date"
                   value={checkInDate}
-                  onChange={(e) => setCheckInDate(e.target.value)}
+                  onChange={handleCheckInChange}
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>
@@ -415,7 +441,7 @@ const Hotels = () => {
                 <input
                   type="date"
                   value={checkOutDate}
-                  onChange={(e) => setCheckOutDate(e.target.value)}
+                  onChange={handleCheckOutChange}
                   min={checkInDate || new Date().toISOString().split('T')[0]}
                 />
               </div>
