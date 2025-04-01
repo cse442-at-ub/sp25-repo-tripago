@@ -159,22 +159,23 @@ class AmadeusAPI {
     }
     
     /**
-     * Search for hotels by city/location
-     * @param string $cityCode IATA city code
+     * Search for hotels by geographic coordinates
+     * @param float $latitude Location latitude
+     * @param float $longitude Location longitude
      * @param array $options Additional search options
      * @return array Hotel search results
      */
-    public function searchHotels($cityCode, $options = []) {
+    public function searchHotels($latitude, $longitude, $options = []) {
         $params = array_merge([
-            'cityCode' => $cityCode,
-            'radius' => 5,
-            'radiusUnit' => 'KM',
-            'amenities' => 'WIFI',
-            'ratings' => '3,4,5',
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'radius' => 10,
+            'radiusUnit' => 'MILE',
+            'ratings' => '2,3,4,5',
             'hotelSource' => 'ALL'
         ], $options);
         
-        return $this->makeRequest('/reference-data/locations/hotels/by-city', $params);
+        return $this->makeRequest('/reference-data/locations/hotels/by-geocode', $params);
     }
     
     /**

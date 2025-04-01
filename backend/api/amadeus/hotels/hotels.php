@@ -18,30 +18,32 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 // Required parameters
-$cityCode = isset($_GET['cityCode']) ? trim($_GET['cityCode']) : null;
-if (!$cityCode) {
-    respondWithError('cityCode parameter is required');
+$latitude = isset($_GET['latitude']) ? (float)$_GET['latitude'] : null;
+$longitude = isset($_GET['longitude']) ? (float)$_GET['longitude'] : null;
+
+if (!$latitude || !$longitude) {
+    respondWithError('Both latitude and longitude parameters are required');
 }
 
-// Optional parameters with defaults
-$radius = isset($_GET['radius']) ? (int)$_GET['radius'] : 5;
-$radiusUnit = isset($_GET['radiusUnit']) ? $_GET['radiusUnit'] : 'KM';
-$hotelRatings = isset($_GET['ratings']) ? $_GET['ratings'] : '3,4,5';
-$amenities = isset($_GET['amenities']) ? $_GET['amenities'] : 'WIFI';
+// Validate latitude and longitude ranges
+if ($latitude < -90 || $latitude > 90) {
+    respondWithError('Latitude must be between -90 and 90 degrees');
+}
+if ($longitude < -180 || $longitude > 180) {
+    respondWithError('Longitude must be between -180 and 180 degrees');
+}
+
+$radius = isset($_GET['radius']) ? (int)$_GET['radius'] : 10;
 
 try {
     // Initialize Amadeus API client
     $amadeus = new AmadeusAPI();
-    
-    // Search for hotels
+
     $searchParams = [
         'radius' => $radius,
-        'radiusUnit' => $radiusUnit,
-        'ratings' => $hotelRatings,
-        'amenities' => $amenities
     ];
     
-    $results = $amadeus->searchHotels($cityCode, $searchParams);
+    $results = $amadeus->searchHotels($latitude, $longitude, $searchParams);
     
     // Return the results
     echo json_encode([
@@ -52,7 +54,8 @@ try {
 } catch (Exception $e) {
     $code = $e->getCode() >= 400 ? $e->getCode() : 500;
     $additionalInfo = [
-        'cityCode' => $cityCode,
+        'latitude' => $latitude,
+        'longitude' => $longitude,
         'params' => $_GET
     ];
     

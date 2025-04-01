@@ -1,10 +1,5 @@
 const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/sambackend/api/amadeus/hotels";
 
-// Function to convert kilometers to miles
-export function convertToMiles(kilometers) {
-  const miles = kilometers * 0.621371;
-  return Number(miles.toFixed(1)); // Return with 1 decimal place as a number
-}
 
 // Function to format location name properly
 export function formatLocationName(name) {
@@ -45,10 +40,17 @@ export async function searchHotels(searchLocation, checkInDate, checkOutDate, ad
     throw new Error("Please select a location and dates");
   }
 
+  if (!searchLocation.geoCode.latitude || !searchLocation.geoCode.longitude) {
+    throw new Error("Location must have latitude and longitude coordinates");
+  }
+
   try {
-    // First get hotels in the city
+    // First get hotels near the location
     const hotelsResponse = await fetch(
-      `${API_BASE_URL}/hotels.php?cityCode=${searchLocation.iataCode}`
+      `${API_BASE_URL}/hotels.php?` + new URLSearchParams({
+        latitude: searchLocation.geoCode.latitude,
+        longitude: searchLocation.geoCode.longitude
+      })
     );
     const hotelsData = await hotelsResponse.json();
     console.log("hotelsData", hotelsData);
@@ -57,7 +59,11 @@ export async function searchHotels(searchLocation, checkInDate, checkOutDate, ad
       throw new Error(hotelsData.error || "Failed to fetch hotels");
     }
 
-    const hotelsList = hotelsData.data.data || [];
+    // Limit to 50 hotels
+    const hotelsList = (hotelsData.data.data || []).slice(0, 50);
+    if (hotelsData.data.data?.length > 50) {
+      console.log(`Limiting results to 50 hotels out of ${hotelsData.data.data.length} found`);
+    }
     console.log("hotelsList", hotelsList);
     
     // Then get offers for these hotels
@@ -87,8 +93,12 @@ export async function searchHotels(searchLocation, checkInDate, checkOutDate, ad
       }
     }
 
+    // Filter out hotels without offers/prices
+    const hotelsWithPrices = hotelsList.filter(hotel => offersMap[hotel.hotelId]);
+    console.log(`Found ${hotelsWithPrices.length} hotels with available prices out of ${hotelsList.length} total hotels`);
+
     return {
-      hotels: hotelsList,
+      hotels: hotelsWithPrices,
       offers: offersMap
     };
   } catch (err) {

@@ -9,7 +9,7 @@ import locationIcon from "../../assets/location.png";
 import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
-import { convertToMiles, searchLocations, searchHotels, formatLocationName } from "../../services/hotelService";
+import { searchLocations, searchHotels, formatLocationName } from "../../services/hotelService";
 
 const Hotels = () => {
   // URL and Navigation State
@@ -532,12 +532,12 @@ const Hotels = () => {
             ...hotel,
             name: hotel.name,
             location: `${formatLocationName(selectedLocation.name)}, ${selectedLocation.address.countryCode}`,
-            distance: convertToMiles(hotel.distance.value),
+            distance: hotel.distance.value,
             rating: parseInt(hotel.rating),
             reviews: 0,
             bestPrice: offer?.offers?.[0]?.price?.total,
             freeBreakfast: offer?.offers?.[0]?.boardType === "BREAKFAST",
-            image: hotel.media?.[0]?.uri || null,
+            geoCode: hotel.geoCode || null,
           };
           
           return <HotelCard key={hotel.hotelId} hotel={hotelData} />;
