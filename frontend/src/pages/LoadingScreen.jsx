@@ -49,24 +49,30 @@ const LoadingScreen = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
+      // If we are going to the hotels page, we need to fetch the location and hotels from amadeus
       if (redirectTo === "/browse-hotels" && hotels) {
         try {
-          // const { searchLocation, checkInDate, checkOutDate, adults, rooms } = searchParams;
-          console.log("getting location");
+          // Step 1: Get location from amadeus
+          console.log("getting location from amadeus");
           const locations = await searchLocations(hotels.location);
           const locationMatch = locations.find(
             loc => loc.name.toLowerCase() === hotels.location.toLowerCase()
           ) || locations[0];
           console.log("locationMatch", locationMatch);
-          console.log("getting hotels", hotels);
+
+          // Step 2: Get hotels from amadeus
+          console.log("getting hotels from amadeus");
           const results = await searchHotels(locationMatch, hotels.checkIn, hotels.checkOut, hotels.adults, hotels.rooms);
-          console.log("results", results);
+          console.log("hotels from amadeus", results);
+
+          // Step 3: Navigate to hotels page with results
           navigate(redirectTo, { state: { location: locationMatch, searchResults: results, checkIn: hotels.checkIn, checkOut: hotels.checkOut } });
         } catch (error) {
           console.error("Error fetching hotels:", error);
           navigate("/browse-hotels", { state: { error: error.message } });
         }
+      // If we are not going to the hotels page, we just navigate to the page after timeout
       } else {
         // Original timer-based navigation for other routes
         const timer = setTimeout(() => {
@@ -78,7 +84,7 @@ const LoadingScreen = () => {
         }, 4000);
         return () => clearTimeout(timer);
       }
-    };
+    }
 
     fetchData();
   }, [navigate, redirectTo, recommendations, hotels]);

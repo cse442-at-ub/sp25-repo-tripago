@@ -1,7 +1,7 @@
 const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/sambackend/api/amadeus/hotels";
 
 // Haversine formula to calculate distance between two points
-export const calculateDistance = (lat1, lon1, lat2, lon2) => {
+export function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth's radius in kilometers
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -13,10 +13,10 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const distanceKm = R * c;
   const distanceMiles = distanceKm * 0.621371; // Convert km to miles
   return distanceMiles.toFixed(1); // Return distance in miles with 1 decimal place
-};
+}
 
 // Function to format location name properly
-export const formatLocationName = (name) => {
+export function formatLocationName(name) {
   return name
     .split(' ')
     .map(word => {
@@ -24,10 +24,10 @@ export const formatLocationName = (name) => {
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     })
     .join(' ');
-};
+}
 
 // Function to search locations
-export const searchLocations = async (query) => {
+export async function searchLocations(query) {
   if (query.length < 3) return [];
 
   try {
@@ -46,10 +46,10 @@ export const searchLocations = async (query) => {
     console.error("Error searching locations:", err);
     return [];
   }
-};
+}
 
 // Function to search hotels and their offers
-export const searchHotels = async (searchLocation, checkInDate, checkOutDate, adults, rooms) => {
+export async function searchHotels(searchLocation, checkInDate, checkOutDate, adults, rooms) {
   if (!searchLocation || !checkInDate || !checkOutDate) {
     throw new Error("Please select a location and dates");
   }
@@ -103,4 +103,4 @@ export const searchHotels = async (searchLocation, checkInDate, checkOutDate, ad
   } catch (err) {
     throw new Error(err.message || "Error searching hotels");
   }
-}; 
+} 
