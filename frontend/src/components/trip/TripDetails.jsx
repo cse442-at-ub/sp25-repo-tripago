@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import Accordion from "../Accordion";
-import { useNavigate } from "react-router-dom";
+import { resolvePath, useNavigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 import axios from 'axios'
@@ -11,7 +11,19 @@ const Itinerary = ({ trip, setShowModal }) => {
 
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
   //Need to get saved activities from DB, (or at least check!)
+  //its called "autofillMessages", but should handle manual ones too!
   const [autoFillMessages, setAutoFillMessages] = useState({});
+
+  const startDate = new Date(trip.startDate);
+  const endDate = new Date(trip.endDate);
+  const diffTime = Math.abs(endDate - startDate);
+
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  
+  
+
+
+  
 
   /*
   This should be called exactly once when generating the day accordians
@@ -21,8 +33,27 @@ const Itinerary = ({ trip, setShowModal }) => {
   Will also want to use fill activity function to fill any retrieved activities
   once you get them!
   */
-  const getActivitiesFromDB = (e) =>{
-   }
+  const getActivitiesFromDB = async(e) =>{
+
+    try{
+      
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getActivities.php",{data:""},{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+
+        
+
+      console.log(trip.name);
+     
+      
+    } catch(error){
+      console.log("Error during login: ",error.response);
+    }
+
+  }
 
   /*
   Main purpose of this is to get a activity from the API call
@@ -34,23 +65,34 @@ const Itinerary = ({ trip, setShowModal }) => {
 
     setAutoFillMessages(prevMessages => ({
       ...prevMessages,
-      [i]: "Fetching activity ideas...",
+      [i]: { name: "Fetching activity ideas...", price: null },
     }));
   
     try{
-      /*
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getActivities.php",{city:trip.city,country:trip.countryCode},{
+      
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/test/generateActivity.php",{location:trip.name},{
         headers:{
           'Content-Type':'application/json'
         }
       })
-*/
-      //should have 
-        
 
-      console.log(trip.name);
-     
-      
+      const data = response.data;
+
+
+      console.log(data);
+
+      if (data.success){
+        //response is success and has trips
+        if (data.has_trips){
+          fillActivity(i,data.activity_name,data.activity_price);
+          //done?
+        } else {
+          //apologize for not findings any activities
+          console.log(data.message);
+        }
+      } else {
+        console.log("An error has occurred!")
+      }
     } catch(error){
       console.log("Error during login: ",error.response);
     }
@@ -61,22 +103,75 @@ const Itinerary = ({ trip, setShowModal }) => {
   /*
   This is called when you have an activity name, and the day that it should go into
   Inserts into the autoFillMessages array!
+
+  This should call a function to save that activity to the database
   */
-  const fillActivity = async(day,name) => {
+  const fillActivity = async(day,name,price) => {
+
+    setAutoFillMessages(prevMessages => ({
+      ...prevMessages,
+      [day]: { name: name, price: "Price: " + price },
+    }));
+
+    storeActivity(day,name,price);
 
   }
 
+/*
+Takes activity information to be stored in the database
+Will just be using the day, name, and price of it for now, 
+but can expand it in the future, if need (or want) be!
+*/
+  const storeActivity = async(day,name,price) => {
+    try{
+      
+      /*
+      send day, name of activity, price, and start date of trip
+      start date of trip is used as a safety precaution in case you have
+      multiple different trips to the same place
 
+      This safety measure assumes that a user will not create mutiple trips 
+      to the same location on the same day, because why would they?
+      */
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/test/addActivity.php",{day:day,name:name,price:price,start:startDate},{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+      const data = response.data;
+
+
+      console.log(data);
+
+      if (data.success){
+        console.log("Activity has been added successfully");
+      } else {
+        console.log("An error was encountered adding the activity");
+      }
+    } catch(error){
+      console.log("Error during login: ",error.response);
+    }
+  }
+
+  /*
+  This will handle when the manual "add activity" button is clicked
+  Should get the input from a text box and day, and make a new activity from that!
+  Will all the fill activity function!
+  */
+  const addActivityButton = async(day,name) => {
+
+  }
 
   const navigate = useNavigate();
   const generateDayAccordions = () => {
     if (!trip.startDate || !trip.endDate) return [];
-    const startDate = new Date(trip.startDate);
-    const endDate = new Date(trip.endDate);
+    //const startDate = new Date(trip.startDate);
+    //const endDate = new Date(trip.endDate);
     const dayAccordions = [];
 
-    const diffTime = Math.abs(endDate - startDate);
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    //const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
 
     for (let i = 0; i < diffDays; i++) {
       const currentDate = new Date(startDate);
@@ -90,9 +185,6 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const dayActivities =
         trip.days && trip.days[i] ? trip.days[i].activities : [];
-
-      //used to get text input from each activity
-      const [location, setLocation] = useState("");
       
 
       dayAccordions.push(
@@ -117,15 +209,29 @@ const Itinerary = ({ trip, setShowModal }) => {
                 ))}
               </div>
             ) : (
-              <p>{autoFillMessages[i] || "No activities planned yet."}</p>
+              <p>{autoFillMessages[i]?.name ? (
+                <>
+                  {autoFillMessages[i].name}
+                  <br />
+                  {autoFillMessages[i].price}
+                </>
+              ) : (
+                "No activities planned yet."
+              )}</p>
             )}
             <div className="activity-controls">
               <input
                 type="text"
                 placeholder="Enter location"
                 className="location-input"
-                value={location} //use state variable as value 
-                onChange={(e) => setLocation(e.target.value)}
+                value={location[i] || ""}
+                onChange={
+                  (e) => {
+                    const newLocation = [...location];
+                    newLocation[i] = e.target.value;
+                    setLocation(newLocation);
+                  }
+                }
               />
               <button className="add-activity-btn">+ Add activity</button>
               <button className="auto-fill-btn" onClick={() =>autoFillBtn(i)}>Auto-fill my day</button>
