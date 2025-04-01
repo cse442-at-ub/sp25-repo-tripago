@@ -1,6 +1,6 @@
 // export default Hotels;
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import HotelCard from "../../components/hotel/HotelCard";
 import "../../styles/hotels/Hotels.css";
 import searchIcon from "../../assets/Search.png";
@@ -9,26 +9,11 @@ import locationIcon from "../../assets/location.png";
 import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
-
-const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/sambackend/api/amadeus/hotels";
-
-// Haversine formula to calculate distance between two points
-const calculateDistance = (lat1, lon1, lat2, lon2) => {
-  const R = 6371; // Earth's radius in kilometers
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  const distanceKm = R * c;
-  const distanceMiles = distanceKm * 0.621371; // Convert km to miles
-  return distanceMiles.toFixed(1); // Return distance in miles with 1 decimal place
-};
+import { searchLocations, searchHotels, calculateDistance, formatLocationName } from "../../services/hotelService";
 
 const Hotels = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   
   // Search form state
   const [locationQuery, setLocationQuery] = useState(searchParams.get('location') || "");
@@ -44,17 +29,6 @@ const Hotels = () => {
   const locationDropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const initialSearchDone = useRef(false);
-
-  // Function to format location name properly
-  const formatLocationName = (name) => {
-    return name
-      .split(' ')
-      .map(word => {
-        if (word.length <= 2) return word.toUpperCase(); // Keep short words (like "OF", "LA") uppercase
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      })
-      .join(' ');
-  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -112,98 +86,33 @@ const Hotels = () => {
     }
   };
 
-  // Function to search locations
-  const searchLocations = async (query) => {
-    if (query.length < 3) return;
+  // Hotel results state
+  const [hotels, setHotels] = useState([]);
+  const [hotelOffers, setHotelOffers] = useState({});
+  const [isLoadingHotels, setIsLoadingHotels] = useState(false);
+  const [isLoadingOffers, setIsLoadingOffers] = useState(false);
 
-    setIsSearchingLocation(true);
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/locations.php?keyword=${encodeURIComponent(query)}`
-      );
-      const data = await response.json();
-      
-      if (data.success) {
-        const results = data.data.data || [];
-        setLocationResults(results);
-        return results;
-      } else {
-        console.error("Location search failed:", data.error);
-        return [];
-      }
-    } catch (err) {
-      console.error("Error searching locations:", err);
-      return [];
-    } finally {
-      setIsSearchingLocation(false);
-    }
-  };
-
-  // Search for hotels when location is selected
-  const searchHotels = async (locationOverride = null) => {
-    const searchLocation = locationOverride || selectedLocation;
-    
-    if (!searchLocation || !checkInDate || !checkOutDate) {
-      setError("Please select a location and dates");
-      return;
-    }
-
-    setError(null);
-    setHotels([]);
-    setHotelOffers({});
-
-    try {
-      // First get hotels in the city
-      setIsLoadingHotels(true);
-      console.log("searchLocation", searchLocation);
-      const hotelsResponse = await fetch(
-        `${API_BASE_URL}/hotels.php?cityCode=${searchLocation.iataCode}`
-      );
-      const hotelsData = await hotelsResponse.json();
-      console.log("hotelsData", hotelsData);
-
-      if (!hotelsData.success) {
-        throw new Error(hotelsData.error || "Failed to fetch hotels");
-      }
-
-      const hotelsList = hotelsData.data.data || [];
+  // Check for search results from loading screen
+  useEffect(() => {
+    console.log("location.state", location.state);
+    if (location.state?.location && location.state?.searchResults && !initialSearchDone.current) {
+      initialSearchDone.current = true;
+      console.log("searchResults", location.state.searchResults);
+      const { hotels: hotelsList, offers: offersMap } = location.state.searchResults;
+      // setSelectedLocation(location.state.location);
       setHotels(hotelsList);
-      console.log("hotelsList", hotelsList);
-      // Then get offers for these hotels
-      setIsLoadingOffers(true);
-      const hotelIds = hotelsList.map(h => h.hotelId).join(",");
-      console.log("hotelIds", hotelIds);
-      if (hotelIds) {
-        const offersResponse = await fetch(
-          `${API_BASE_URL}/hotel_offers.php?` + new URLSearchParams({
-            hotelIds,
-            checkInDate,
-            checkOutDate,
-            adults: adults.toString(),
-            rooms: rooms.toString()
-          })
-        );
-        const offersData = await offersResponse.json();
-        console.log("offersData", offersData);  
+      setHotelOffers(offersMap);
 
-        if (offersData.success) {
-          // Create a map of hotelId to offer
-          const offersMap = {};
-          (offersData.data.data || []).forEach(offer => {
-            offersMap[offer.hotel.hotelId] = offer;
-          });
-          console.log("offersMap", offersMap);
-          setHotelOffers(offersMap);
-        }
-      }
-    } catch (err) {
-      setError(err.message);
-      console.error("Error searching hotels:", err);
-    } finally {
-      setIsLoadingHotels(false);
-      setIsLoadingOffers(false);
+      handleLocationSelect(location.state.location);
+      handleCheckInSelect(location.state.checkIn);
+      handleCheckOutSelect(location.state.checkOut);
+      // Clear the state to prevent reloading on navigation
+      window.history.replaceState({}, document.title);
+    } else if (location.state?.error) {
+      setError(location.state.error);
+      window.history.replaceState({}, document.title);
     }
-  };
+  }, [location.state]);
 
   // Handle URL parameters on mount
   useEffect(() => {
@@ -219,7 +128,8 @@ const Hotels = () => {
       if (checkOutParam) setCheckOutDate(checkOutParam);
       
       // Search for the location
-      searchLocations(locationParam).then(results => {
+      const performInitialSearch = async () => {
+        const results = await searchLocations(locationParam);
         if (results.length > 0) {
           // Find exact match or use first result
           const exactMatch = results.find(
@@ -230,10 +140,12 @@ const Hotels = () => {
           
           // If we have all required parameters, trigger the search immediately with the location
           if (checkInParam && checkOutParam) {
-            searchHotels(exactMatch);
+            handleSearchHotels(exactMatch);
           }
         }
-      });
+      };
+      
+      performInitialSearch();
     }
   }, [searchParams]);
 
@@ -247,6 +159,22 @@ const Hotels = () => {
     // Update URL search params while preserving other params
     setSearchParams(params => {
       params.set('location', location.name);
+      return params;
+    });
+  };
+
+  const handleCheckInSelect = (checkIn) => {
+    setCheckInDate(checkIn);
+    setSearchParams(params => {
+      params.set('checkIn', checkIn);
+      return params;
+    });
+  };
+
+  const handleCheckOutSelect = (checkOut) => {
+    setCheckOutDate(checkOut);
+    setSearchParams(params => {
+      params.set('checkOut', checkOut);
       return params;
     });
   };
@@ -309,16 +237,12 @@ const Hotels = () => {
     setIsLocationDropdownOpen(true);
 
     // Set new timeout for search
-    searchTimeoutRef.current = setTimeout(() => {
-      searchLocations(value);
+    searchTimeoutRef.current = setTimeout(async () => {
+      const results = await searchLocations(value);
+      setLocationResults(results);
+      setIsSearchingLocation(false);
     }, 500);
   };
-
-  // Hotel results state
-  const [hotels, setHotels] = useState([]);
-  const [hotelOffers, setHotelOffers] = useState({});
-  const [isLoadingHotels, setIsLoadingHotels] = useState(false);
-  const [isLoadingOffers, setIsLoadingOffers] = useState(false);
 
   // UI state
   const [sortOption, setSortOption] = useState("Distance");
@@ -330,6 +254,35 @@ const Hotels = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const hotelsPerPage = 3;
   const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false);
+
+  const handleSearchHotels = async (locationOverride = null) => {
+    const searchLocation = locationOverride || selectedLocation;
+    
+    setError(null);
+    setHotels([]);
+    setHotelOffers({});
+    setIsLoadingHotels(true);
+    setIsLoadingOffers(true);
+
+    try {
+      const { hotels: hotelsList, offers: offersMap } = await searchHotels(
+        searchLocation,
+        checkInDate,
+        checkOutDate,
+        adults,
+        rooms
+      );
+      
+      setHotels(hotelsList);
+      setHotelOffers(offersMap);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error searching hotels:", err);
+    } finally {
+      setIsLoadingHotels(false);
+      setIsLoadingOffers(false);
+    }
+  };
 
   // Filter and sort hotels
   let filteredHotels = [...hotels];
@@ -517,7 +470,7 @@ const Hotels = () => {
             <div className="input-wrapper">
               <div 
                 className="search-container"
-                onClick={() => searchHotels()}
+                onClick={() => handleSearchHotels()}
                 style={{ cursor: 'pointer' }}
               >
                 <img src={searchIcon} alt="Search" className="search-icon" />

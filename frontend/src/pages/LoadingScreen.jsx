@@ -34,30 +34,54 @@
 
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { searchLocations, searchHotels } from "../services/hotelService";
 import "../styles/LoadingScreen.css";
 
 const LoadingScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const { headerText, redirectTo, recommendations } = location.state || {
+  const { headerText, redirectTo, recommendations, hotels } = location.state || {
     headerText: "Loading...",
     redirectTo: "/",
-    recommendations: null
+    recommendations: null,
+    hotels: null
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // Only pass recommendations if they exist
-      if (recommendations) {
-        navigate(redirectTo, { state: { recommendations } });
+    const fetchData = async () => {
+      if (redirectTo === "/browse-hotels" && hotels) {
+        try {
+          // const { searchLocation, checkInDate, checkOutDate, adults, rooms } = searchParams;
+          console.log("getting location");
+          const locations = await searchLocations(hotels.location);
+          const locationMatch = locations.find(
+            loc => loc.name.toLowerCase() === hotels.location.toLowerCase()
+          ) || locations[0];
+          console.log("locationMatch", locationMatch);
+          console.log("getting hotels", hotels);
+          const results = await searchHotels(locationMatch, hotels.checkIn, hotels.checkOut, hotels.adults, hotels.rooms);
+          console.log("results", results);
+          navigate(redirectTo, { state: { location: locationMatch, searchResults: results, checkIn: hotels.checkIn, checkOut: hotels.checkOut } });
+        } catch (error) {
+          console.error("Error fetching hotels:", error);
+          navigate("/browse-hotels", { state: { error: error.message } });
+        }
       } else {
-        navigate(redirectTo);
+        // Original timer-based navigation for other routes
+        const timer = setTimeout(() => {
+          if (recommendations) {
+            navigate(redirectTo, { state: { recommendations } });
+          } else {
+            navigate(redirectTo);
+          }
+        }, 4000);
+        return () => clearTimeout(timer);
       }
-    }, 4000);
+    };
 
-    return () => clearTimeout(timer);
-  }, [navigate, redirectTo, recommendations]);
+    fetchData();
+  }, [navigate, redirectTo, recommendations, hotels]);
 
   return (
     <div className="loading-screen">

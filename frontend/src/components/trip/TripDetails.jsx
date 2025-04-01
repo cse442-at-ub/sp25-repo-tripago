@@ -111,7 +111,14 @@ const Itinerary = ({ trip, setShowModal }) => {
                     state: {
                       headerText:
                         "Hang on! We’re finding the best hotels for you",
-                      redirectTo: "/browse-hotels?location=" + trip.name + "&checkIn=" + trip.startDate + "&checkOut=" + trip.endDate,
+                      redirectTo: "/browse-hotels",
+                      hotels: {
+                        location: trip.name,
+                        checkIn: trip.startDate,
+                        checkOut: trip.endDate,
+                        adults: 2, // safe default
+                        rooms: 1, // safe default
+                      },
                     },
                   })
                 }
