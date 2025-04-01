@@ -1,18 +1,9 @@
 const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/sambackend/api/amadeus/hotels";
 
-// Haversine formula to calculate distance between two points
-export function calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth's radius in kilometers
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  const distanceKm = R * c;
-  const distanceMiles = distanceKm * 0.621371; // Convert km to miles
-  return distanceMiles.toFixed(1); // Return distance in miles with 1 decimal place
+// Function to convert kilometers to miles
+export function convertToMiles(kilometers) {
+  const miles = kilometers * 0.621371;
+  return Number(miles.toFixed(1)); // Return with 1 decimal place as a number
 }
 
 // Function to format location name properly

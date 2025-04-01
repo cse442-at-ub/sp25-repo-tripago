@@ -9,7 +9,7 @@ import locationIcon from "../../assets/location.png";
 import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
-import { searchLocations, searchHotels, calculateDistance, formatLocationName } from "../../services/hotelService";
+import { convertToMiles, searchLocations, searchHotels, formatLocationName } from "../../services/hotelService";
 
 const Hotels = () => {
   // URL and Navigation State
@@ -45,7 +45,7 @@ const Hotels = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [freeBreakfastOnly, setFreeBreakfastOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const hotelsPerPage = 10;
+  const hotelsPerPage = 20;
 
   // Traveler State
   const [rooms, setRooms] = useState(1);
@@ -164,6 +164,7 @@ const Hotels = () => {
     setHotelOffers({});
     setIsLoadingHotels(true);
     setIsLoadingOffers(true);
+    setCurrentPage(1);
 
     try {
       const { hotels: hotelsList, offers: offersMap } = await searchHotels(
@@ -188,6 +189,7 @@ const Hotels = () => {
   const handleSortSelection = (option) => {
     setSortOption(option);
     setIsDropdownOpen(false);
+    setCurrentPage(1);
   };
 
   // Filter and Sort Logic
@@ -218,23 +220,11 @@ const Hotels = () => {
       filtered.sort((a, b) => b.rating - a.rating);
     } else if (sortOption === "Distance") {
       filtered.sort((a, b) => {
-        if (!a.latitude || !a.longitude || !b.latitude || !b.longitude || 
-            !selectedLocation.latitude || !selectedLocation.longitude) {
+        if (!a.distance?.value || !b.distance?.value) {
           return 0;
         }
-        const distanceA = parseFloat(calculateDistance(
-          parseFloat(selectedLocation.latitude),
-          parseFloat(selectedLocation.longitude),
-          parseFloat(a.latitude),
-          parseFloat(a.longitude)
-        ));
-        const distanceB = parseFloat(calculateDistance(
-          parseFloat(selectedLocation.latitude),
-          parseFloat(selectedLocation.longitude),
-          parseFloat(b.latitude),
-          parseFloat(b.longitude)
-        ));
-        return distanceA - distanceB;
+
+        return a.distance.value - b.distance.value;
       });
     }
 
@@ -446,7 +436,10 @@ const Hotels = () => {
     <div className="filters filters-sort">
       <button
         className={`free-breakfast-button ${freeBreakfastOnly ? "active" : ""}`}
-        onClick={() => setFreeBreakfastOnly(!freeBreakfastOnly)}
+        onClick={() => {
+          setFreeBreakfastOnly(!freeBreakfastOnly);
+          setCurrentPage(1);
+        }}
       >
         Free Breakfast
       </button>
@@ -540,13 +533,7 @@ const Hotels = () => {
             ...hotel,
             name: hotel.name,
             location: `${formatLocationName(selectedLocation.address.cityName)}, ${selectedLocation.address.countryCode}`,
-            distance: hotel.geoCode.latitude && hotel.geoCode.longitude && selectedLocation.geoCode.latitude && selectedLocation.geoCode.longitude ? 
-              `${calculateDistance(
-                parseFloat(selectedLocation.geoCode.latitude),
-                parseFloat(selectedLocation.geoCode.longitude),
-                parseFloat(hotel.geoCode.latitude),
-                parseFloat(hotel.geoCode.longitude)
-              )} miles` : "Distance not available",
+            distance: convertToMiles(hotel.distance.value),
             rating: parseInt(hotel.rating),
             reviews: 0,
             bestPrice: offer?.offers?.[0]?.price?.total,

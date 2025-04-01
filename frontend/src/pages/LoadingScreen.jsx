@@ -49,7 +49,7 @@ const LoadingScreen = () => {
   };
 
   useEffect(() => {
-    async function fetchData() {
+    async function doLoad() {
       // If we are going to the hotels page, we need to fetch the location and hotels from amadeus
       if (redirectTo === "/browse-hotels" && hotels) {
         try {
@@ -86,7 +86,7 @@ const LoadingScreen = () => {
       }
     }
 
-    fetchData();
+    doLoad();
   }, [navigate, redirectTo, recommendations, hotels]);
 
   return (

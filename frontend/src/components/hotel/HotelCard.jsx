@@ -10,7 +10,7 @@ const HotelCard = ({ hotel }) => {
       {/* Hotel Info */}
       <div className="hotel-info">
         <h3 className="hotel-name">{hotel.name}</h3>
-        <p className="hotel-location">{hotel.distance} from {hotel.location}</p>
+        <p className="hotel-location">{hotel.distance} miles from {hotel.location}</p>
 
         {/* Star Rating */}
         <div className="star-rating">
