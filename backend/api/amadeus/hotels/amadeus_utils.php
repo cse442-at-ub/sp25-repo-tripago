@@ -144,7 +144,7 @@ class AmadeusAPI {
     }
     
     /**
-     * Search for locations (cities, airports) by keyword
+     * Search for locations (cities) by keyword
      * @param string $keyword The search keyword
      * @param array $options Additional search options
      * @return array Location search results
@@ -152,12 +152,10 @@ class AmadeusAPI {
     public function searchLocations($keyword, $options = []) {
         $params = array_merge([
             'keyword' => $keyword,
-            'subType' => 'CITY,AIRPORT',
-            'page[limit]' => 10,
-            'page[offset]' => 0
+            'max' => 5
         ], $options);
         
-        return $this->makeRequest('/reference-data/locations', $params);
+        return $this->makeRequest('/reference-data/locations/cities', $params);
     }
     
     /**

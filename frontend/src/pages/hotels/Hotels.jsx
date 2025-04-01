@@ -335,8 +335,7 @@ const Hotels = () => {
           >
             <div className="location-name">{formatLocationName(location.name)}</div>
             <div className="location-details">
-              {formatLocationName(location.address.cityName)}, {location.address.countryCode}
-              {location.subType === "AIRPORT" && " (Airport)"}
+              {location.address?.stateCode || location.stateCode}
             </div>
           </div>
         ))
@@ -532,7 +531,7 @@ const Hotels = () => {
           const hotelData = {
             ...hotel,
             name: hotel.name,
-            location: `${formatLocationName(selectedLocation.address.cityName)}, ${selectedLocation.address.countryCode}`,
+            location: `${formatLocationName(selectedLocation.name)}, ${selectedLocation.address.countryCode}`,
             distance: convertToMiles(hotel.distance.value),
             rating: parseInt(hotel.rating),
             reviews: 0,

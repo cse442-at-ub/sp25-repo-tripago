@@ -23,29 +23,12 @@ if (!$keyword) {
     respondWithError('keyword parameter is required');
 }
 
-// Optional parameters with defaults
-$countryCode = isset($_GET['countryCode']) ? $_GET['countryCode'] : null;
-$pageLimit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
-$pageOffset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
-
 try {
     // Initialize Amadeus API client
     $amadeus = new AmadeusAPI();
     
-    // Build the search options
-    $options = [
-        'subType' => 'CITY,AIRPORT',
-        'page[limit]' => $pageLimit,
-        'page[offset]' => $pageOffset
-    ];
-    
-    // Add country code if provided
-    if ($countryCode) {
-        $options['countryCode'] = $countryCode;
-    }
-    
     // Perform location search using the searchLocations method
-    $results = $amadeus->searchLocations($keyword, $options);
+    $results = $amadeus->searchLocations($keyword);
     
     // Return the results
     echo json_encode([
