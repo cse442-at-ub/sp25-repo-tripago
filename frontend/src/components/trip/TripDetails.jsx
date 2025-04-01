@@ -4,8 +4,70 @@ import Accordion from "../Accordion";
 import { useNavigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
+import axios from 'axios'
+
 
 const Itinerary = ({ trip, setShowModal }) => {
+
+  //THIS STORES THE ACTIVITIES FOR EACH DAY :)
+  //Need to get saved activities from DB, (or at least check!)
+  const [autoFillMessages, setAutoFillMessages] = useState({});
+
+  /*
+  This should be called exactly once when generating the day accordians
+  Will populate the autoFillmMessages array with any saved trips from 
+  the database. Database retrievals will be based on cookie email, and trip name
+  to find any corresponding activities for that trip.
+  Will also want to use fill activity function to fill any retrieved activities
+  once you get them!
+  */
+  const getActivitiesFromDB = (e) =>{
+   }
+
+  /*
+  Main purpose of this is to get a activity from the API call
+  Should call fillActivity function, since you want to immediately fill that
+  activity!
+  */
+  const autoFillBtn = async(i) => {
+    //gets day number in i, so we can set the correspending accordians activity
+
+    setAutoFillMessages(prevMessages => ({
+      ...prevMessages,
+      [i]: "Fetching activity ideas...",
+    }));
+  
+    try{
+      /*
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getActivities.php",{city:trip.city,country:trip.countryCode},{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+*/
+      //should have 
+        
+
+      console.log(trip.name);
+     
+      
+    } catch(error){
+      console.log("Error during login: ",error.response);
+    }
+
+    
+  };
+
+  /*
+  This is called when you have an activity name, and the day that it should go into
+  Inserts into the autoFillMessages array!
+  */
+  const fillActivity = async(day,name) => {
+
+  }
+
+
+
   const navigate = useNavigate();
   const generateDayAccordions = () => {
     if (!trip.startDate || !trip.endDate) return [];
@@ -29,6 +91,10 @@ const Itinerary = ({ trip, setShowModal }) => {
       const dayActivities =
         trip.days && trip.days[i] ? trip.days[i].activities : [];
 
+      //used to get text input from each activity
+      const [location, setLocation] = useState("");
+      
+
       dayAccordions.push(
         <Accordion key={i} title={dateString}>
           <div className="day-content">
@@ -51,17 +117,18 @@ const Itinerary = ({ trip, setShowModal }) => {
                 ))}
               </div>
             ) : (
-              <p>No activities planned yet.</p>
+              <p>{autoFillMessages[i] || "No activities planned yet."}</p>
             )}
             <div className="activity-controls">
               <input
                 type="text"
                 placeholder="Enter location"
                 className="location-input"
-                value={""} 
-                onChange={() => {}} 
+                value={location} //use state variable as value 
+                onChange={(e) => setLocation(e.target.value)}
               />
               <button className="add-activity-btn">+ Add activity</button>
+              <button className="auto-fill-btn" onClick={() =>autoFillBtn(i)}>Auto-fill my day</button>
             </div>
           </div>
         </Accordion>

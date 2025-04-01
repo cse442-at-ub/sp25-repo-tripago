@@ -6,7 +6,24 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header('Content-Type: application/json');
+
+
+$jsonData = file_get_contents("php://input");
+
+$data = json_decode($jsonData,true);
+
+if ($data == null){
+  echo json_encode(["success"=>false,"message"=>"Error with data recieved"]);
+  exit();
+}
+
+
+
+$lat  = $data['latitude'];
+$long = $data['longitude'];
+
 
 
 $tokenPath = __DIR__ . '/getAccessToken.php';
@@ -25,7 +42,8 @@ if (!$token) {
 }
 
 // make API call to Amadeus
-$url = "https://test.api.amadeus.com/v1/shopping/activities?latitude=41.397158&longitude=2.160873&radius=1";
+//use lat and long from destination with a radius of 10 to find trips
+$url = "https://test.api.amadeus.com/v1/shopping/activities?latitude=$lat&longitude=$long&radius=10";
 
 
 
