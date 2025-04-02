@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/hotels/HotelCard.css";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -14,7 +15,47 @@ L.Icon.Default.mergeOptions({
 });
 
 const HotelCard = ({ hotel }) => {
+  const navigate = useNavigate();
   const position = [hotel.geoCode.latitude, hotel.geoCode.longitude]
+
+  const handleSelectDeal = async () => {
+    try {
+      const response = await fetch('/CSE442/2025-Spring/cse-442aj/sambackend/api/trips/updateTripHotel.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          city_name: hotel.location.split(',')[0].trim(),
+          hotel_name: hotel.name,
+          hotel_price: hotel.bestPrice
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Update localStorage
+        const storedTrip = localStorage.getItem('selectedTrip');
+        if (storedTrip) {
+          const tripData = JSON.parse(storedTrip);
+          tripData.hotel = {
+            name: hotel.name,
+            price: hotel.bestPrice
+          };
+          localStorage.setItem('selectedTrip', JSON.stringify(tripData));
+        }
+        
+        // Navigate back and trigger a reload
+        navigate("/profile");
+      } else {
+        console.error('Failed to book hotel:', data.message);
+      }
+    } catch (error) {
+      console.error('Error booking hotel:', error);
+    }
+  };
 
   return (
     <div className="hotel-card">
@@ -53,7 +94,7 @@ const HotelCard = ({ hotel }) => {
       <div className="hotel-cta">
         <p className="best-price">${hotel.bestPrice}</p>
         {hotel.freeBreakfast && <p className="free-breakfast">Free breakfast</p>}
-        <button className="modal-button">Select Deal</button>
+        <button className="modal-button" onClick={handleSelectDeal}>Select Deal</button>
       </div>
     </div>
   );

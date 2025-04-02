@@ -57,9 +57,7 @@ const LoadingScreen = () => {
           console.log("getting location from amadeus");
           const locations = await searchLocations(hotels.location);
           const locationMatch = locations.find(
-            loc => loc.address.stateCode === hotels.location.stateCode
-          ) || locations.find(
-            loc => loc.address.countryCode === hotels.location.countryCode
+            loc => loc.name === hotels.location
           ) || locations[0];
           console.log("locationMatch", locationMatch);
 
