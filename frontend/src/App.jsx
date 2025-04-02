@@ -19,6 +19,7 @@ import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
+import Recommended from "./pages/Recommended.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
@@ -88,6 +89,15 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Hotels />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/recommended"
+                element={
+                  <ProtectedRoute>
+                    <Recommended />
                   </ProtectedRoute>
                 }
               />
