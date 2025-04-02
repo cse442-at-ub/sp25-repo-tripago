@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import PropTypes from "prop-types";
 import Accordion from "../Accordion";
 import { resolvePath, useNavigate } from "react-router-dom";
@@ -19,11 +19,7 @@ const Itinerary = ({ trip, setShowModal }) => {
   const diffTime = Math.abs(endDate - startDate);
 
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-  
-  
-
-
-  
+    
 
   /*
   This should be called exactly once when generating the day accordians
@@ -33,28 +29,76 @@ const Itinerary = ({ trip, setShowModal }) => {
   Will also want to use fill activity function to fill any retrieved activities
   once you get them!
   */
-  const getActivitiesFromDB = async(e) =>{
+  
+  const getActivitiesFromDB = async () => {
+  
+   console.log("Fetching activities from DB...");
 
-    try{
+
+   try{
       
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getActivities.php",{data:""},{
+    //use trip start date and user email to get activities for trip
+    //ASSUMES USER DOES NOT MAKE MULTIPLE TRIPS THAT START ON THE SAME DAY!!!!!!
+
+    console.log("Before post");
+
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/test/getAllActivities.php",{start_date:startDate},{
         headers:{
           'Content-Type':'application/json'
         }
       })
 
+      
+      console.log(response.data);
+
+      const data = response.data.activities;
+
+      console.log("After post");
+
+      //should have a list which contains "activities"
+
+      for (let i=0;i<data.length;i++){
+        let day = data[i].day;
+        let name = data[i].name;
+        let price;
+
+        //null check for safety
+        if (data.price == null){
+          price = data[i].price;
+        } else {
+          price = "";
+        }
 
         
 
-      console.log(trip.name);
-     
-      
-    } catch(error){
-      console.log("Error during login: ",error.response);
-    }
 
+        setAutoFillMessages(prevMessages => ({
+          ...prevMessages,
+          [day]: { name: name, price: "Price: "+ price },
+        }));
+      }
+
+      console.log(data);
+
+    } catch(error){
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+     } else if (error.request) {
+       console.error("No response received. Request:", error.request);
+     } else {  
+       console.error("Error setting up the request:", error.message);
+     }
+       console.error("Original error:", error); // Log the full error for debugging.
+    }
+    
   }
 
+  useEffect(() => {
+    getActivitiesFromDB();
+  }, []);
+  
   /*
   Main purpose of this is to get a activity from the API call
   Should call fillActivity function, since you want to immediately fill that
@@ -157,11 +201,13 @@ but can expand it in the future, if need (or want) be!
   /*
   This will handle when the manual "add activity" button is clicked
   Should get the input from a text box and day, and make a new activity from that!
-  Will all the fill activity function!
+  Will also call the fill activity function!
   */
   const addActivityButton = async(day,name) => {
 
   }
+
+  
 
   const navigate = useNavigate();
   const generateDayAccordions = () => {

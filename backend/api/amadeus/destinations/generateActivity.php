@@ -149,8 +149,14 @@ function getActivity($lat,$long){
     //loop through activities and get info that you want
     //will just take name and price for now
     for ($i=0; $i<$count; $i++){
-        $activity_names[] = $response['data'][$i]['name'];
-        $activity_prices[] = $response['data'][$i]['price']['amount'];
+
+
+        if (!isset($response['data'][$i]['name']) || !isset($response['data'][$i]['price']['amount'])){
+            continue;
+        }
+            $activity_names[] = $response['data'][$i]['name'];
+            $activity_prices[] = $response['data'][$i]['price']['amount'];
+            
     }
 
     return [$activity_names,$activity_prices];
