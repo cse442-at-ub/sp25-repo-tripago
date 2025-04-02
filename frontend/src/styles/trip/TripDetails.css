@@ -482,6 +482,10 @@ p {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.trip-dates-edit {
+  width: 100%;
+}
+
 .trip-dates-bar {
   display: flex;
   flex-direction: column;
@@ -586,6 +590,7 @@ p {
 }
 
 .booked-hotel-details {
+  width: 100%;
   background-color: #f8f9fa;
   padding: 1rem;
   border-radius: 8px;
@@ -593,6 +598,7 @@ p {
 }
 
 .booked-hotel-details h4 {
+  text-align: left;
   margin: 0 0 0.5rem 0;
   color: #2c3e50;
 }

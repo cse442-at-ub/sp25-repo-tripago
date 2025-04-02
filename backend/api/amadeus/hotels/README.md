@@ -17,7 +17,7 @@ Search for city or airport locations by keyword.
 **Example Request:**
 
 ```
-https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/sambackend/api/locations.php?keyword=Charleston
+https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/api/locations.php?keyword=Charleston
 ```
 
 **Response:** Returns location data including city codes that can be used in hotel searches.
@@ -36,7 +36,7 @@ Find hotels in a specific city.
 **Example Request:**
 
 ```
-https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/sambackend/api/hotels.php?cityCode=CHS&radius=25
+https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/api/hotels.php?cityCode=CHS&radius=25
 ```
 
 **Response:** Returns a list of hotels with their IDs that can be used to check availability and pricing.
@@ -57,7 +57,7 @@ Get pricing and availability for specific hotels.
 **Example Request:**
 
 ```
-https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/sambackend/api/hotel_offers.php?hotelIds=HICHS223,WVCHS297&checkInDate=2025-10-01&checkOutDate=2025-10-05&adults=1
+https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/api/hotel_offers.php?hotelIds=HICHS223,WVCHS297&checkInDate=2025-10-01&checkOutDate=2025-10-05&adults=1
 ```
 
 **Response:** Returns available offers for the specified hotels, including pricing and room information.
@@ -75,7 +75,7 @@ Get detailed information about a specific hotel offer.
 **Example Request:**
 
 ```
-https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/sambackend/api/hotel_offer_details.php?offerId=SG75Q6KWQ8
+https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/backend/api/hotel_offer_details.php?offerId=SG75Q6KWQ8
 ```
 
 **Response:** Returns comprehensive details about the specific offer, including cancellation policies, room details, and pricing information.

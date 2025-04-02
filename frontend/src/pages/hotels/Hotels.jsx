@@ -167,11 +167,14 @@ const Hotels = () => {
     setCurrentPage(1);
 
     try {
+      // Calculate adults per room - round up to ensure enough capacity
+      const adultsPerRoom = Math.ceil(adults / rooms);
+      
       const { hotels: hotelsList, offers: offersMap } = await searchHotels(
         searchLocation,
         checkInDate,
         checkOutDate,
-        adults,
+        adultsPerRoom,
         rooms
       );
       
@@ -560,8 +563,6 @@ const Hotels = () => {
             setRooms={setRooms}
             adults={adults}
             setAdults={setAdults}
-            children={children}
-            setChildren={setChildren}
           />
         </div>
       </div>

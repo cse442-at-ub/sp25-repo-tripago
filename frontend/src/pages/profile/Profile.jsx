@@ -148,7 +148,7 @@ const isFromLogin = incomingDestination.fromLogin === true;
         // Load latest trip from DB
         try {
           const res = await fetch(
-            "/CSE442/2025-Spring/cse-442aj/sambackend/api/trips/getLatestTrip.php"
+            "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getLatestTrip.php"
           );
           const data = await res.json();
           if (data.success) {

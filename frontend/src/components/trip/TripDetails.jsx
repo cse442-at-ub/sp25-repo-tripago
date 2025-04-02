@@ -97,7 +97,7 @@ const Itinerary = ({ trip, setShowModal }) => {
           </div>
         </div>
       ) : (
-        <div>
+        <>
           <div className="hotel-details">
             <h3>Hotel Details:</h3>
             <div className="hotel-status">
@@ -106,7 +106,7 @@ const Itinerary = ({ trip, setShowModal }) => {
                   <h4>{trip.hotel.name}</h4>
                   <p className="hotel-price">Price: ${trip.hotel.price}</p>
                   <button
-                    className="change-hotel-btn"
+                    className="find-hotel-btn"
                     onClick={() =>
                       navigate("/loading-screen", {
                         state: {
@@ -167,7 +167,7 @@ const Itinerary = ({ trip, setShowModal }) => {
             </div>
             <div className="days-container">{generateDayAccordions()}</div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

@@ -22,6 +22,7 @@ $hotelIds = isset($_GET['hotelIds']) ? trim($_GET['hotelIds']) : null;
 $checkInDate = isset($_GET['checkInDate']) ? $_GET['checkInDate'] : null;
 $checkOutDate = isset($_GET['checkOutDate']) ? $_GET['checkOutDate'] : null;
 $adults = isset($_GET['adults']) ? (int)$_GET['adults'] : null;
+$rooms = isset($_GET['rooms']) ? (int)$_GET['rooms'] : null;
 
 if (!$hotelIds) {
     respondWithError('hotelIds parameter is required');
@@ -42,6 +43,14 @@ if (!$checkOutDate) {
 
 if (!$adults || $adults < 1) {
     respondWithError('adults parameter is required and must be at least 1');
+}
+
+if (!$rooms || $rooms < 1) {
+    respondWithError('rooms parameter is required and must be at least 1');
+}
+
+if ($adults < $rooms) {
+    respondWithError('Number of adults must be at least equal to number of rooms');
 }
 
 // Validate date formats
@@ -73,7 +82,7 @@ try {
         'adults' => $adults,
         'checkInDate' => $checkInDate,
         'checkOutDate' => $checkOutDate,
-        'roomQuantity' => isset($_GET['rooms']) ? (int)$_GET['rooms'] : 1,
+        'roomQuantity' => $rooms,
         'paymentPolicy' => isset($_GET['paymentPolicy']) ? $_GET['paymentPolicy'] : 'NONE',
         'bestRateOnly' => isset($_GET['bestRateOnly']) ? $_GET['bestRateOnly'] === 'true' : true,
         'currency' => isset($_GET['currency']) ? $_GET['currency'] : 'USD'
@@ -95,7 +104,8 @@ try {
         $checkInDate,
         $checkOutDate,
         $adults,
-        array_diff_key($params, array_flip(['hotelIds', 'checkInDate', 'checkOutDate', 'adults']))
+        $rooms,
+        array_diff_key($params, array_flip(['hotelIds', 'checkInDate', 'checkOutDate', 'adults', 'rooms']))
     );
     
     // Return the results
@@ -110,7 +120,8 @@ try {
         'hotelIds' => $hotelIds,
         'checkInDate' => $checkInDate,
         'checkOutDate' => $checkOutDate,
-        'adults' => $adults
+        'adults' => $adults,
+        'rooms' => $rooms
     ];
     
     respondWithError('Error: ' . $e->getMessage(), $code, $additionalInfo);

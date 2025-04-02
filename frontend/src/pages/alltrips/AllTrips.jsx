@@ -24,7 +24,7 @@ const AllTrips = () => {
     const fetchTrips = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/sambackend/api/trips/getAllTrips.php",
+          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
           {
             credentials: "include",
           }

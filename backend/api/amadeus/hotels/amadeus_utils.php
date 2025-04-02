@@ -183,16 +183,16 @@ class AmadeusAPI {
      * @param string $hotelIds Comma-separated list of hotel IDs
      * @param string $checkInDate Check-in date (YYYY-MM-DD)
      * @param string $checkOutDate Check-out date (YYYY-MM-DD)
-     * @param int $adults Number of adults
+     * @param int $adults Number of adults per room
+     * @param int $rooms Number of rooms to book
      * @param array $options Additional search options
      * @return array Hotel offers results
      */
-    public function getHotelOffers($hotelIds, $checkInDate, $checkOutDate, $adults, $options = []) {
+    public function getHotelOffers($hotelIds, $checkInDate, $checkOutDate, $adults, $rooms, $options = []) {
         // Make sure the hotelIds are properly formatted
         $hotelIds = trim($hotelIds);
 
         $defaultOptions = [
-            'roomQuantity' => 1,
             'paymentPolicy' => 'NONE',
             'bestRateOnly' => true,
             'currency' => 'USD',
@@ -201,6 +201,7 @@ class AmadeusAPI {
         $params = array_merge($defaultOptions, [
             'hotelIds' => $hotelIds,
             'adults' => $adults,
+            'roomQuantity' => $rooms,
             'checkInDate' => $checkInDate,
         ], $options);
         
