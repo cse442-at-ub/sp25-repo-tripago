@@ -499,6 +499,22 @@ p {
   margin-bottom: 5px;
 }
 
+.auto-fill-btn {
+  background: none;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.auto-fill-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
   .title-container {
