@@ -5,6 +5,7 @@ import Paris from "../assets/paris.jpg";
 import { useNavigate } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import "../styles/recommended.css";
+import MobileSidebarToggle from "../components/MobileSidebarToggle.jsx";
 
 const VerifyLocation = () => {
   const navigate = useNavigate();
@@ -12,237 +13,57 @@ const VerifyLocation = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [favorites, setFavorites] = useState({});
   const [destinations, setDestinations] = useState([]);
+  const [destinationImages, setDestinationImages] = useState([]);
   const [error, setError] = useState(null);
   const [imagesFetched, setImagesFetched] = useState(false); // Flag to ensure images are fetched only once
 
   useEffect(() => {
-    if (destinations.length != 0) return;
     const fetchDestinations = async () => {
       try {
-        //const response = await fetch("http://localhost/tripago/getRecommendations.php?category=Recommendations");
-        const response = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommendations.php?category=Recommendations`)
-
+        const response = await fetch("http://localhost/tripago/getRecommendations.php?category=Recommendations");
+        
         if (!response.ok) {
           throw new Error("Failed to fetch recommendations");
         }
-
+  
         const data = await response.json();
-        setDestinations(data.data || []);
-        //console.log(data.data[0]);
-        //for (let i = 0; i < data.data.length; i++ ) {
-          //console.log(data);
-          //const t = {
-            //name: data.data.name,
-            //image_url: Paris
-          //}
-          //destinations.push(t);
-          //destinations[i].name = data.data[i].name;
-        //}
-        //console.log(destinations);
-      } catch (err) {
-        console.error("Error fetching destinations:", err);
-        //setError("Error fetching destinations");
-        //alert("Error getting cities!");
-      }
-    };
-
-    fetchDestinations();
-  }, []);
-
-
-  // Fetch images ONCE after destinations are retrieved
-  useEffect(() => {
-    if (destinations.length === 0 || imagesFetched) return; // Prevent multiple calls
-    const fetchImages = async () => {
-      try {
-        const updatedDestinations = await Promise.all(
-          destinations.map(async (destination) => {
-            //const response = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
-            const response = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/pexelsSearch.php?query=${destination.name}`);
-
-            if (!response.ok) {
-              throw new Error("Failed to fetch image");
+        let destinationsList = data.data || [];
+  
+        // Fetch images for each destination **before** updating state
+        destinationsList = await Promise.all(
+          destinationsList.map(async (destination) => {
+            try {
+              const imgResponse = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
+              
+              if (!imgResponse.ok) {
+                throw new Error("Failed to fetch image");
+              }
+  
+              const imgData = await imgResponse.json();
+              return { ...destination, image_url: imgData.photos[0]?.src.large || Paris }; 
+            } catch (imgErr) {
+              console.error("Error retrieving image for", destination.name, imgErr);
+              return { ...destination, image_url: Paris }; // Default to Paris image
             }
-
-            const data = await response.json();
-            destination.image_url = data.photos[0]?.src.large;
-            //console.log(data);
-            //return { ...destination, image_url: data.photos[0]?.src.large || Paris };
-            return { ...destination};
           })
         );
-
-        setDestinations(updatedDestinations);
-        setImagesFetched(true); // Prevents re-fetching images
-        console.log(destinations);
+  
+        setDestinations(destinationsList); // Update state **after** fetching images
       } catch (err) {
-        console.error("Error retrieving images:", err);
-        //alert("Error retrieving image URLs.");
+        console.error("Error fetching destinations:", err);
       }
     };
-
-    fetchImages();
-  }, [destinations]); // Runs once after destinations update
-
-/*
-  useEffect(() => {
-    //fetch("/CSE442/2025-Spring/cse-442aj/backend/api/recommended.php")
-    //fetch("http://localhost/tripago/recommended.php")
-      //.then((res) => res.json())
-      //.then((data) => setDestinations(data))
-      //.catch((err) => console.error("Error fetching destinations:", err));
-    const fetchDestinations = async () => {
-      const response = fetch(`http://localhost/tripago/getRecommendations.php?category=Recommendations`)
-        .then((res) => {
-          try {
-            //const response = fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommended.php`);
-            //const response = fetch(`http://localhost/tripago/getRecommendations.php?category=Recommendations`);
-          
-            if (!res.ok) {
-              throw new Error("Failed to fetch recommendations");
-            }
-          
-            const data = res.json();
-            setDestinations(data.data || [])
-          } catch (err) {
-            //setError(err.message);
-            //console.log(data);
-            alert("Error getting cities!");
-          }
-        })
-        .then(() => {
-          const fetchImages = async () => {
-          for (var i = 0; i < destinations.length; i++) {
-            try {
-              const response = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destinations[i]}`);
-              
-              if (!response.ok) {
-                throw new Error("Failed to fetch recommendations");
-              }
-        
-              const data = await response.json();
-              destinations.image_url = data.photos.src.small;
-            } catch (err) {
-              //setError(err.message);
-              console.log(result);
-              alert("error retrieving image url.");
-            }
-          }
-        }
-        fetchImages();
-      })
-      .catch((err) => console.error("Error fetching destinations:", err));
-      }
-      fetchDestinations();
-    })
-      
-      /*try {
-        //const response = fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommended.php`);
-        const response = fetch(`http://localhost/tripago/getRecommendations.php?category=Recommendations`);
   
-        if (!response.ok) {
-          throw new Error("Failed to fetch recommendations");
-        }
+    fetchDestinations();
+  }, []);
   
-        const data = response.json();
-        setDestinations(data.data || []);
-      } catch (err) {
-        //setError(err.message);
-        //console.log(data);
-        alert("Error getting cities!");
-      }*/
-
-        /*
-      const fetchDestinations = async () => {
-        try {
-          const response = await fetch(`http://localhost/tripago/getRecommendations.php?category=Recommendations`);
-    
-          if (!response.ok) {
-            throw new Error("Failed to fetch recommendations");
-          }
-    
-          const data = await response.json();
-          setDestinations(data.data || []);
-        } catch (err) {
-          //setError(err.message);
-          console.log(result);
-          alert("Error adding trip.");
-        }
-        
-        for (var i = 0; i < destinations.length; i++) {
-          try {
-            const response = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destinations[i]}`);
-            
-            if (!response.ok) {
-              throw new Error("Failed to fetch recommendations");
-            }
-      
-            const data = await response.json();
-            destinations.image_url = data.photos.src.small;
-          } catch (err) {
-            //setError(err.message);
-            console.log(result);
-            alert("error retrieving image url.");
-          }
-        }
-      };
-
-      fetchDestinations();
-  }, []); */
-
-  
-
-  /*
-  const fetchDestinations = async () => {
-    try {
-      const response = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommended.php`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch recommendations");
-      }
-
-      const data = await response.json();
-      setDestinations(data.data || []);
-    } catch (err) {
-      //setError(err.message);
-      console.log(result);
-      alert("Error adding trip.");
-    }
-  };
-*/
-  const handleNewTrip = async (destination) => {
-    //try {
-      //fetch("http://localhost/tripago/recommended.php", {
-      /*const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/recommended.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          city_name: destination.city_name,
-          country_name: destination.country_name,
-          image_url: destination.image_url
-        }),
-      });*/
-
-      localStorage.setItem(
-        "selectedTrip",
-        JSON.stringify({ name: destination.name, cityCode:destination.iataCode, newTrip: true })
-      );
-      navigate("/profile");
-     
-      /*
-      const result = await response.json();
-      if (result.success) {
-        alert("Trip added successfully!");
-      } else {
-        console.log(result);
-        alert("Error adding trip.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to add trip.");
-    } */
+  // Save trip selection
+  const handleNewTrip = (destination) => {
+    localStorage.setItem(
+      "selectedTrip",
+      JSON.stringify({ name: destination.name, cityCode: destination.iataCode, newTrip: true })
+    );
+    navigate("/profile");
   };
 
   const filteredDestinations = destinations.filter(destination =>
@@ -257,7 +78,7 @@ const VerifyLocation = () => {
 
   return (
     <div style={{display: 'flex', width:'100%', height: '100vh', textAlign: 'left'}}>
-      <Sidebar username="Jane" />
+      <Sidebar />
       <Navbar />
     <div style={{ paddingTop: '5rem', paddingBottom: '10rem', display: 'flex', flexWrap: 'wrap', height: '600vh', backgroundColor: '#f3f4f6', width: '100%' }}>
       
@@ -312,7 +133,7 @@ const VerifyLocation = () => {
               }}
               onClick={() => setSelectedLocation(destination.name)}
             >
-              <img src={destination.image_url} onerror={`this.onerror=null; this.src=${Paris};`} alt={destination.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
+              <img src={destination.image_url} onError={(e) => (e.target.src = Paris)} alt={destination.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
               <div style={{ padding: "1rem", textAlign: "center", width: "100%" }}>
                 <p style={{ margin: '0px', fontWeight: "600" }}>{destination.name}</p>
                 <p style={{ margin: '0px', color: "gray", fontSize: "0.875rem" }}>{destination.country_name}</p>
