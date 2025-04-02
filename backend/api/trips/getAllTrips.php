@@ -33,7 +33,7 @@ if ($mysqli->connect_errno) {
 
 // Fetch all trips for the user
 $stmt = $mysqli->prepare("
-  SELECT id, city_name, start_date, end_date, image_url 
+  SELECT id, city_name, start_date, end_date, image_url , hotel_name, hotel_price
   FROM trips 
   WHERE email = ? 
   ORDER BY created_at DESC
@@ -73,6 +73,8 @@ while ($row = $result->fetch_assoc()) {
     "dates" => $formattedDates,
     "price" => $totalPrice,  // Use summed expense total
     "image_url" => $row["image_url"],
+    "hotel_name" => $row["hotel_name"],
+    "hotel_price" => $row["hotel_price"],
   ];
 }
 

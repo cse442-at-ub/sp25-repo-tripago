@@ -1,30 +1,60 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { encode } from "html-entities";
+import { searchLocations, searchHotels } from "../services/hotelService";
 import "../styles/LoadingScreen.css";
 
 const LoadingScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const { headerText, redirectTo, recommendations } = location.state || {
+  const { headerText, redirectTo, recommendations, hotels } = location.state || {
     headerText: "Loading...",
     redirectTo: "/",
-    recommendations: null
+    recommendations: null,
+    hotels: null
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // Only pass recommendations if they exist
-      if (recommendations) {
-        navigate(redirectTo, { state: { recommendations } });
-      } else {
-        navigate(redirectTo);
-      }
-    }, 4000);
+    async function doLoad() {
+      // If we are going to the hotels page, we need to fetch the location and hotels from amadeus
+      if (redirectTo === "/browse-hotels" && hotels) {
+        try {
+          // Step 1: Get location from amadeus
+          console.log("getting location from amadeus");
+          const locations = await searchLocations(hotels.location);
+          const locationMatch = locations.find(
+            loc => loc.name === hotels.location
+          ) || locations[0];
+          console.log("locationMatch", locationMatch);
 
-    return () => clearTimeout(timer);
-  }, [navigate, redirectTo, recommendations]);
+          // Step 2: Get hotels from amadeus
+          console.log("getting hotels from amadeus");
+          const results = await searchHotels(locationMatch, hotels.checkIn, hotels.checkOut, hotels.adults, hotels.rooms);
+          console.log("hotels from amadeus", results);
+
+          // Step 3: Navigate to hotels page with results
+          navigate(redirectTo, { state: { location: locationMatch, searchResults: results, checkIn: hotels.checkIn, checkOut: hotels.checkOut } });
+        } catch (error) {
+          console.error("Error fetching hotels:", error);
+          navigate("/browse-hotels", { state: { error: error.message } });
+        }
+      // If we are not going to the hotels page, we just navigate to the page after timeout
+      } else {
+        // Original timer-based navigation for other routes
+        const timer = setTimeout(() => {
+          if (recommendations) {
+            navigate(redirectTo, { state: { recommendations } });
+          } else {
+            navigate(redirectTo);
+          }
+        }, 4000);
+        return () => clearTimeout(timer);
+      }
+    }
+
+    doLoad();
+  }, [navigate, redirectTo, recommendations, hotels]);
 
   return (
     <div className="loading-screen">

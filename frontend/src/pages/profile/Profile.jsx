@@ -34,6 +34,10 @@ const isFromLogin = incomingDestination.fromLogin === true;
     picture: airplaneIllustration,
     days: [],
     budget: { amount: 0, expenses: [] },
+    hotel: {
+      name: "",
+      price: 0,
+    }
   });
 
   const [startDate, setStartDate] = useState(null);
@@ -98,6 +102,10 @@ const isFromLogin = incomingDestination.fromLogin === true;
                   countryCode: encode(data.trip.country_name),
                   startDate: data.trip.start_date,
                   endDate: data.trip.end_date,
+                  hotel: {
+                    name: data.trip.hotel?.name,
+                    price: data.trip.hotel?.price,
+                  }
                 };
           
                 const image = data.trip.image_url || airplaneIllustration;
@@ -128,6 +136,10 @@ const isFromLogin = incomingDestination.fromLogin === true;
             countryCode: encode(parsed.countryCode || ""),
             startDate: parsed.startDate || "",
             endDate: parsed.endDate || "",
+            hotel: {
+              name: parsed.hotel?.name || "",
+              price: parsed.hotel?.price || 0,
+            }
           };
           console.log("tripData in stored block is:", tripData)
   
@@ -147,6 +159,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
                 start_date: null,
                 end_date: null,
                 image_url: image || "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
+                hotel_name: null,
+                hotel_price: null,
               }),
             })
               .then((res) => res.json())
@@ -203,6 +217,10 @@ const isFromLogin = incomingDestination.fromLogin === true;
               countryCode: encode(data.trip.country_name),
               startDate: data.trip.start_date,
               endDate: data.trip.end_date,
+              hotel: {
+                name: data.trip.hotel?.name,
+                price: data.trip.hotel?.price,
+              }
             };
   
             const image = data.trip.image_url || "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";

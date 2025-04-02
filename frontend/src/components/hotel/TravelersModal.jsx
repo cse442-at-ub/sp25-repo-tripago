@@ -5,7 +5,7 @@ import childIcon from "../../assets/child.png";
 import "../../styles/hotels/TravelersModal.css"; 
 import { encode } from "html-entities";
 
-const TravelersModal = ({ isOpen, setIsOpen, rooms, setRooms, adults, setAdults, children, setChildren }) => {
+const TravelersModal = ({ isOpen, setIsOpen, rooms, setRooms, adults, setAdults }) => {
   if (!isOpen) return null;
 
   const increase = (setter, value) => setter(value + 1);
@@ -42,25 +42,12 @@ const TravelersModal = ({ isOpen, setIsOpen, rooms, setRooms, adults, setAdults,
           </div>
         </div>
 
-        {/* Children */}
-        <div className="modal-row">
-          <div className="modal-label">
-            <img src={childIcon} alt="Children" className="modal-icon" />
-            <span>Children</span>
-          </div>
-          <div className="modal-counter">
-            <button className="modal-btn" onClick={() => decrease(setChildren, children)}>-</button>
-            <span className="modal-count">{children}</span>
-            <button className="modal-btn" onClick={() => increase(setChildren, children)}>+</button>
-          </div>
-        </div>
-
         {/* Modal Buttons */}
         <div className="modal-footer">
           {/* <button className="reset-btn" onClick={() => { setRooms(1); setAdults(2); setChildren(0); }}>Reset</button>
           <button className="save-btn" onClick={() => setIsOpen(false)}>Save</button> */}
           <div className="modal-footer">
-  <button className="reset-btn" onClick={() => { setRooms(1); setAdults(2); setChildren(0); }}>Reset</button>
+  <button className="reset-btn" onClick={() => { setRooms(1); setAdults(2); }}>Reset</button>
   <button className="save-btn" onClick={() => setIsOpen(false)}>Save</button>
 </div>
         </div>
