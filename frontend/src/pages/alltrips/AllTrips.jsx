@@ -15,6 +15,9 @@ const AllTrips = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState(""); // Sorting option
   const [trips, setTrips] = useState([]);
+  const [drafts, setDrafts] = useState([]);
+  const [review, setReview] = useState([]);
+  const [posted, setPosted] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -24,7 +27,7 @@ const AllTrips = () => {
     const fetchTrips = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
+          "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/getAllTrips.php",
           {
             credentials: "include",
           }
@@ -39,6 +42,10 @@ const AllTrips = () => {
         if (data.success) {
           console.log("Trips received:", data.trips);
           setTrips(data.trips);
+
+          setDrafts(data.trips.filter((trip) => trip.posted == "drafts"))
+          setReview(data.trips.filter((trip) => trip.posted == "review"))
+          setPosted(data.trips.filter((trip) => trip.posted == "posted"))
         } else {
           console.error("Backend error message:", data.message);
         }
@@ -81,6 +88,10 @@ const AllTrips = () => {
     }
 
     setTrips(sortedTrips);
+
+    setDrafts(trips.filter((trip) => trip.posted == "drafts"))
+    setReview(trips.filter((trip) => trip.posted == "review"))
+    setPosted(trips.filter((trip) => trip.posted == "posted"))
   };
 
   return (
@@ -117,6 +128,7 @@ const AllTrips = () => {
             </div>
           </div>
 
+          <h3>Drafts</h3>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container ${
@@ -129,7 +141,7 @@ const AllTrips = () => {
                 started.
               </p>
             ) : (
-              trips.map((trip) => (
+              drafts.map((trip) => (
                 <div key={trip.id} className="trip-card">
                   {/* View Button */}
                   <button
@@ -184,6 +196,76 @@ const AllTrips = () => {
               ))
             )}
           </div>
+
+          <h3>Review Before Posting</h3>
+          {/* cName changed from trips-container */}
+          <div
+            className={`trips-container all-trips-trips-container ${
+              trips.length === 1 ? "single-trip" : ""
+            }`}
+          >
+            {trips.length === 0 ? (
+              <p className="no-trips-message">
+                Looks like you have no trips yet. Click the button above to get
+                started.
+              </p>
+            ) : (
+              review.map((trip) => (
+                <div key={trip.id} className="trip-card">
+                  {/* View Button */}
+                  <button
+                    className="view-button"
+                    onClick={() => {
+                      const selected = {
+                        name: trip.destination,
+                        countryCode: "", // optional
+                        startDate: trip.start_date,
+                        endDate: trip.end_date,
+                        imageUrl: trip.image_url || "",
+                      };
+                      console.log("When clicking view, we send,");
+                      console.log(selected);
+
+                      localStorage.setItem(
+                        "selectedTrip",
+                        JSON.stringify(selected)
+                      );
+                      navigate("/profile");
+                    }}
+                  >
+                    View
+                  </button>
+
+                  {/* Trip Info */}
+                  <div className="trip-info">
+                    <h4 className="trip-destination">{trip.destination}</h4>
+                    <p className="trip-dates">{trip.dates}</p>
+
+                    {/* Bottom Row: Icons + Price */}
+                    <div className="trip-bottom-row">
+                      <div className="trip-icons">
+                        <img src={plane} alt="Plane" className="icon" />
+                        <img src={house} alt="House" className="icon" />
+                        <img src={car} alt="Car" className="icon" />
+                      </div>
+                      <p className="trip-price">${trip.price}</p>
+                    </div>
+                  </div>
+
+                  {/* Trip Image */}
+                  <img
+                    src={
+                      trip.image_url ||
+                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
+                    }
+                    alt={trip.destination}
+                    className="trip-image"
+                  />
+                </div>
+              ))
+            )}
+          </div>
+
         </div>
       </div>
     </>

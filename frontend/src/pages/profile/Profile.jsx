@@ -398,13 +398,13 @@ const Profile = ({editable}) => {
           {trip && <ShareTripButton />}
 
           {(trip && (trip.startDate && trip.endDate)) &&
-              <div className="cart-buttons">
+              <div className="review-buttons">
               {editable ? (
-                  <button className="cart-button" onClick={() => navigate("/profile/cart")}>Send to Cart</button>
+                  <button className="review-button" onClick={() => navigate("/profile/review")}>Review Before Posting</button>
                 ) : (
-                  <div className="cart-buttons">
-                <button className="cart-button">Confirm Trip Details</button>
-                <button className="cart-button" onClick={() => navigate("/profile")}>Edit Trip Details</button>
+                  <div className="review-buttons">
+                <button className="review-button" onClick={() => navigate("/profile")}>Edit Trip Details</button>
+                <button className="review-button">Post</button>
                 </div>
               )}
               </div>

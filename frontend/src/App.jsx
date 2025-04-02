@@ -68,7 +68,7 @@ const App = () => {
                 }
               />
               <Route
-                path="/profile/cart"
+                path="/profile/review"
                 element={
                   <ProtectedRoute>
                     <Profile editable={false} />

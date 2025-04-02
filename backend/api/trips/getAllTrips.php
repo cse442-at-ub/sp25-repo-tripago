@@ -2,23 +2,30 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-$email = $_COOKIE['user'] ?? null;
+$token = $_COOKIE['authCookie'];
 
-if (!$email) {
-  echo json_encode(["success" => false, "message" => "Not logged in"]);
-  exit();
-}
-
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 if ($mysqli->connect_errno) {
   echo json_encode(["success" => false, "message" => "Database connection failed"]);
   exit();
 }
 
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$email = $result["email"];
+if (!$email) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
+}
+
 // Fetch all trips for the user
 $stmt = $mysqli->prepare("
-  SELECT id, city_name, start_date, end_date, image_url 
+  SELECT id, city_name, start_date, end_date, image_url, posted_status
   FROM trips 
   WHERE email = ? 
   ORDER BY created_at DESC
@@ -58,6 +65,7 @@ while ($row = $result->fetch_assoc()) {
     "dates" => $formattedDates,
     "price" => $totalPrice,  // Use summed expense total
     "image_url" => $row["image_url"],
+    "posted" => $row["posted_status"]
   ];
 }
 

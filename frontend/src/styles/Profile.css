@@ -81,14 +81,14 @@
   }
 }
 
-.cart-buttons {
+.review-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 5%;
 }
 
-.cart-button {
+.review-button {
   margin-top: 3%;
   width: 520px;
 }
