@@ -266,6 +266,75 @@ const AllTrips = () => {
             )}
           </div>
 
+          <h3>Posted</h3>
+          {/* cName changed from trips-container */}
+          <div
+            className={`trips-container all-trips-trips-container ${
+              trips.length === 1 ? "single-trip" : ""
+            }`}
+          >
+            {trips.length === 0 ? (
+              <p className="no-trips-message">
+                Looks like you have no trips yet. Click the button above to get
+                started.
+              </p>
+            ) : (
+              posted.map((trip) => (
+                <div key={trip.id} className="trip-card">
+                  {/* View Button */}
+                  <button
+                    className="view-button"
+                    onClick={() => {
+                      const selected = {
+                        name: trip.destination,
+                        countryCode: "", // optional
+                        startDate: trip.start_date,
+                        endDate: trip.end_date,
+                        imageUrl: trip.image_url || "",
+                      };
+                      console.log("When clicking view, we send,");
+                      console.log(selected);
+
+                      localStorage.setItem(
+                        "selectedTrip",
+                        JSON.stringify(selected)
+                      );
+                      navigate("/profile");
+                    }}
+                  >
+                    View
+                  </button>
+
+                  {/* Trip Info */}
+                  <div className="trip-info">
+                    <h4 className="trip-destination">{trip.destination}</h4>
+                    <p className="trip-dates">{trip.dates}</p>
+
+                    {/* Bottom Row: Icons + Price */}
+                    <div className="trip-bottom-row">
+                      <div className="trip-icons">
+                        <img src={plane} alt="Plane" className="icon" />
+                        <img src={house} alt="House" className="icon" />
+                        <img src={car} alt="Car" className="icon" />
+                      </div>
+                      <p className="trip-price">${trip.price}</p>
+                    </div>
+                  </div>
+
+                  {/* Trip Image */}
+                  <img
+                    src={
+                      trip.image_url ||
+                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
+                    }
+                    alt={trip.destination}
+                    className="trip-image"
+                  />
+                </div>
+              ))
+            )}
+          </div>
+
         </div>
       </div>
     </>
