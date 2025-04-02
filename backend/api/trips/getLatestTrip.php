@@ -16,9 +16,10 @@ if ($mysqli->connect_errno) {
   exit();
 }
 
-// Get the most recent trip (sorted by end_date or created_at)
+// Get the most recent trip (sorted by created_at)
 $stmt = $mysqli->prepare("
-  SELECT * FROM trips 
+  SELECT id, city_name, country_name, start_date, end_date, image_url, budget_amount, hotel_name, hotel_price
+  FROM trips 
   WHERE email = ? 
   ORDER BY created_at DESC 
   LIMIT 1
@@ -33,4 +34,37 @@ if (!$trip) {
   exit();
 }
 
-echo json_encode(["success" => true, "trip" => $trip]);
+$tripId = $trip["id"];
+
+// Fetch expenses for this trip
+$expensesStmt = $mysqli->prepare("SELECT category, amount FROM expenses WHERE trip_id = ?");
+$expensesStmt->bind_param("i", $tripId);
+$expensesStmt->execute();
+$expensesResult = $expensesStmt->get_result();
+
+$expenses = [];
+while ($row = $expensesResult->fetch_assoc()) {
+  $expenses[] = [
+    "category" => $row["category"],
+    "amount" => (float)$row["amount"],
+  ];
+}
+
+$response = [
+  "city_name" => $trip["city_name"],
+  "country_name" => $trip["country_name"],
+  "start_date" => $trip["start_date"],
+  "end_date" => $trip["end_date"],
+  "image_url" => $trip["image_url"],
+  "budget" => [
+    "amount" => (float)($trip["budget_amount"] ?? 0),
+    "expenses" => $expenses,
+  ],
+  "hotel" => [
+    "name" => $trip["hotel_name"],
+    "price" => (float)($trip["hotel_price"] ?? 0),
+  ],
+];
+
+echo json_encode(["success" => true, "trip" => $response]);
+?>

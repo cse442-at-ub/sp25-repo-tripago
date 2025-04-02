@@ -141,6 +141,10 @@ const AllTrips = () => {
                         startDate: trip.start_date,
                         endDate: trip.end_date,
                         imageUrl: trip.image_url || "",
+                        hotel: {
+                          name: trip.hotel_name,
+                          price: trip.hotel_price,
+                        },
                       };
                       console.log("When clicking view, we send,");
                       console.log(selected);

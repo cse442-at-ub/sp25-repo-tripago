@@ -46,8 +46,8 @@ const Login = () => {
 
         console.log("In login, user is: ", result)
 
-        navigate('/profile', {
-          state: { fromLogin: true }
+        navigate('/user-profile', {
+          state: { fromLogin: false }
         });
       } else {
         alert(result.message)

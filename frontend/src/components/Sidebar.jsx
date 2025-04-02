@@ -47,9 +47,9 @@ const Sidebar = ({isOpen = true}) => {
         </button>
 
         <button 
-          className={`sidebar-item ${currentPath === '/profile' && 'sidebar-item-active'}`} 
-          onClick={() => navigate('/profile', {
-            state: { fromLogin: true }
+          className={`sidebar-item ${currentPath === '/profile/new-destination' && 'sidebar-item-active'}`} 
+          onClick={() => navigate('/profile/new-destination', {
+            state: { fromLogin: false }
           })}
         >
           <FaPlus className="sidebar-icon" />

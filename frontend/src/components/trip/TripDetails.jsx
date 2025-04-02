@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Accordion from "../Accordion";
 import { useNavigate } from "react-router-dom";
@@ -97,27 +97,64 @@ const Itinerary = ({ trip, setShowModal }) => {
           </div>
         </div>
       ) : (
-        <div>
+        <>
           <div className="hotel-details">
             <h3>Hotel Details:</h3>
             <div className="hotel-status">
-              <p className="no-hotel-message">
-                Looks like you haven&apos;t booked a hotel yet for this trip.
-              </p>
-              <button
-                className="find-hotel-btn"
-                onClick={() =>
-                  navigate("/loading-screen", {
-                    state: {
-                      headerText:
-                        "Hang on! We’re finding the best hotels for you",
-                      redirectTo: "/browse-hotels",
-                    },
-                  })
-                }
-              >
-                + Find a hotel
-              </button>
+              {trip.hotel.name ? (
+                <div className="booked-hotel-details">
+                  <h4>{trip.hotel.name}</h4>
+                  <p className="hotel-price">Price: ${trip.hotel.price}</p>
+                  <button
+                    className="find-hotel-btn"
+                    onClick={() =>
+                      navigate("/loading-screen", {
+                        state: {
+                          headerText:
+                            "Hang on! We're finding the best hotels for you",
+                          redirectTo: "/browse-hotels",
+                          hotels: {
+                            location: trip.name,
+                            checkIn: trip.startDate,
+                            checkOut: trip.endDate,
+                            adults: 2, // safe default
+                            rooms: 1, // safe default
+                          },
+                        },
+                      })
+                    }
+                  >
+                    Change Hotel
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="no-hotel-message">
+                    Looks like you haven&apos;t booked a hotel yet for this trip.
+                  </p>
+                  <button
+                    className="find-hotel-btn"
+                    onClick={() =>
+                      navigate("/loading-screen", {
+                        state: {
+                          headerText:
+                            "Hang on! We're finding the best hotels for you",
+                          redirectTo: "/browse-hotels",
+                          hotels: {
+                            location: trip.name,
+                            checkIn: trip.startDate,
+                            checkOut: trip.endDate,
+                            adults: 2, // safe default
+                            rooms: 1, // safe default
+                          },
+                        },
+                      })
+                    }
+                  >
+                    + Find a hotel
+                  </button>
+                </>
+              )}
             </div>
           </div>
           <div className="trip-dates-edit">
@@ -130,35 +167,97 @@ const Itinerary = ({ trip, setShowModal }) => {
             </div>
             <div className="days-container">{generateDayAccordions()}</div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
 };
 
 const Budgeting = ({ trip }) => {
+
   const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
   const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
 
-  const totalExpenses = expenses.reduce(
-    (sum, expense) => sum + expense.amount,
-    0
-  );
+  useEffect(() => {
+    console.log("Incoming trip.budget.amount in Budgeting:", trip.budget?.amount);
+    setBudget(trip.budget?.amount ?? 0);
+    console.log("Setting budget to," , trip.budget?.amount ?? 0)
+  }, [trip.budget?.amount]);
+
+  useEffect(() => {
+    setExpenses(trip.budget?.expenses ?? []);
+    console.log("Setting expenses to," , trip.budget?.expenses ?? [])
+  }, [trip.budget?.expenses]);  
+
+  const totalExpenses = expenses.reduce((sum, expense) => {
+    const amount = parseFloat(expense.amount);
+    return sum + (isNaN(amount) ? 0 : amount);
+  }, 0);
   const isOverBudget = totalExpenses > budget;
 
   const handleEditBudget = () => {
     setShowBudgetModal(true);
   };
 
-  const handleSaveBudget = (newBudget) => {
+  const handleSaveBudget = async (newBudget) => {
     setBudget(newBudget);
+  
+    try {
+      await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          city_name: trip.name,
+          budget_amount: newBudget, // triggers the update block
+        }),
+      });
+    } catch (err) {
+      console.error("Error saving budget amount:", err);
+    }
   };
 
-  const handleAddExpense = (newExpense) => {
-    setExpenses([...expenses, newExpense]);
+  const handleAddExpense = async (newExpense) => {
+    setExpenses((prev) => [...prev, newExpense]);
+  
+    try {
+      await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          city_name: trip.name,
+          category: newExpense.category,
+          amount: newExpense.amount,
+        }),
+      });
+    } catch (err) {
+      console.error("Error saving expense:", err);
+    }
   };
+  
+
+    // Whenever totalExpenses is updated
+    useEffect(() => {
+      const loadExpenses = async () => {
+        try {
+          const res = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(trip.name)}`);
+          const data = await res.json();
+          if (data.success) {
+            setExpenses(data.expenses || []);
+          } else {
+            console.warn("No expenses found:", data.message);
+          }
+        } catch (err) {
+          console.error("Error fetching expenses:", err);
+        }
+      };
+    
+      if (trip.name) {
+        loadExpenses();
+      }
+    }, [trip.name]);
+    
 
   return (
     <div className="budgeting-container">
@@ -171,9 +270,9 @@ const Budgeting = ({ trip }) => {
         </div>
 
         <div className="budget-overview">
-          <div className="budget-amount">${budget}</div>
+          <div className="budget-amount">${budget.toFixed(2)}</div>
           <div className="budget-spent">
-            You spent ${totalExpenses}
+            You spent ${Number(totalExpenses).toFixed(2)}
             {isOverBudget && (
               <div className="budget-warning">
                 <span className="warning-icon">ⓘ</span>
@@ -202,7 +301,7 @@ const Budgeting = ({ trip }) => {
                 </div>
                 <p>{expense.category}</p>
               </div>
-              <p>${expense.amount}</p>
+              <p>${Number(expense.amount).toFixed(2)}</p>
             </div>
           ))}
         </div>
@@ -455,6 +554,10 @@ const tripProps = PropTypes.shape({
       ),
     })
   ),
+  hotel: PropTypes.shape({
+    name: PropTypes.string,
+    price: PropTypes.number,
+  }),
   budget: PropTypes.shape({
     amount: PropTypes.number.isRequired,
     expenses: PropTypes.arrayOf(
