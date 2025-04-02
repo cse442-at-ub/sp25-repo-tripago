@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
+import { encode } from "html-entities";
 
 // Hardcoded friends data
 const friendsData = ["Alice Johnson", "Michael Smith", "Samantha Lee"];
@@ -21,7 +22,6 @@ const UserProfile = () => {
     countriesVisited: 0,
   });
 
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -193,7 +193,7 @@ const UserProfile = () => {
 
           <div className="header-info">
             <h1>
-              {user.firstName} {user.lastName}
+            {encode(user.firstName)} {encode(user.lastName)}
             </h1>
 
             <button
@@ -225,7 +225,7 @@ const UserProfile = () => {
             {bucketList.length === 0 ? (
               <p>No destinations added yet.</p>
             ) : (
-              bucketList.map((place, index) => <li key={index}>{place}</li>)
+              bucketList.map((place, index) => <li key={index}>{encode(place)}</li>)
             )}
           </ul>
           <div className="add-destination">

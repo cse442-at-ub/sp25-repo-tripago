@@ -13,6 +13,7 @@ import locationIcon from "../../assets/location.png";
 import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
+import { encode } from "html-entities";
 
 const Hotels = () => {
   const navigate = useNavigate();
@@ -188,7 +189,7 @@ const Hotels = () => {
                 className="dropbtn sort-dropbtn"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                Sort by<span className="sort-option">{sortOption} ▼</span>
+                Sort by<span className="sort-option">{encode(sortOption)} ▼</span>
               </button>
               {isDropdownOpen && (
                 <div className="dropdown-content sort-dropdown-content">

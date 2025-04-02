@@ -7,6 +7,7 @@ import "../../styles/Profile.css";
 import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
+import { encode } from "html-entities";
 
 const Profile = () => {
   const [user] = useState({
@@ -62,7 +63,6 @@ const isFromLogin = incomingDestination.fromLogin === true;
     };
   
     const loadTrip = async () => {
-      console.log("LOAD TRIP FUNCTION STARTED!");
 
       // If user is coming from login page, get latest trip.
       const stored = !isFromLogin ? localStorage.getItem("selectedTrip") : null;
@@ -94,8 +94,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
               const data = await res.json();
               if (data.success) {
                 const tripData = {
-                  name: data.trip.city_name,
-                  countryCode: data.trip.country_name,
+                  name: encode(data.trip.city_name),
+                  countryCode: encode(data.trip.country_name),
                   startDate: data.trip.start_date,
                   endDate: data.trip.end_date,
                 };
@@ -124,8 +124,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
           }
           
           tripData = {
-            name: parsed.name,
-            countryCode: parsed.countryCode || "",
+            name: encode(parsed.name),
+            countryCode: encode(parsed.countryCode || ""),
             startDate: parsed.startDate || "",
             endDate: parsed.endDate || "",
           };
@@ -199,8 +199,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
           console.log("Data recieved from latest trip is: ", data)
           if (data.success) {
             tripData = {
-              name: data.trip.city_name,
-              countryCode: data.trip.country_name,
+              name: encode(data.trip.city_name),
+              countryCode: encode(data.trip.country_name),
               startDate: data.trip.start_date,
               endDate: data.trip.end_date,
             };

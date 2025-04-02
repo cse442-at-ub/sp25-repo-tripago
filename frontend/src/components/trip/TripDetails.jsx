@@ -4,6 +4,7 @@ import Accordion from "../Accordion";
 import { useNavigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
+import { encode } from "html-entities";
 
 const Itinerary = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
@@ -37,14 +38,14 @@ const Itinerary = ({ trip, setShowModal }) => {
                 {dayActivities.map((activity, index) => (
                   <div key={index} className="activity-item">
                     <div className="activity-header">
-                      <h3>{activity.name}</h3>
+                      <h3>{encode(activity.name)}</h3>
                     </div>
                     {activity.time && (
-                      <p className="activity-time">Open {activity.time}</p>
+                      <p className="activity-time">Open {encode(activity.time)}</p>
                     )}
                     {activity.description && (
                       <p className="activity-description">
-                        {activity.description}
+                        {encode(activity.description)}
                       </p>
                     )}
                   </div>
@@ -262,7 +263,7 @@ const Budgeting = ({ trip }) => {
                     ? "🍽️"
                     : "💰"}
                 </div>
-                <p>{expense.category}</p>
+                <p>{encode(expense.category)}</p>
               </div>
               <p>${Number(expense.amount).toFixed(2)}</p>
             </div>
@@ -447,7 +448,7 @@ const TripDetails = ({ trip, setShowModal }) => {
           <div className="title-container divider">
             <h2>
               Your trip to{" "}
-              <span className="title-accent">{trip.name}.</span>
+              <span className="title-accent">{encode(trip.name)}.</span>
             </h2>
             {/* <p>Select a different trip</p> */}
             <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle";
 import Sidebar from "../../components/Sidebar";
+import { encode } from "html-entities";
 
 const AllTrips = () => {
   const navigate = useNavigate();
@@ -157,8 +158,8 @@ const AllTrips = () => {
 
                   {/* Trip Info */}
                   <div className="trip-info">
-                    <h4 className="trip-destination">{trip.destination}</h4>
-                    <p className="trip-dates">{trip.dates}</p>
+                    <h4 className="trip-destination">{encode(trip.destination)}</h4>
+                    <p className="trip-dates">{encode(trip.dates)}</p>
 
                     {/* Bottom Row: Icons + Price */}
                     <div className="trip-bottom-row">
@@ -177,7 +178,7 @@ const AllTrips = () => {
                       trip.image_url ||
                       "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
                     }
-                    alt={trip.destination}
+                    alt={encode(trip.destination)}
                     className="trip-image"
                   />
                 </div>

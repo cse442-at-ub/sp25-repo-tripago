@@ -4,6 +4,7 @@ import fallbackImg from '../../assets/paris.jpg';
 import '../../styles/trip/AcceptRejectDest.css';
 import Sidebar from '../../components/Sidebar';
 import MobileSidebarToggle from '../../components/MobileSidebarToggle';
+import { encode } from "html-entities";
 
 const AcceptRejectDest = () => {
   const navigate = useNavigate();
@@ -112,13 +113,13 @@ const [isMobile, setIsMobile] = useState(false);
 <Sidebar isOpen={!isMobile || isSidebarOpen} />
     <div className="accept-reject-container">
       <h2>
-        How does a trip to <span className="destination-name">{city}</span> sound?
+        How does a trip to <span className="destination-name">{encode(city)}</span> sound?
       </h2>
 
       {isImageLoaded ? (
         <img
           src={imageUrl || fallbackImg}
-          alt={name}
+          alt={encode(name)}
           className="destination-image"
         />
       ) : (
