@@ -71,16 +71,66 @@ const Profile = ({editable}) => {
       let tripData = null;
   
       if (stored) {
+        console.log("In stored block:")
         try {
           const parsed = JSON.parse(stored);
           const isNewTrip = parsed.newTrip === true;
-  
+
+          const hasNoBudget = !parsed.budget;
+
+          if (hasNoBudget && !isNewTrip) {
+            console.log("Stored trip missing budget — fetching full trip from DB instead");
+          
+            try {
+              const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTrip.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  city_name: parsed.name,
+                  start_date: parsed.startDate || null,
+                  end_date: parsed.endDate || null,
+                }),
+              });
+          
+              const data = await res.json();
+              if (data.success) {
+                const tripData = {
+                  name: data.trip.city_name,
+                  countryCode: data.trip.country_name,
+                  startDate: data.trip.start_date,
+                  endDate: data.trip.end_date,
+                };
+          
+                const image = data.trip.image_url || airplaneIllustration;
+                const budget = data.trip.budget || { amount: 0, expenses: [] };
+          
+                setTrip({
+                  ...tripData,
+                  picture: image,
+                  days: [],
+                  budget,
+                });
+          
+                setStartDate(tripData.startDate || null);
+                setEndDate(tripData.endDate || null);
+                return;
+              } else {
+                console.warn("Trip not found via getTrip.php");
+              }
+            } catch (err) {
+              console.error("Failed to fetch trip via getTrip.php", err);
+            }
+          
+            return; // don't continue to getLatestTrip fallback
+          }
+          
           tripData = {
             name: parsed.name,
             countryCode: parsed.countryCode || "",
             startDate: parsed.startDate || "",
             endDate: parsed.endDate || "",
           };
+          console.log("tripData in stored block is:", tripData)
   
           let image = parsed.imageUrl || airplaneIllustration;
   
@@ -119,6 +169,7 @@ const Profile = ({editable}) => {
                 ...tripData,
                 imageUrl: image,
                 newTrip: false,
+                budget: parsed.budget
               })
             );
           }
@@ -127,21 +178,26 @@ const Profile = ({editable}) => {
             ...tripData,
             picture: image,
             days: [],
-            budget: { amount: 0, expenses: [] },
+            budget: parsed.budget || { amount: 0, expenses: [] },
           });
   
           setStartDate(tripData.startDate || null);
           setEndDate(tripData.endDate || null);
+          return; 
+
         } catch (err) {
           console.warn("Invalid trip data in localStorage.");
         }
-      } else {
+      }
+       
         // Load latest trip from DB
         try {
+          console.log("Pt2 : Fetching full trip from db")
           const res = await fetch(
             "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getLatestTrip.php"
           );
           const data = await res.json();
+          console.log("Data recieved from latest trip is: ", data)
           if (data.success) {
             tripData = {
               name: data.trip.city_name,
@@ -151,12 +207,15 @@ const Profile = ({editable}) => {
             };
   
             const image = data.trip.image_url || "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
+            const budget = data.trip.budget || { amount: 0, expenses: [] };
+
+            console.log("Budget recieved is: ", budget) 
   
             setTrip({
               ...tripData,
               picture: image,
               days: [],
-              budget: { amount: 0, expenses: [] },
+              budget,
             });
   
             setStartDate(tripData.startDate || null);
@@ -167,7 +226,7 @@ const Profile = ({editable}) => {
         } catch (err) {
           console.error("Error loading latest trip:", err);
         }
-      }
+      
   
       if (!tripData?.startDate || !tripData?.endDate) {
         setShowModal(true);
