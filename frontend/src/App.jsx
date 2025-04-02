@@ -96,9 +96,9 @@ const App = () => {
               <Route
                 path="/recommended"
                 element={
-                  //<ProtectedRoute>
+                  <ProtectedRoute>
                     <Recommended />
-                 // </ProtectedRoute>
+                  </ProtectedRoute>
                 }
               />
               <Route

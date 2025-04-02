@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 import "../styles/recommended.css";
 import MobileSidebarToggle from "../components/MobileSidebarToggle.jsx";
+import '../styles/trip/AcceptRejectDest.css';
 
 const VerifyLocation = () => {
   const navigate = useNavigate();
@@ -16,11 +17,15 @@ const VerifyLocation = () => {
   const [destinationImages, setDestinationImages] = useState([]);
   const [error, setError] = useState(null);
   const [imagesFetched, setImagesFetched] = useState(false); // Flag to ensure images are fetched only once
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const response = await fetch("http://localhost/tripago/getRecommendations.php?category=Recommendations");
+        
+        //const response = await fetch("http://localhost/tripago/getRecommendations.php?category=Recommendations");
+        const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommendations.php?category=Recommendations");
         
         if (!response.ok) {
           throw new Error("Failed to fetch recommendations");
@@ -33,8 +38,9 @@ const VerifyLocation = () => {
         destinationsList = await Promise.all(
           destinationsList.map(async (destination) => {
             try {
-              const imgResponse = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
-              
+              //const imgResponse = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
+              const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${destination.name}`);
+        
               if (!imgResponse.ok) {
                 throw new Error("Failed to fetch image");
               }
@@ -55,8 +61,61 @@ const VerifyLocation = () => {
     };
   
     fetchDestinations();
+
+    // Copied from userprofile.jsx
+    const handleResize = () => {
+      setIsMobile(false);
+      const isNowMobile = window.innerWidth <= 480;
+      console.log(
+        "Window width:",
+        window.innerWidth,
+        "| isMobile:",
+        isNowMobile
+      );
+
+      setIsMobile(isNowMobile);
+      console.log("is mobile: ", isNowMobile);
+
+    };
+
+    handleResize(); // Run on first load
+    window.addEventListener("resize", handleResize); // Watch for resizes
+
   }, []);
+
+  const toggleFavorite = async (destination) => {
+    const isFavorited = favorites[destination.name];
+    setFavorites((prev) => ({ ...prev, [destination.name]: !isFavorited }));
   
+    try {
+      const url = isFavorited
+        ? "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/removeFavorite.php"
+        : "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/addFavorite.php";
+  
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: destination.name,
+          countryCode: destination.countryCode,
+        }),
+      });
+  
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to update favorites");
+      }
+  
+      console.log(`${destination.name} ${isFavorited ? "removed from" : "added to"} favorites.`);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+      alert("An error occurred while updating favorites.");
+    }
+  };
+  
+
   // Save trip selection
   const handleNewTrip = (destination) => {
     localStorage.setItem(
@@ -71,16 +130,27 @@ const VerifyLocation = () => {
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const toggleFavorite = (name) => {
-    setFavorites(prev => ({ ...prev, [name]: !prev[name] }));
-    console.log(destinations);
-  };
+  //const toggleFavorite = (name) => {
+  //  setFavorites(prev => ({ ...prev, [name]: !prev[name] }));
+  //  console.log(destinations);
+  //};
 
   return (
+    <>
+    {/* Hamburger toggle for mobile */}
+    {isMobile && (
+        <MobileSidebarToggle
+          isOpen={isSidebarOpen}
+          toggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+        />
+      )}
+
+      {/* Sidebar: always visible on desktop, toggled on mobile */}
+      {console.log("send to sidebar: ", !isMobile || isSidebarOpen)}
+      <Sidebar isOpen={!isMobile || isSidebarOpen} />
     <div style={{display: 'flex', width:'100%', height: '100vh', textAlign: 'left'}}>
-      <Sidebar />
-      <Navbar />
-    <div style={{ paddingTop: '5rem', paddingBottom: '10rem', display: 'flex', flexWrap: 'wrap', height: '600vh', backgroundColor: '#f3f4f6', width: '100%' }}>
+
+    <div style={{paddingTop: '5rem', paddingBottom: '10rem', display: 'flex', flexWrap: 'wrap', height: '600vh', backgroundColor: '#f3f4f6', backgroundSize: 'cover', width: '100%' }}>
       
       <div class="card_positions">
         <h2 style={{ fontSize: "1.5rem", fontWeight: "600", color: "#374151", marginTop: "2rem" }}>
@@ -103,6 +173,13 @@ const VerifyLocation = () => {
             textAlign: "center",
           }}
         />
+
+        <p
+        className="reject-text"
+        onClick={() => navigate('/profile/new-destination')}
+        >
+          I want something else.
+        </p>
 
         <div style={{
           marginTop: "2rem",
@@ -141,7 +218,7 @@ const VerifyLocation = () => {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "75%", padding: "0.5rem 1rem" }}>
                 <FaHeart 
                   style={{ color: favorites[destination.name] ? "red" : "gray", cursor: "pointer" }}
-                  onClick={(e) => { e.stopPropagation(); toggleFavorite(destination.name); }}
+                  onClick={(e) => { e.stopPropagation(); toggleFavorite(destination); }}
                 />
                 <button
                   style={{
@@ -169,6 +246,7 @@ const VerifyLocation = () => {
       </div>
     </div>
     </div>
+    </>
   );
 };
 
