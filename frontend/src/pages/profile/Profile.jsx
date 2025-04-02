@@ -102,6 +102,10 @@ const isFromLogin = incomingDestination.fromLogin === true;
                   countryCode: data.trip.country_name,
                   startDate: data.trip.start_date,
                   endDate: data.trip.end_date,
+                  hotel: {
+                    name: data.trip.hotel?.name,
+                    price: data.trip.hotel?.price,
+                  }
                 };
           
                 const image = data.trip.image_url || airplaneIllustration;
@@ -133,8 +137,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
             startDate: parsed.startDate || "",
             endDate: parsed.endDate || "",
             hotel: {
-              name: parsed.hotel.name || "",
-              price: parsed.hotel.price || 0,
+              name: parsed.hotel?.name || "",
+              price: parsed.hotel?.price || 0,
             }
           };
           console.log("tripData in stored block is:", tripData)
@@ -214,8 +218,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
               startDate: data.trip.start_date,
               endDate: data.trip.end_date,
               hotel: {
-                name: data.trip.hotel_name,
-                price: data.trip.hotel_price,
+                name: data.trip.hotel?.name,
+                price: data.trip.hotel?.price,
               }
             };
   

@@ -18,7 +18,7 @@ if ($mysqli->connect_errno) {
 
 // Get the most recent trip (sorted by created_at)
 $stmt = $mysqli->prepare("
-  SELECT id, city_name, country_name, start_date, end_date, image_url, budget_amount 
+  SELECT id, city_name, country_name, start_date, end_date, image_url, budget_amount, hotel_name, hotel_price
   FROM trips 
   WHERE email = ? 
   ORDER BY created_at DESC 
@@ -59,6 +59,10 @@ $response = [
   "budget" => [
     "amount" => (float)($trip["budget_amount"] ?? 0),
     "expenses" => $expenses,
+  ],
+  "hotel" => [
+    "name" => $trip["hotel_name"],
+    "price" => (float)($trip["hotel_price"] ?? 0),
   ],
 ];
 
