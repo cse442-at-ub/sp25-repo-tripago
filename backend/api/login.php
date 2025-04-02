@@ -59,10 +59,16 @@ if ($good){
     setcookie("authCookie",$uuid,$expiration,"/","",true,true);
     setcookie("user",$email,$expiration,"/","",true,true);
 
-    echo json_encode(["success"=>true,"message"=>"Authentication successful","token"=>$uuid]);
+    // echo json_encode(["success"=>true,"message"=>"Authentication successful","token"=>$uuid]);
 
-
-
+    echo json_encode([
+        "success" => true,
+        "message" => "Authentication successful",
+        "token" => $uuid,
+        "first_name" => $result["first_name"],
+        "last_name" => $result["last_name"]
+      ]);
+      
 } else {
 
     echo json_encode(["success"=>false,"message"=>"Authentication failed"]);

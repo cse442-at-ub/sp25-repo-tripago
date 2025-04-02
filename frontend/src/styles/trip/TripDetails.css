@@ -15,6 +15,13 @@ p {
   color: #666;
 }
 
+.select-different-p {
+  transition: 3ms ease-in;
+}
+.select-different-p:hover {
+  color: var(--primary-color);
+}
+
 /* TITLE CONTAINER */
 .title-container {
   display: flex;
@@ -74,7 +81,7 @@ p {
 .no-dates-selected {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   margin: 0;
   font-size: 16px;
@@ -200,7 +207,7 @@ p {
 .hotel-details {
   width: 100%;
   padding: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   border-bottom: 1px solid #e0e0e0;
   text-align: left;
 }
@@ -475,6 +482,39 @@ p {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.trip-dates-edit {
+  width: 100%;
+}
+
+.trip-dates-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.trip-dates-bar h3 {
+  color: var(--black);
+  margin-bottom: 5px;
+}
+
+.auto-fill-btn {
+  background: none;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.auto-fill-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
   .title-container {
@@ -563,4 +603,40 @@ p {
   .category-button {
     width: 100%;
   }
+}
+
+.booked-hotel-details {
+  width: 100%;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.booked-hotel-details h4 {
+  text-align: left;
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.hotel-price {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.change-hotel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.change-hotel-btn:hover {
+  background-color: #5a6268;
 }

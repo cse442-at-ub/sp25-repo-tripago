@@ -1,63 +1,74 @@
-// import React, { useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import "../styles/LoadingScreen.css"; // Ensure you have this
-
-// const LoadingScreen = ({ headerText, redirectTo }) => {
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const timer = setTimeout(() => {
-//       navigate(redirectTo || "/browse-hotels"); // Default: /browse-hotels
-//     }, 5000);
-    
-//     return () => clearTimeout(timer); // Cleanup timeout
-//   }, [navigate, redirectTo]);
-
-//   return (
-//     <div className="loading-screen">
-//       <h1 className="loading-header">
-//         {headerText || "Hang on! We’re finding the best hotels for you"}
-//       </h1>
-//       <div className="loading-spinner"></div>
-//       <p className="loading-text">This may take a while. . .</p>
-//       <button className="loading-cancel" onClick={() => navigate(-1)}>✖</button>
-//     </div>
-//   );
-// };
-
-// export default LoadingScreen;
-
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "../styles/LoadingScreen.css"; // Make sure your styles are set up
+import { searchLocations, searchHotels } from "../services/hotelService";
+import "../styles/LoadingScreen.css";
 
 const LoadingScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Get values from navigate()
-  const { headerText, redirectTo } = location.state || {
+  const { headerText, redirectTo, recommendations, hotels } = location.state || {
     headerText: "Loading...",
     redirectTo: "/",
+    recommendations: null,
+    hotels: null
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate(redirectTo); // Navigate after 5 seconds
-    }, 4000);
-    
-    return () => clearTimeout(timer); // Cleanup
-  }, [navigate, redirectTo]);
+    async function doLoad() {
+      // If we are going to the hotels page, we need to fetch the location and hotels from amadeus
+      if (redirectTo === "/browse-hotels" && hotels) {
+        try {
+          // Step 1: Get location from amadeus
+          console.log("getting location from amadeus");
+          const locations = await searchLocations(hotels.location);
+          const locationMatch = locations.find(
+            loc => loc.name === hotels.location
+          ) || locations[0];
+          console.log("locationMatch", locationMatch);
+
+          // Step 2: Get hotels from amadeus
+          console.log("getting hotels from amadeus");
+          const results = await searchHotels(locationMatch, hotels.checkIn, hotels.checkOut, hotels.adults, hotels.rooms);
+          console.log("hotels from amadeus", results);
+
+          // Step 3: Navigate to hotels page with results
+          navigate(redirectTo, { state: { location: locationMatch, searchResults: results, checkIn: hotels.checkIn, checkOut: hotels.checkOut } });
+        } catch (error) {
+          console.error("Error fetching hotels:", error);
+          navigate("/browse-hotels", { state: { error: error.message } });
+        }
+      // If we are not going to the hotels page, we just navigate to the page after timeout
+      } else {
+        // Original timer-based navigation for other routes
+        const timer = setTimeout(() => {
+          if (recommendations) {
+            navigate(redirectTo, { state: { recommendations } });
+          } else {
+            navigate(redirectTo);
+          }
+        }, 4000);
+        return () => clearTimeout(timer);
+      }
+    }
+
+    doLoad();
+  }, [navigate, redirectTo, recommendations, hotels]);
 
   return (
     <div className="loading-screen">
       <h2>{headerText}</h2>
       <div className="loading-spinner"></div>
       <p>This may take a while...</p>
+      <p className="powered-by">
+            Powered by{" "}
+            <a href="https://amadeus.com" target="_blank">
+              Amadeus
+            </a>
+      </p>
       <button className="loading-cancel" onClick={() => navigate(-1)}>✖</button>
     </div>
   );
 };
 
 export default LoadingScreen;
-
