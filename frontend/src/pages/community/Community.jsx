@@ -79,7 +79,7 @@ const Community = () => {
     console.log("Search term:", searchTerm);
     setSearchTerm("");
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/sendFriendRequest.php",{ searchTerm: searchTerm },{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/sendFriendRequest.php",{ searchTerm: searchTerm },{
         headers:{
           'Content-Type':'application/json'
         }
@@ -168,7 +168,7 @@ const Community = () => {
     try {
 
 
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/getIncFriends.php",{test:"empty"},{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/getIncFriends.php",{test:"empty"},{
         headers:{
           'Content-Type':'application/json'
         }
