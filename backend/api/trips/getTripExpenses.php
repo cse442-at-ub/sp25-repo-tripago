@@ -1,0 +1,40 @@
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json");
+
+$email = $_COOKIE['user'] ?? null;
+$city = $_GET['city_name'] ?? null;
+
+if (!$email || !$city) {
+  echo json_encode(["success" => false, "message" => "Missing data"]);
+  exit();
+}
+
+$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
+
+$tripStmt = $mysqli->prepare("SELECT id FROM trips WHERE email=? AND city_name=?");
+$tripStmt->bind_param("ss", $email, $city);
+$tripStmt->execute();
+$tripResult = $tripStmt->get_result();
+$trip = $tripResult->fetch_assoc();
+
+if (!$trip) {
+  echo json_encode(["success" => false, "message" => "Trip not found"]);
+  exit();
+}
+
+$tripId = $trip["id"];
+
+$expStmt = $mysqli->prepare("SELECT category, amount FROM expenses WHERE trip_id=?");
+$expStmt->bind_param("i", $tripId);
+$expStmt->execute();
+$expResult = $expStmt->get_result();
+
+$expenses = [];
+while ($row = $expResult->fetch_assoc()) {
+  $expenses[] = $row;
+}
+
+echo json_encode(["success" => true, "expenses" => $expenses]);
+?>
+
