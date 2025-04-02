@@ -158,10 +158,16 @@ const NewDestination = () => {
         const data = JSON.parse(text);
         if (!data || !data.data) throw new Error("No recommendations found");
 
+        let redirectPath = "/profile/accept-reject"; // Default redirect
+
+        if (category === "Recommendations") {
+          redirectPath = "/recommended";
+        }
+        console.log("redirect path: " + redirectPath);
         navigate("/loading-screen", {
           state: {
             headerText: "Scanning the map for your ideal getaway",
-            redirectTo: "/profile/accept-reject",
+            redirectTo: redirectPath,
             category,
             recommendations: data.data.map((rec) => ({
               name: rec.name,
