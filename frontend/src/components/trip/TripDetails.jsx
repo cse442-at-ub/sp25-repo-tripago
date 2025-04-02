@@ -97,27 +97,64 @@ const Itinerary = ({ trip, setShowModal }) => {
           </div>
         </div>
       ) : (
-        <div>
+        <>
           <div className="hotel-details">
             <h3>Hotel Details:</h3>
             <div className="hotel-status">
-              <p className="no-hotel-message">
-                Looks like you haven&apos;t booked a hotel yet for this trip.
-              </p>
-              <button
-                className="find-hotel-btn"
-                onClick={() =>
-                  navigate("/loading-screen", {
-                    state: {
-                      headerText:
-                        "Hang on! We’re finding the best hotels for you",
-                      redirectTo: "/browse-hotels",
-                    },
-                  })
-                }
-              >
-                + Find a hotel
-              </button>
+              {trip.hotel.name ? (
+                <div className="booked-hotel-details">
+                  <h4>{trip.hotel.name}</h4>
+                  <p className="hotel-price">Price: ${trip.hotel.price}</p>
+                  <button
+                    className="find-hotel-btn"
+                    onClick={() =>
+                      navigate("/loading-screen", {
+                        state: {
+                          headerText:
+                            "Hang on! We're finding the best hotels for you",
+                          redirectTo: "/browse-hotels",
+                          hotels: {
+                            location: trip.name,
+                            checkIn: trip.startDate,
+                            checkOut: trip.endDate,
+                            adults: 2, // safe default
+                            rooms: 1, // safe default
+                          },
+                        },
+                      })
+                    }
+                  >
+                    Change Hotel
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="no-hotel-message">
+                    Looks like you haven&apos;t booked a hotel yet for this trip.
+                  </p>
+                  <button
+                    className="find-hotel-btn"
+                    onClick={() =>
+                      navigate("/loading-screen", {
+                        state: {
+                          headerText:
+                            "Hang on! We're finding the best hotels for you",
+                          redirectTo: "/browse-hotels",
+                          hotels: {
+                            location: trip.name,
+                            checkIn: trip.startDate,
+                            checkOut: trip.endDate,
+                            adults: 2, // safe default
+                            rooms: 1, // safe default
+                          },
+                        },
+                      })
+                    }
+                  >
+                    + Find a hotel
+                  </button>
+                </>
+              )}
             </div>
           </div>
           <div className="trip-dates-edit">
@@ -130,7 +167,7 @@ const Itinerary = ({ trip, setShowModal }) => {
             </div>
             <div className="days-container">{generateDayAccordions()}</div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
@@ -517,6 +554,10 @@ const tripProps = PropTypes.shape({
       ),
     })
   ),
+  hotel: PropTypes.shape({
+    name: PropTypes.string,
+    price: PropTypes.number,
+  }),
   budget: PropTypes.shape({
     amount: PropTypes.number.isRequired,
     expenses: PropTypes.arrayOf(
