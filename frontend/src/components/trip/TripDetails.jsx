@@ -45,7 +45,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
     console.log("Before post");
 
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/test/getAllActivities.php",{start_date:startDate},{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",{start_date:startDate},{
         headers:{
           'Content-Type':'application/json'
         }
@@ -117,7 +117,7 @@ const Itinerary = ({ trip, setShowModal }) => {
   
     try{
       
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/test/generateActivity.php",{location:trip.name},{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",{location:trip.name},{
         headers:{
           'Content-Type':'application/json'
         }
@@ -191,7 +191,7 @@ but can expand it in the future, if need (or want) be!
       This safety measure assumes that a user will not create mutiple trips 
       to the same location on the same day, because why would they?
       */
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/test/addActivity.php",{day:day,name:name,price:price,start:startDate},{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",{day:day,name:name,price:price,start:startDate},{
         headers:{
           'Content-Type':'application/json'
         }
