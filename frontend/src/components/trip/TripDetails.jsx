@@ -15,6 +15,7 @@ const Itinerary = ({ trip, setShowModal }) => {
   const [autoFillMessages, setAutoFillMessages] = useState({});
   const [location, setLocation] = useState({}); // State to store location input for each day
   const [placeholderText, setPlaceholderText] = useState({}); // State to store the placeholder text for each day
+  const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
 
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
@@ -266,6 +267,13 @@ but can expand it in the future, if need (or want) be!
         ...prevLocation,
         [day]: "",
       }));
+
+      //change button text after it's clicked for first time
+      setAddActivityButtonText(prevText => ({
+        ...prevText,
+        [day]: "Add Price", 
+      }));
+
   }
   }
 
@@ -342,7 +350,7 @@ but can expand it in the future, if need (or want) be!
                   }
                 }
               />
-              <button className="add-activity-btn" onClick={() => addActivityButton(i,location[i])}>+ Add activity</button>
+              <button className="add-activity-btn" onClick={() => addActivityButton(i,location[i])}>{addActivityButtonText[i] || "Add activity"}</button>
               <button className="auto-fill-btn" onClick={() =>autoFillBtn(i)}>Auto-fill my day</button>
             </div>
           </div>
