@@ -13,6 +13,8 @@ const Itinerary = ({ trip, setShowModal }) => {
   //Need to get saved activities from DB, (or at least check!)
   //its called "autofillMessages", but should handle manual ones too!
   const [autoFillMessages, setAutoFillMessages] = useState({});
+  const [location, setLocation] = useState({}); // State to store location input for each day
+  const [placeholderText, setPlaceholderText] = useState({}); // State to store the placeholder text for each day
 
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
@@ -133,6 +135,10 @@ const Itinerary = ({ trip, setShowModal }) => {
         } else {
           //apologize for not findings any activities
           console.log(data.message);
+          setAutoFillMessages(prevMessages => ({
+            ...prevMessages,
+            [i]: { name: "Could not find any activities", price: "" },
+          }));
         }
       } else {
         console.log("An error has occurred!")
@@ -152,12 +158,19 @@ const Itinerary = ({ trip, setShowModal }) => {
   */
   const fillActivity = async(day,name,price) => {
 
+
     setAutoFillMessages(prevMessages => ({
       ...prevMessages,
       [day]: { name: name, price: "Price: " + price },
     }));
 
     storeActivity(day,name,price);
+
+
+    setPlaceholderText(prevPlaceholder => ({
+      ...prevPlaceholder,
+      [day]: "Enter price",
+    }));
 
   }
 
@@ -204,7 +217,56 @@ but can expand it in the future, if need (or want) be!
   Will also call the fill activity function!
   */
   const addActivityButton = async(day,name) => {
+    //check if price is entered
+    if (placeholderText[day] == "Enter price"){
+      console.log("Detected that price is recieved!");
 
+      const activity_price = name;
+      const activityName = autoFillMessages[day]?.name;
+
+      console.log("Custom user activity: " + activityName + " and corresponding price: " + activity_price + " will be processed");
+
+      //update text box to include user entered price
+      setAutoFillMessages(prevMessages => ({
+        ...prevMessages,
+        [day]: { ...prevMessages[day], price: "Price: " + name },
+      }));
+
+      //change text box place holder to be "Done"
+      setPlaceholderText(prevPlaceholder => ({
+        ...prevPlaceholder,
+        [day]: "Done",
+      }));
+    
+      //sets value of input box to empty
+      setLocation(prevLocation => ({
+        ...prevLocation,
+        [day]: "",
+      }));
+
+      //store the custom activity
+      storeActivity(day,activityName,activity_price);
+
+    } else {
+
+      //sets text in text box
+      setAutoFillMessages(prevMessages => ({
+        ...prevMessages,
+        [day]: { name: name, price: "Price:  "},
+      }));
+
+      //sets place holder text in input box
+      setPlaceholderText(prevPlaceholder => ({
+        ...prevPlaceholder,
+        [day]: "Enter price",
+      }));
+    
+      //sets value of input box to empty
+      setLocation(prevLocation => ({
+        ...prevLocation,
+        [day]: "",
+      }));
+  }
   }
 
   
@@ -268,18 +330,19 @@ but can expand it in the future, if need (or want) be!
             <div className="activity-controls">
               <input
                 type="text"
-                placeholder="Enter location"
+                placeholder={placeholderText[i] || "Enter location"}
                 className="location-input"
                 value={location[i] || ""}
                 onChange={
                   (e) => {
-                    const newLocation = [...location];
-                    newLocation[i] = e.target.value;
-                    setLocation(newLocation);
+                    setLocation(prevLocation => ({
+                      ...prevLocation,
+                      [i]: e.target.value,
+                    }));
                   }
                 }
               />
-              <button className="add-activity-btn">+ Add activity</button>
+              <button className="add-activity-btn" onClick={() => addActivityButton(i,location[i])}>+ Add activity</button>
               <button className="auto-fill-btn" onClick={() =>autoFillBtn(i)}>Auto-fill my day</button>
             </div>
           </div>
