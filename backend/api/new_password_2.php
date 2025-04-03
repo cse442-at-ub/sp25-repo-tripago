@@ -102,10 +102,9 @@ session_start();
 				$hashed_password = password_hash($password , PASSWORD_BCRYPT);
 				
 				// Update the password in the database
-				if (!mysqli_query($con, "UPDATE users SET password_hash='$hashed_password' WHERE reset_token='$key'")) {
-					echo json_encode(["status" => "error", "message" => "password not reset"]);
-					exit;
-				}
+				$stmt = $mysqli->prepare("UPDATE users SET password_hash=? WHERE reset_token=?");
+				$stmt->bind_param("ss", $hashed_password, $key);
+				$stmt->execute();
 
 				echo json_encode(["status" => "success", "message" => "password reset"]);
 				exit;
