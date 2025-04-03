@@ -1,12 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Settings.css';
+import MobileSidebarToggle from "../../components/MobileSidebarToggle";
+import Sidebar from "../../components/Sidebar";
 
 const Settings = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [isMobile, setIsMobile] = useState(false);
+
   return (
+    <>
+    {/* Hamburger toggle for mobile */}
+    {isMobile && (
+      <MobileSidebarToggle
+        isOpen={isSidebarOpen}
+        toggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+      />
+    )}
+
+    {/* Sidebar: always visible on desktop, toggled on mobile */}
+    <Sidebar isOpen={!isMobile || isSidebarOpen} />
+    
     <div className="settings-container">
 
        {/* Hamburger Button */}
@@ -41,6 +58,7 @@ const Settings = () => {
       </div>
 
     </div>
+    </>
   );
 };
 
