@@ -28,13 +28,14 @@ import NewDestination from "./pages/profile/NewDestination.jsx";
 import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
 import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
+import Community from "./pages/community/Community.jsx";
 
 const App = () => {
   return (
     <UserProvider>
-      <HashRouter>
-        <div className="app-container">
-          <Navbar />
+    <HashRouter>
+      <div className="app-container">
+        <Navbar />
 
           <main className="content">
             <Routes>
@@ -51,8 +52,8 @@ const App = () => {
                 element={<AcceptRejectDest />}
               />
 
-              {/* Protected Routes: Only logged in users can access these pages */}
-              <Route
+          {/* Protected Routes: Only logged in users can access these pages */}
+          <Route
                 path="/all-trips"
                 element={
                   <ProtectedRoute>
@@ -60,15 +61,8 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route
                 path="/profile/new-destination"
                 element={
                   <ProtectedRoute>
@@ -76,7 +70,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route
+               <Route
                 path="/user-profile"
                 element={
                   <ProtectedRoute>
@@ -170,6 +164,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <SettingsPrivacyPolicy />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/community"
+                element={
+                  <ProtectedRoute>
+                    <Community />
                   </ProtectedRoute>
                 }
               />
