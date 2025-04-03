@@ -101,14 +101,11 @@ const AllTrips = () => {
 
     // TODO: Change this trip's travel_log column in the database to true
     try {
-      await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/postToLog.php", {
-        method: "POST",
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/postToLog.php", trip, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          city_name: trip.name,
-          budget_amount: newBudget
-        }),
       });
+      const result = response.data
+      console.log("postToLog Form Response: ", result);
     } catch(err) {
       console.log("Error posting to log: ", err)
     };
