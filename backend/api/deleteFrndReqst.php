@@ -1,4 +1,7 @@
 <?php
+/*
+Removes a friend request from the database
+*/
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
