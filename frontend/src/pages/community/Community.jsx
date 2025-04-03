@@ -108,6 +108,7 @@ const Community = () => {
   }
 
   //called when you click "view sent requests" button
+  //Will show you requests that you sent
   const getSentRequests = async(e) => {
     
     try {
