@@ -43,7 +43,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",
-        { start_date: startDate },
+        { trip_id: trip.id },
         {
           headers: {
             "Content-Type": "application/json",
@@ -182,7 +182,7 @@ but can expand it in the future, if need (or want) be!
       */
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",
-        { day: day, name: name, price: price, start: startDate },
+        { trip_id: trip.id, day: day, name: name, price: price },
         {
           headers: {
             "Content-Type": "application/json",

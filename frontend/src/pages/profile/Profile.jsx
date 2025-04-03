@@ -98,6 +98,7 @@ const isFromLogin = incomingDestination.fromLogin === true;
               const data = await res.json();
               if (data.success) {
                 const tripData = {
+                  id: data.trip.id,
                   name: encode(data.trip.city_name),
                   countryCode: encode(data.trip.country_name),
                   startDate: data.trip.start_date,
@@ -107,6 +108,8 @@ const isFromLogin = incomingDestination.fromLogin === true;
                     price: data.trip.hotel?.price,
                   }
                 };
+
+                console.log("trip id set is: ", tripData.id)
           
                 const image = data.trip.image_url || airplaneIllustration;
                 const budget = data.trip.budget || { amount: 0, expenses: [] };
@@ -132,6 +135,7 @@ const isFromLogin = incomingDestination.fromLogin === true;
           }
           
           tripData = {
+            id: parsed.id, 
             name: encode(parsed.name),
             countryCode: encode(parsed.countryCode || ""),
             startDate: parsed.startDate || "",
@@ -175,11 +179,14 @@ const isFromLogin = incomingDestination.fromLogin === true;
                 console.error("Failed to save trip:", err);
               });
   
+
             // Update localStorage to clear the newTrip flag
+            tripData.id = data.trip_id; 
             localStorage.setItem(
               "selectedTrip",
               JSON.stringify({
                 ...tripData,
+                id: data.trip_id,
                 imageUrl: image,
                 newTrip: false,
                 budget: parsed.budget
@@ -213,6 +220,7 @@ const isFromLogin = incomingDestination.fromLogin === true;
           console.log("Data recieved from latest trip is: ", data)
           if (data.success) {
             tripData = {
+              id: data.trip.id,
               name: encode(data.trip.city_name),
               countryCode: encode(data.trip.country_name),
               startDate: data.trip.start_date,
@@ -375,6 +383,7 @@ const isFromLogin = incomingDestination.fromLogin === true;
                           localStorage.setItem(
                             "selectedTrip",
                             JSON.stringify({
+                              id: updatedTrip.id,
                               name: updatedTrip.name,
                               countryCode: updatedTrip.countryCode,
                               startDate: updatedTrip.startDate,

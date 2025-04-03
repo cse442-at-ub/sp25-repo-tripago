@@ -4,6 +4,12 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
+function write_debug($msg) {
+  file_put_contents(__DIR__ . "/debug_log.txt", date("Y-m-d H:i:s") . " - " . $msg . "\n", FILE_APPEND);
+}
+
+write_debug("login.php script STARTED");
+
 $jsonData = file_get_contents("php://input");
 
 //DATA SHOULD HAVE DICTIONARY THING FROM SIGNUP PAGE
@@ -35,6 +41,12 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $result = $result->fetch_assoc();
+
+if (!$result) {
+  write_debug("Login failed: No user found with email $email");
+} else {
+  write_debug("Login success: Fetched user " . $result["first_name"] . " " . $result["last_name"]);
+}
 
 $hash = $result["password_hash"];
 
@@ -68,6 +80,9 @@ if ($good){
         "first_name" => $result["first_name"],
         "last_name" => $result["last_name"]
       ]);
+
+      write_debug("Returned first_name: " . $result["first_name"] . ", last_name: " . $result["last_name"]);
+
       
 } else {
 

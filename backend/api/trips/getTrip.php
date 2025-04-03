@@ -85,6 +85,7 @@ while ($row = $expensesResult->fetch_assoc()) {
 echo json_encode([
   "success" => true,
   "trip" => [
+    "id" => (int)$trip["id"],
     "city_name" => $trip["city_name"],
     "country_name" => $trip["country_name"],
     "start_date" => $trip["start_date"],

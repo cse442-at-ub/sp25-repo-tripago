@@ -77,7 +77,7 @@ if ($result->num_rows > 0) {
   echo json_encode([
     "success" => false, 
     "message" => "Duplicate trip - already exists",
-    "existing_id" => $row['id'] // Return existing trip ID
+    "trip_id" => (int)$row['id'] // Return existing trip ID
   ]);
   exit();
 }

@@ -106,7 +106,7 @@ const Community = () => {
     
     try {
       console.log("hello!");
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/romanTest/backend/api/getSentRequests.php",{test:"empty"},{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/getSentRequests.php",{test:"empty"},{
         headers:{
           'Content-Type':'application/json'
         }
