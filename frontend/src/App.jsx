@@ -19,6 +19,7 @@ import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
+import Recommended from "./pages/Recommended.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
@@ -27,13 +28,14 @@ import NewDestination from "./pages/profile/NewDestination.jsx";
 import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
 import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
+import Community from "./pages/community/Community.jsx";
 
 const App = () => {
   return (
     <UserProvider>
-      <HashRouter>
-        <div className="app-container">
-          <Navbar />
+    <HashRouter>
+      <div className="app-container">
+        <Navbar />
 
           <main className="content">
             <Routes>
@@ -50,8 +52,8 @@ const App = () => {
                 element={<AcceptRejectDest />}
               />
 
-              {/* Protected Routes: Only logged in users can access these pages */}
-              <Route
+          {/* Protected Routes: Only logged in users can access these pages */}
+          <Route
                 path="/all-trips"
                 element={
                   <ProtectedRoute>
@@ -59,14 +61,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile editable={true} />
-                  </ProtectedRoute>
-                }
-              />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route
                 path="/profile/new-destination"
                 element={
@@ -75,7 +70,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route
+               <Route
                 path="/user-profile"
                 element={
                   <ProtectedRoute>
@@ -88,6 +83,15 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Hotels />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/recommended"
+                element={
+                  <ProtectedRoute>
+                    <Recommended />
                   </ProtectedRoute>
                 }
               />
@@ -160,6 +164,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <SettingsPrivacyPolicy />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/community"
+                element={
+                  <ProtectedRoute>
+                    <Community />
                   </ProtectedRoute>
                 }
               />

@@ -1,0 +1,73 @@
+.request-modal-content {
+  width: 350px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.request-modal-content li {
+  color: var(--dark-grey);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.close-btn {
+  float: right;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.requests-list {
+  list-style: none;
+  padding: 0;
+}
+
+.requests-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.approve-btn, .delete-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background-color: #52DDA2;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+/* Sent Requests Status */
+.status {
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.status.pending {
+  color: var(--secondary-text);
+}
+
+.status.accepted {
+  color: #52DDA2;
+}
+
+.status.rejected {
+  color: #ff6b6b;
+}
