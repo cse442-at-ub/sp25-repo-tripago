@@ -15,9 +15,8 @@ const AllTrips = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState(""); // Sorting option
   const [trips, setTrips] = useState([]);
-  const [drafts, setDrafts] = useState([]);
-  const [review, setReview] = useState([]);
-  const [posted, setPosted] = useState([]);
+  const [logged, setLogged] = useState([]);
+  const [notLogged, setNotLogged] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -43,9 +42,8 @@ const AllTrips = () => {
           console.log("Trips received:", data.trips);
           setTrips(data.trips);
 
-          setDrafts(data.trips.filter((trip) => trip.posted == "drafts"))
-          setReview(data.trips.filter((trip) => trip.posted == "review"))
-          setPosted(data.trips.filter((trip) => trip.posted == "posted"))
+          setLogged(data.trips.filter((trip) => trip.logged == true))
+          setNotLogged(data.trips.filter((trip) => trip.logged != true))
         } else {
           console.error("Backend error message:", data.message);
         }
@@ -82,16 +80,15 @@ const AllTrips = () => {
 
     let sortedTrips = [...trips];
     if (value === "date") {
-      sortedTrips.sort((a, b) => new Date(b.dates) - new Date(a.dates));
+      sortedTrips.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
     } else if (value === "price") {
       sortedTrips.sort((a, b) => a.price - b.price);
     }
 
     setTrips(sortedTrips);
 
-    setDrafts(trips.filter((trip) => trip.posted == "drafts"))
-    setReview(trips.filter((trip) => trip.posted == "review"))
-    setPosted(trips.filter((trip) => trip.posted == "posted"))
+    setLogged(sortedTrips.filter((trip) => trip.logged == true))
+    setNotLogged(sortedTrips.filter((trip) => trip.logged != true))
   };
 
   return (
@@ -128,7 +125,7 @@ const AllTrips = () => {
             </div>
           </div>
 
-          <h3>Drafts</h3>
+          <h3>Private Trips</h3>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container ${
@@ -141,7 +138,7 @@ const AllTrips = () => {
                 started.
               </p>
             ) : (
-              drafts.map((trip) => (
+              notLogged.map((trip) => (
                 <div key={trip.id} className="trip-card">
                   {/* View Button */}
                   <button
@@ -197,7 +194,7 @@ const AllTrips = () => {
             )}
           </div>
 
-          <h3>Review Before Posting</h3>
+          <h3>Travel Log</h3>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container ${
@@ -210,76 +207,7 @@ const AllTrips = () => {
                 started.
               </p>
             ) : (
-              review.map((trip) => (
-                <div key={trip.id} className="trip-card">
-                  {/* View Button */}
-                  <button
-                    className="view-button"
-                    onClick={() => {
-                      const selected = {
-                        name: trip.destination,
-                        countryCode: "", // optional
-                        startDate: trip.start_date,
-                        endDate: trip.end_date,
-                        imageUrl: trip.image_url || "",
-                      };
-                      console.log("When clicking view, we send,");
-                      console.log(selected);
-
-                      localStorage.setItem(
-                        "selectedTrip",
-                        JSON.stringify(selected)
-                      );
-                      navigate("/profile");
-                    }}
-                  >
-                    View
-                  </button>
-
-                  {/* Trip Info */}
-                  <div className="trip-info">
-                    <h4 className="trip-destination">{trip.destination}</h4>
-                    <p className="trip-dates">{trip.dates}</p>
-
-                    {/* Bottom Row: Icons + Price */}
-                    <div className="trip-bottom-row">
-                      <div className="trip-icons">
-                        <img src={plane} alt="Plane" className="icon" />
-                        <img src={house} alt="House" className="icon" />
-                        <img src={car} alt="Car" className="icon" />
-                      </div>
-                      <p className="trip-price">${trip.price}</p>
-                    </div>
-                  </div>
-
-                  {/* Trip Image */}
-                  <img
-                    src={
-                      trip.image_url ||
-                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
-                    }
-                    alt={trip.destination}
-                    className="trip-image"
-                  />
-                </div>
-              ))
-            )}
-          </div>
-
-          <h3>Posted</h3>
-          {/* cName changed from trips-container */}
-          <div
-            className={`trips-container all-trips-trips-container ${
-              trips.length === 1 ? "single-trip" : ""
-            }`}
-          >
-            {trips.length === 0 ? (
-              <p className="no-trips-message">
-                Looks like you have no trips yet. Click the button above to get
-                started.
-              </p>
-            ) : (
-              posted.map((trip) => (
+              logged.map((trip) => (
                 <div key={trip.id} className="trip-card">
                   {/* View Button */}
                   <button

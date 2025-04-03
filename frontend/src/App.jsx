@@ -67,14 +67,6 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/profile/review"
-                element={
-                  <ProtectedRoute>
-                    <Profile/>
-                  </ProtectedRoute>
-                }
-              />
             <Route
                 path="/profile/new-destination"
                 element={

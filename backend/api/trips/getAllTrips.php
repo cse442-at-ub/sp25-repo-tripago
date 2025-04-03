@@ -25,7 +25,7 @@ if (!$email) {
 
 // Fetch all trips for the user
 $stmt = $mysqli->prepare("
-  SELECT id, city_name, start_date, end_date, image_url, posted_status
+  SELECT id, city_name, start_date, end_date, image_url, travel_log
   FROM trips 
   WHERE email = ? 
   ORDER BY created_at DESC
@@ -65,7 +65,7 @@ while ($row = $result->fetch_assoc()) {
     "dates" => $formattedDates,
     "price" => $totalPrice,  // Use summed expense total
     "image_url" => $row["image_url"],
-    "posted" => $row["posted_status"]
+    "logged" => $row["travel_log"]
   ];
 }
 
