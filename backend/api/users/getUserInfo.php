@@ -2,15 +2,24 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-$email = $_COOKIE['user'] ?? null;
-if (!$email) {
-  echo json_encode(["success" => false, "message" => "User not logged in"]);
-  exit();
+$token = $_COOKIE['authCookie'];
+
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+if ($mysqli->connect_error != 0){
+    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
+    exit();
 }
 
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "Database error"]);
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$email = $result["email"];
+if (!$email) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
 }
 

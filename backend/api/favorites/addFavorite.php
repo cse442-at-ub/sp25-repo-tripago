@@ -9,16 +9,26 @@ $username = "npula";
 $password = "50540565";
 $dbname = "cse442_2025_spring_team_aj_db";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
-}
-
 $data = json_decode(file_get_contents("php://input"), true);
 $name = $data["name"];
 $countryCode = isset($data["countryCode"]) ? $data["countryCode"] : null;
-$email = isset($_COOKIE["user"]) ? $_COOKIE["user"] : null;//"nobody@buffalo.edu";
-//print_r("Email: '$email'");
+
+$token = $_COOKIE['authCookie'];
+
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+if ($mysqli->connect_errno) {
+  echo json_encode(["success" => false, "message" => "Database connection failed"]);
+  exit();
+}
+
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$email = $result["email"];
 
 if (!$email || !$name) {
     echo json_encode(["success" => false, "message" => "Missing required fields"]);
@@ -28,7 +38,7 @@ if (!$email || !$name) {
 // SQL query to insert into the favorites table
 
 $query = "INSERT INTO favorites (email, name, country_code) VALUES (?, ?, ?)";
-$stmt = mysqli_prepare($conn, $query);
+$stmt = mysqli_prepare($mysqli, $query);
 mysqli_stmt_bind_param($stmt, "sss", $email, $name, $country_code);
 
 if (mysqli_stmt_execute($stmt)) {
@@ -38,4 +48,4 @@ if (mysqli_stmt_execute($stmt)) {
 }
 
 mysqli_stmt_close($stmt);
-mysqli_close($conn);
+mysqli_close($mysqli);

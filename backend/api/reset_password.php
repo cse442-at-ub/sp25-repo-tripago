@@ -40,6 +40,7 @@
 		   echo json_encode(["status" => "error", "message" => "Enter a valid email"]);
 		   exit;
 		}else{
+			// THIS WAS CLEANED ON LINES 35-37
 		   $sel_query = "SELECT email FROM users WHERE email='$email' LIMIT 1";
 		   $results = mysqli_query($con,$sel_query);
 		   $row = mysqli_num_rows($results);
@@ -58,6 +59,7 @@
 		$key = $token;
 	
 		// Insert token (key) into table
+		// All these variables were either made by us in the backend or were cleaned previously
 		$sel_query = "UPDATE users SET reset_token='$key', reset_token_expires= '$expDate' WHERE email='$email'";
 		if (!$results = mysqli_query($con, $sel_query)) {
 			echo json_encode(["status" => "error", "message" => "Unable to update user: $email"]);

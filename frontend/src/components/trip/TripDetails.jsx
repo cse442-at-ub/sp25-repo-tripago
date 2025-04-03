@@ -554,9 +554,9 @@ const Budgeting = ({ trip }) => {
       <div className="budget-info">
         <div className="budget-header">
           <h2>Budgeting</h2>
-          <button className="edit-budget-btn" onClick={handleEditBudget}>
-            <FaEdit /> Edit budget
-          </button>
+            <button className="edit-budget-btn" onClick={handleEditBudget}>
+              <FaEdit /> Edit budget
+            </button>
         </div>
 
         <div className="budget-overview">
@@ -776,7 +776,6 @@ const TripDetails = ({ trip, setShowModal }) => {
               Your trip to{" "}
               <span className="title-accent">{trip.name}.</span>
             </h2>
-            {/* <p>Select a different trip</p> */}
             <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
   Select a different trip
 </p>

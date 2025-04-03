@@ -152,8 +152,12 @@
     color: var(--dark-grey);
 }
 
-.hamburger-menu {
+.gear-menu {
   display: none;
+}
+
+.settings-right select {
+  color: var(--black);
 }
 
 
@@ -182,11 +186,11 @@
     padding: 20px;
   }
 
-  .hamburger-menu {
+  .gear-menu {
     position: absolute;
     display: block;
-    top: 20px;
-    left: 20px;
+    top: 15px;
+    right: 15px;
     background: none;
     border: none;
     font-size: 24px;
@@ -196,7 +200,7 @@
     color: var(--dark-grey);
   }
 
-  .hamburger-menu:hover {
+  .gear-menu:hover {
     color: var(--primary-color);
     box-shadow: none;
     border: none;

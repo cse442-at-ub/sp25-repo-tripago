@@ -19,7 +19,27 @@ if ($data == null){
 
 //get the location of trip from frontend
 $start = $data['start_date'];
-$email = $_COOKIE['user'];
+
+$token = $_COOKIE['authCookie'];
+
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+if ($mysqli->connect_errno) {
+  echo json_encode(["success" => false, "message" => "Database connection failed"]);
+  exit();
+}
+
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$email = $result["email"];
+if (!$email) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
+}
 
 
 checkForActivity($email,$start);
@@ -28,14 +48,7 @@ checkForActivity($email,$start);
 
 
 function checkForActivity($email,$activity_start_date){
-    $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-    if ($mysqli->connect_error != 0){
-        echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-        extit();
-    }
-
-
-
+    
     $stmt = $mysqli->prepare("SELECT * FROM activities WHERE email=? AND start_date=?");
     $stmt->bind_param("ss",$email,$activity_start_date);
     $stmt->execute();

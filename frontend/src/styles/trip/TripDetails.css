@@ -205,9 +205,10 @@ p {
 
 /* HOTEL DETAILS */
 .hotel-details {
-  width: 100%;
-  padding: 20px;
-  margin-bottom: 0px;
+  width: 520px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
   border-bottom: 1px solid #e0e0e0;
   text-align: left;
 }

@@ -2,7 +2,27 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-$email = $_COOKIE['user'] ?? null;
+$token = $_COOKIE['authCookie'];
+
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+if ($mysqli->connect_error != 0){
+    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
+    exit();
+}
+
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$email = $result["email"];
+if (!$email) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
+}
+
 $input = json_decode(file_get_contents("php://input"), true);
 
 if (!$email || !isset($input["city_name"])) {
@@ -13,12 +33,6 @@ if (!$email || !isset($input["city_name"])) {
 $city = $input["city_name"];
 $start = $input["start_date"] ?? null;
 $end = $input["end_date"] ?? null;
-
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "DB connection failed"]);
-  exit();
-}
 
 $query = "
   SELECT id, city_name, country_name, start_date, end_date, image_url, budget_amount, hotel_name, hotel_price
