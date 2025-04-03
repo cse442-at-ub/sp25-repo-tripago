@@ -26,8 +26,28 @@ $activity_day = $data['day'];
 $activity_name = $data['name'];
 $activity_price = $data['price'];
 $activity_start_date = $data['start'];
-$email = $_COOKIE['user'];
 
+$token = $_COOKIE['authCookie'];
+
+$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+if ($mysqli->connect_errno) {
+  echo json_encode(["success" => false, "message" => "Database connection failed"]);
+  exit();
+}
+
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$email = $result["email"];
+
+if (!$email) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
+}
 
 if (checkForActivity($email,$activity_start_date,$activity_day)){
     //there is already an activity on that day for that trip
@@ -36,15 +56,6 @@ if (checkForActivity($email,$activity_start_date,$activity_day)){
 }
 
 //can add the activity at this point
-
-
-$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_error != 0){
-    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-    extit();
-}
-
-
 
 $stmt = $mysqli->prepare("INSERT INTO activities (email,start_date,activity_name,day_number,price) VALUES (?,?,?,?,?)");
 $stmt->bind_param("sssdd",$email,$activity_start_date,$activity_name,$activity_day,$activity_price);
