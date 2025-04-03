@@ -287,6 +287,19 @@
   cursor: pointer;
 }
 
+.trip-card .log-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--secondary-color);
+  color: var(--white);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
 .trip-card .trip-destination {
   font-size: 1.2rem;
   font-weight: bold;

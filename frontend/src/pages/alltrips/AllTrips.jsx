@@ -91,6 +91,26 @@ const AllTrips = () => {
     setNotLogged(sortedTrips.filter((trip) => trip.logged != true))
   };
 
+  const postToLog = (trip) => {
+    
+    trip.logged = true
+
+    setLogged(trips.filter((trip) => trip.logged == true))
+    setNotLogged(trips.filter((trip) => trip.logged != true))
+
+    // TODO: Change this trip's travel_log column in the database to true
+  }
+
+  const removeFromLog = (trip) => {
+    
+    trip.logged = false
+
+    setLogged(trips.filter((trip) => trip.logged == true))
+    setNotLogged(trips.filter((trip) => trip.logged != true))
+
+    // TODO: Change this trip's travel_log column in the database to false
+  }
+
   return (
     <>
       {/* Hamburger toggle for mobile */}
@@ -129,10 +149,10 @@ const AllTrips = () => {
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container ${
-              trips.length === 1 ? "single-trip" : ""
+              notLogged.length === 1 ? "single-trip" : ""
             }`}
           >
-            {trips.length === 0 ? (
+            {notLogged.length === 0 ? (
               <p className="no-trips-message">
                 Looks like you have no trips yet. Click the button above to get
                 started.
@@ -140,6 +160,15 @@ const AllTrips = () => {
             ) : (
               notLogged.map((trip) => (
                 <div key={trip.id} className="trip-card">
+                  
+                  {/* Post to Travel Log Button */}
+                  <button
+                    className="log-button"
+                    onClick={() => postToLog(trip)}
+                  >
+                    Post to Travel Log
+                  </button>
+
                   {/* View Button */}
                   <button
                     className="view-button"
@@ -198,17 +227,25 @@ const AllTrips = () => {
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container ${
-              trips.length === 1 ? "single-trip" : ""
+              logged.length === 1 ? "single-trip" : ""
             }`}
           >
-            {trips.length === 0 ? (
+            {logged.length === 0 ? (
               <p className="no-trips-message">
-                Looks like you have no trips yet. Click the button above to get
-                started.
+                Post trips to your Travel Log by clicking the button on the top left of each trip card.
               </p>
             ) : (
               logged.map((trip) => (
                 <div key={trip.id} className="trip-card">
+
+                  {/* Remove from Travel Log Button */}
+                  <button
+                    className="log-button"
+                    onClick={() => removeFromLog(trip)}
+                  >
+                    Remove from Travel Log
+                  </button>
+
                   {/* View Button */}
                   <button
                     className="view-button"
