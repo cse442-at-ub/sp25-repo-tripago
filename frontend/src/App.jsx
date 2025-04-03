@@ -71,7 +71,7 @@ const App = () => {
                 path="/profile/review"
                 element={
                   <ProtectedRoute>
-                    <Profile editable={false} />
+                    <Profile/>
                   </ProtectedRoute>
                 }
               />

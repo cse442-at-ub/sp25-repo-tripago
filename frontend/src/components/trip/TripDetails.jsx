@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 
-const Itinerary = ({ trip, setShowModal, editable }) => {
+const Itinerary = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
   const generateDayAccordions = () => {
     if (!trip.startDate || !trip.endDate) return [];
@@ -52,9 +52,8 @@ const Itinerary = ({ trip, setShowModal, editable }) => {
                 ))}
               </div>
             ) : (
-              <p>No activities planned{editable && " yet"}.</p>
+              <p>No activities planned yet.</p>
             )}
-            {editable &&
               <div className="activity-controls">
                 <input
                   type="text"
@@ -65,7 +64,6 @@ const Itinerary = ({ trip, setShowModal, editable }) => {
                 />
                 <button className="add-activity-btn">+ Add activity</button>
               </div>
-            }
           </div>
         </Accordion>
       );
@@ -78,7 +76,6 @@ const Itinerary = ({ trip, setShowModal, editable }) => {
     <div className="itinerary-container">
       {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
-          {!editable && <Navigate to="/profile" />}
           <div>
             <p>
               Looks like you haven&apos;t selected the dates for your trip yet.
@@ -106,9 +103,8 @@ const Itinerary = ({ trip, setShowModal, editable }) => {
             <h3>Hotel Details:</h3>
             <div className="hotel-status">
               <p className="no-hotel-message">
-                Looks like you haven&apos;t booked a hotel {editable && " yet"} for this trip.
+                Looks like you haven&apos;t booked a hotel yet for this trip.
               </p>
-              {editable &&
                 <button
                   className="find-hotel-btn"
                   onClick={() =>
@@ -123,16 +119,15 @@ const Itinerary = ({ trip, setShowModal, editable }) => {
                 >
                 + Find a hotel
               </button>
-              }
             </div>
           </div>
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
             <h3>Trip Dates:</h3>
 
-              {editable && <button className="edit-budget-btn" onClick={() => setShowModal(true)}>
+              <button className="edit-budget-btn" onClick={() => setShowModal(true)}>
             <FaEdit /> Edit dates
-          </button>}
+          </button>
             </div>
             <div className="days-container">{generateDayAccordions()}</div>
           </div>
@@ -142,7 +137,7 @@ const Itinerary = ({ trip, setShowModal, editable }) => {
   );
 };
 
-const Budgeting = ({ trip, editable }) => {
+const Budgeting = ({ trip }) => {
 
   const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
   const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
@@ -233,11 +228,9 @@ const Budgeting = ({ trip, editable }) => {
       <div className="budget-info">
         <div className="budget-header">
           <h2>Budgeting</h2>
-          {editable &&
             <button className="edit-budget-btn" onClick={handleEditBudget}>
               <FaEdit /> Edit budget
             </button>
-          }
         </div>
 
         <div className="budget-overview">
@@ -256,7 +249,7 @@ const Budgeting = ({ trip, editable }) => {
 
       <div className="expenses-section">
         <h3>Expenses</h3>
-        {editable && <button onClick={() => setShowExpenseModal(true)}>+ Add expense</button>}
+        <button onClick={() => setShowExpenseModal(true)}>+ Add expense</button>
         <div className="expenses-list">
           {expenses.map((expense, index) => (
             <div key={index} className="expense-item">
@@ -440,7 +433,7 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
-const TripDetails = ({ trip, setShowModal, editable }) => {
+const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
 
   console.log("Trip is:", trip)
@@ -457,7 +450,6 @@ const TripDetails = ({ trip, setShowModal, editable }) => {
               Your trip to{" "}
               <span className="title-accent">{trip.name}.</span>
             </h2>
-            {/* {editable && <p>Select a different trip</p> */}
             <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
   Select a different trip
 </p>
@@ -483,15 +475,14 @@ const TripDetails = ({ trip, setShowModal, editable }) => {
 
           <div className="tab-content">
             {currentTab === "itinerary" && (
-              <Itinerary trip={trip} setShowModal={setShowModal} editable={editable} />
+              <Itinerary trip={trip} setShowModal={setShowModal} />
             )}
-            {currentTab === "budgeting" && <Budgeting trip={trip} editable={editable} />}
+            {currentTab === "budgeting" && <Budgeting trip={trip} />}
           </div>
         </div>
       ) : (
         // if NO trip is selected
         <div className="trips-status">
-          {!editable && <Navigate to="/profile" />}
           <h2 className="divider trip-status-pad">
             Looks like you don&apos;t have any trips scheduled yet.
           </h2>
@@ -540,16 +531,13 @@ const tripProps = PropTypes.shape({
 TripDetails.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
-  editable: PropTypes.bool.isRequired,
 };
 Itinerary.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
-  editable: PropTypes.bool.isRequired,
 };
 Budgeting.propTypes = {
   trip: tripProps,
-  editable: PropTypes.bool.isRequired,
 };
 ExpenseModal.propTypes = {
   onClose: PropTypes.func.isRequired,

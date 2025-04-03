@@ -8,7 +8,7 @@ import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 
-const Profile = ({editable}) => {
+const Profile = () => {
 
   const [user] = useState({
     firstName: "Jane",
@@ -393,22 +393,9 @@ const Profile = ({editable}) => {
           <TripDetails
             trip={trip}
             setShowModal={setShowModal}
-            editable={editable}
           />
+          
           {trip && <ShareTripButton />}
-
-          {(trip && (trip.startDate && trip.endDate)) &&
-              <div className="review-buttons">
-              {editable ? (
-                  <button className="review-button" onClick={() => navigate("/profile/review")}>Review Before Posting</button>
-                ) : (
-                  <div className="review-buttons">
-                <button className="review-button" onClick={() => navigate("/profile")}>Edit Trip Details</button>
-                <button className="review-button">Post</button>
-                </div>
-              )}
-              </div>
-          }
 
         </div>
       </div>
