@@ -9,7 +9,6 @@ import locationIcon from "../../assets/location.png";
 import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
-import { encode } from "html-entities";
 import { searchLocations, searchHotels, formatLocationName } from "../../services/hotelService";
 
 const Hotels = () => {

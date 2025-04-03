@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import PropTypes from 'prop-types';
 import L from 'leaflet';
-import { encode } from "html-entities";
 
 // Fix for default marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -14,7 +13,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: new URL('leaflet/dist/images/marker-icon.png', import.meta.url).href,
   shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url).href,
 });
-import { encode } from "html-entities";
 
 const HotelCard = ({ hotel }) => {
   const navigate = useNavigate();
@@ -94,7 +92,7 @@ const HotelCard = ({ hotel }) => {
 
       {/* Price + CTA */}
       <div className="hotel-cta">
-        <p className="best-price">${encode(String(hotel.bestPrice))}</p>
+        <p className="best-price">${hotel.bestPrice}</p>
         {hotel.freeBreakfast && <p className="free-breakfast">Free breakfast</p>}
         <button className="modal-button" onClick={handleSelectDeal}>Select Deal</button>
       </div>
