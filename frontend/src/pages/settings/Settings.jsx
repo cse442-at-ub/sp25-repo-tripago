@@ -31,7 +31,7 @@ const Settings = () => {
       return () => {
         window.removeEventListener("resize", handleResize);
       };
-    }, []);
+  }, []);
 
   return (
     <>
@@ -44,12 +44,12 @@ const Settings = () => {
     )}
 
     {/* Sidebar: always visible on desktop, toggled on mobile */}
-    <Sidebar isOpen={!isMobile || isSidebarOpen} />
+    <Sidebar isOpen={!isMobile || isSidebarOpen && !menuOpen} />
     
     <div className="settings-container">
 
-       {/* Hamburger Button */}
-       <button className="gear-menu" onClick={() => setMenuOpen(!menuOpen)}>
+      {/* Gear Button */}
+      <button className="gear-menu" onClick={() => setMenuOpen(!menuOpen)}>
         <FaCog></FaCog>
       </button>
 
@@ -70,7 +70,9 @@ const Settings = () => {
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-        <button className="return-home-btn" onClick={() => navigate("/profile")}>Return to Profile</button>
+
+        <h3>Profile</h3>
+        <button className="return-home-btn" onClick={() => navigate("/profile")}>Return to Trip Profile</button>
       </div>
 
       {/* Right Content Area */}
