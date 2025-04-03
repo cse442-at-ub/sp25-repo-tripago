@@ -24,13 +24,6 @@ if (!$email) {
   exit();
 }
 
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-
-if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "Database connection failed"]);
-  exit();
-}
-
 // Get the most recent trip (sorted by created_at)
 $stmt = $mysqli->prepare("
   SELECT id, city_name, country_name, start_date, end_date, image_url, budget_amount, hotel_name, hotel_price

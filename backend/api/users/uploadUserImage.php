@@ -33,7 +33,7 @@ if (!$email) {
 fwrite($debugLog, "Email from cookie: " . ($email ?? 'NULL') . "\n");
 
 if (!$email) {
-  fwrite($debugLog, "No user cookie found\n");
+  fwrite($debugLog, "Invalid auth cookie\n");
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   fclose($debugLog);
   exit();
@@ -72,14 +72,6 @@ fwrite($debugLog, "File moved successfully\n");
 
 // 6. Prepare DB
 $relativePath = "/CSE442/2025-Spring/cse-442aj/backend/api/users/pictures/" . $uniqueName;
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-
-if ($mysqli->connect_errno) {
-  fwrite($debugLog, "DB connection error: " . $mysqli->connect_error . "\n");
-  echo json_encode(["success" => false, "message" => "DB connection failed"]);
-  fclose($debugLog);
-  exit();
-}
 
 $stmt = $mysqli->prepare("UPDATE users SET user_image_url = ? WHERE email = ?");
 $stmt->bind_param("ss", $relativePath, $email);

@@ -40,13 +40,6 @@ if (!$data) {
 // Default fallback image if none provided
 $image_url = $data["image_url"] ?? "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
 
-// Connect to DB
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "Database connection error"]);
-  exit();
-}
-
 // 1. First check for EXACT duplicate
 $checkStmt = $mysqli->prepare("
   SELECT id FROM trips 

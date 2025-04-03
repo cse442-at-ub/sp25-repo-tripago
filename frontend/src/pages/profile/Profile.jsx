@@ -10,6 +10,7 @@ import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
 
 const Profile = () => {
+
   const [user] = useState({
     firstName: "Jane",
     lastName: "Doe",
@@ -19,11 +20,11 @@ const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
-const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // let incomingDestination = location.state || null;
   const incomingDestination = location.state || {};
-const isFromLogin = incomingDestination.fromLogin === true;
+  const isFromLogin = incomingDestination.fromLogin === true;
   console.log("at very top, incomingDest is", incomingDestination)
 
   const [trip, setTrip] = useState({
@@ -416,8 +417,13 @@ const isFromLogin = incomingDestination.fromLogin === true;
             picture={trip?.picture}
           />
 
-          <TripDetails trip={trip} setShowModal={setShowModal} />
+          <TripDetails
+            trip={trip}
+            setShowModal={setShowModal}
+          />
+          
           {trip && <ShareTripButton />}
+
         </div>
       </div>
     </div>

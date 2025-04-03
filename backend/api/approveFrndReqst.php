@@ -16,16 +16,27 @@ if ($data == null){
 //get first and last name of sender of request
 $first_name = $data['first_name'];
 $last_name = $data['last_name'];
-$recipient_email = $_COOKIE['user'];
 
+$token = $_COOKIE['authCookie'];
 
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-
 if ($mysqli->connect_error != 0){
     echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
     exit();
 }
 
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$recipient_email = $result["email"];
+if (!$recipient_email) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
+}
 
 //get the email associated with sender first and last name
 

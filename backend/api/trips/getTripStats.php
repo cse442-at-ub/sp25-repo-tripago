@@ -24,12 +24,6 @@ if (!$email) {
   exit();
 }
 
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "DB connection failed"]);
-  exit();
-}
-
 // Total Trips
 $tripStmt = $mysqli->prepare("SELECT COUNT(*) AS total FROM trips WHERE email = ?");
 $tripStmt->bind_param("s", $email);

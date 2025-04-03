@@ -18,6 +18,11 @@ $stmt->execute();
 $result = $stmt->get_result();
 $result = $result->fetch_assoc();
 
+if (!$result || !isset($result["email"])) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
+}
+
 $email = $result["email"];
 
 if (!$email) {
@@ -34,12 +39,6 @@ if (!$data) {
 $city = $data["city_name"];
 $start = $data["start_date"];
 $end = $data["end_date"];
-
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "Database connection error"]);
-  exit();
-}
 
 // Update dates for a specific trip (identified by email + city)
 $stmt = $mysqli->prepare("UPDATE trips SET start_date=?, end_date=? WHERE email=? AND city_name=?");

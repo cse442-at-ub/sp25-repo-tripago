@@ -34,12 +34,6 @@ if (!$data || !isset($data["city_name"]) || !isset($data["price"])) {
 $city = $data["city_name"];
 $price = (int)$data["price"];
 
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "Database connection error"]);
-  exit();
-}
-
 // Update the trip price for a specific user + city
 $stmt = $mysqli->prepare("UPDATE trips SET price=? WHERE email=? AND city_name=?");
 $stmt->bind_param("iss", $price, $email, $city);

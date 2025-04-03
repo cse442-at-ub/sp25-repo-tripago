@@ -287,6 +287,19 @@
   cursor: pointer;
 }
 
+.trip-card .log-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--secondary-color);
+  color: var(--white);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
 .at-trip-card .trip-destination {
   font-size: 1.2rem;
   font-weight: bold;
@@ -303,6 +316,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
+  width: 95%;
 }
 
 .trip-icons img {
@@ -420,6 +434,10 @@
 
   .profile-container {
     margin-left: 270px;
+  }
+
+  .trip-image {
+    max-height: 100px;
   }
 }
 

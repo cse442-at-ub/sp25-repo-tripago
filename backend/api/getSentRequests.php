@@ -13,13 +13,25 @@ if ($data == null){
 }
 
 //set sender as user who sent the request
-$sender = $_COOKIE['user'];;
+$token = $_COOKIE['authCookie'];
 
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-
 if ($mysqli->connect_error != 0){
     echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
     exit();
+}
+
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
+$stmt->bind_param("s",$token);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$result = $result->fetch_assoc();
+
+$sender = $result["email"];
+if (!$sender) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
 }
 
 //Get all emails that user is sending requests to. This will get pending requests

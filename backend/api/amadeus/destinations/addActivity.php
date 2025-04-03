@@ -2,104 +2,72 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
-$jsonData = file_get_contents("php://input");
-
-//DATA SHOULD HAVE DICTIONARY THING FROM SIGNUP PAGE
-$data = json_decode($jsonData,true);
-
-if ($data == null){
-  echo json_encode(["success"=>false,"message"=>"Error with data recieved"]);
+// Parse request body
+$data = json_decode(file_get_contents("php://input"), true);
+if (!$data) {
+  echo json_encode(["success" => false, "message" => "Error with data received"]);
   exit();
 }
-/*
-day - the day that the activity falls on
-name - the name of the activity
-price - the price of the activity
-start date - the start date of the TRIP (used for safety)
-user - gets the email of the user who is making the request
-*/
+
+// Required fields
 $activity_day = $data['day'];
 $activity_name = $data['name'];
 $activity_price = $data['price'];
-$activity_start_date = $data['start'];
+$activity_start_date = $data['start'];  // not currently used
 $trip_id = $data['trip_id'];
-$email = $_COOKIE['user'];
 
-
-if (checkForActivity($email,$trip_id, $activity_start_date,$activity_day)){
-    //there is already an activity on that day for that trip
-    echo json_encode(['success'=>false, 'message'=>'You already have an activity for that day!']);
-    exit();
+// Get auth token
+$token = $_COOKIE['authCookie'] ?? null;
+if (!$token) {
+  echo json_encode(["success" => false, "message" => "No authentication token"]);
+  exit();
 }
 
-//can add the activity at this point
-
+// DB connection
 $mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_error != 0){
-    echo json_encode(["success" => false, "message" => "Database connection failed " . $mysqli->connect_error]);
-    exit();
+if ($mysqli->connect_errno) {
+  echo json_encode(["success" => false, "message" => "Database connection failed"]);
+  exit();
 }
 
+// Get user by token
+$stmt = $mysqli->prepare("SELECT email FROM users WHERE token=?");
+$stmt->bind_param("s", $token);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+$email = $user['email'] ?? null;
+if (!$email) {
+  echo json_encode(["success" => false, "message" => "Not logged in"]);
+  exit();
+}
+
+// Check for existing activity on that day
+if (checkForActivity($mysqli, $email, $trip_id, $activity_day)) {
+  echo json_encode(["success" => false, "message" => "You already have an activity for that day!"]);
+  exit();
+}
+
+// Insert new activity
 $stmt = $mysqli->prepare("INSERT INTO activities (email, activity_name, day_number, price, trip_id) VALUES (?, ?, ?, ?, ?)");
 $stmt->bind_param("ssidi", $email, $activity_name, $activity_day, $activity_price, $trip_id);
 $stmt->execute();
 
-echo json_encode(["success" => true, 'message' => "Activity was saved successfully!"]);
+echo json_encode(["success" => true, "message" => "Activity was saved successfully!"]);
+exit();
 
-
-
-/*
-checks if user already has an activity for the trip on a particular day
-*/
-// function checkForActivity($email,$trip_id,$activity_start_date,$activity_day){
-//     $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-//     if ($mysqli->connect_error != 0){
-//         echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-//         exit();
-//     }
-
-
-
-//     $stmt = $mysqli->prepare("SELECT * FROM activities WHERE email=? AND start_date=? AND day_number=?");
-//     $stmt->bind_param("ssd",$email,$activity_start_date,$activity_day);
-//     $stmt->execute();
-//     $result = $stmt->get_result();
-//     $result = $result->fetch_assoc();
-
-//     $mysqli -> close();
-
-//     if ($result == null){
-//         //there are no activites for that day of trip 
-//         return false;
-//     } else {
-//         //it found a activity for the day
-//         return true;
-//     }
-
-
-// }
-
-function checkForActivity($email, $trip_id, $activity_day) {
-    $mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-    if ($mysqli->connect_error != 0){
-        echo json_encode(["success" => false, "message" => "Database connection failed " . $mysqli->connect_error]);
-        exit();
-    }
-
-    $stmt = $mysqli->prepare("SELECT * FROM activities WHERE email=? AND trip_id=? AND day_number=?");
-    $stmt->bind_param("sii", $email, $trip_id, $activity_day);
-    $stmt->execute();
-    $result = $stmt->get_result()->fetch_assoc();
-
-    $mysqli->close();
-
-    return $result !== null;
+// ------------------ Helper ------------------ //
+function checkForActivity($mysqli, $email, $trip_id, $activity_day) {
+  $stmt = $mysqli->prepare("SELECT id FROM activities WHERE email=? AND trip_id=? AND day_number=?");
+  $stmt->bind_param("sii", $email, $trip_id, $activity_day);
+  $stmt->execute();
+  $result = $stmt->get_result()->fetch_assoc();
+  return $result !== null;
 }
-
-
-
 ?>

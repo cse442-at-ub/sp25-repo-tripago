@@ -589,9 +589,9 @@ const Budgeting = ({ trip }) => {
       <div className="budget-info">
         <div className="budget-header">
           <h2>Budgeting</h2>
-          <button className="edit-budget-btn" onClick={handleEditBudget}>
-            <FaEdit /> Edit budget
-          </button>
+            <button className="edit-budget-btn" onClick={handleEditBudget}>
+              <FaEdit /> Edit budget
+            </button>
         </div>
 
         <div className="budget-overview">

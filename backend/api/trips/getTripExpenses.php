@@ -31,8 +31,6 @@ if (!$email || !$city) {
   exit();
 }
 
-$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
-
 $tripStmt = $mysqli->prepare("SELECT id FROM trips WHERE email=? AND city_name=?");
 $tripStmt->bind_param("ss", $email, $city);
 $tripStmt->execute();
