@@ -44,8 +44,6 @@ const TravelersModal = ({ isOpen, setIsOpen, rooms, setRooms, adults, setAdults 
 
         {/* Modal Buttons */}
         <div className="modal-footer">
-          {/* <button className="reset-btn" onClick={() => { setRooms(1); setAdults(2); setChildren(0); }}>Reset</button>
-          <button className="save-btn" onClick={() => setIsOpen(false)}>Save</button> */}
           <div className="modal-footer">
   <button className="reset-btn" onClick={() => { setRooms(1); setAdults(2); }}>Reset</button>
   <button className="save-btn" onClick={() => setIsOpen(false)}>Save</button>

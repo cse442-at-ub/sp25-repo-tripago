@@ -1,21 +1,294 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Accordion from "../Accordion";
-import { useNavigate } from "react-router-dom";
+import { resolvePath, useNavigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 import { encode } from "html-entities";
+import axios from 'axios'
+
 
 const Itinerary = ({ trip, setShowModal }) => {
+
+  //THIS STORES THE ACTIVITIES FOR EACH DAY :)
+  //Need to get saved activities from DB, (or at least check!)
+  //its called "autofillMessages", but should handle manual ones too!
+  const [autoFillMessages, setAutoFillMessages] = useState({});
+  const [location, setLocation] = useState({}); // State to store location input for each day
+  const [placeholderText, setPlaceholderText] = useState({}); // State to store the placeholder text for each day
+  const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
+
+  const startDate = new Date(trip.startDate);
+  const endDate = new Date(trip.endDate);
+  const diffTime = Math.abs(endDate - startDate);
+
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    
+
+  /*
+  This should be called exactly once when generating the day accordians
+  Will populate the autoFillmMessages array with any saved trips from 
+  the database. Database retrievals will be based on cookie email, and trip name
+  to find any corresponding activities for that trip.
+  Will also want to use fill activity function to fill any retrieved activities
+  once you get them!
+  */
+  
+  const getActivitiesFromDB = async () => {
+  
+   console.log("Fetching activities from DB...");
+
+
+   try{
+      
+    //use trip start date and user email to get activities for trip
+    //ASSUMES USER DOES NOT MAKE MULTIPLE TRIPS THAT START ON THE SAME DAY!!!!!!
+
+    console.log("Before post");
+
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",{start_date:startDate},{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+      
+      console.log(response.data);
+
+      const data = response.data.activities;
+
+      console.log("After post");
+
+      //should have a list which contains "activities"
+
+      for (let i=0;i<data.length;i++){
+        let day = data[i].day;
+        let name = data[i].name;
+        let price;
+
+        //null check for safety
+        if (data.price == null){
+          price = data[i].price;
+        } else {
+          price = "";
+        }
+
+        
+
+
+        setAutoFillMessages(prevMessages => ({
+          ...prevMessages,
+          [day]: { name: name, price: "Price: "+ price },
+        }));
+      }
+
+      console.log(data);
+
+    } catch(error){
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+        console.error("Status code:", error.response.status);
+        console.error("Headers:", error.response.headers);
+     } else if (error.request) {
+       console.error("No response received. Request:", error.request);
+     } else {  
+       console.error("Error setting up the request:", error.message);
+     }
+       console.error("Original error:", error); // Log the full error for debugging.
+    }
+    
+  }
+
+  useEffect(() => {
+    getActivitiesFromDB();
+  }, []);
+  
+  /*
+  Main purpose of this is to get a activity from the API call
+  Should call fillActivity function, since you want to immediately fill that
+  activity!
+  */
+  const autoFillBtn = async(i) => {
+    //gets day number in i, so we can set the correspending accordians activity
+
+    setAutoFillMessages(prevMessages => ({
+      ...prevMessages,
+      [i]: { name: "Fetching activity ideas...", price: null },
+    }));
+  
+    try{
+      
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",{location:trip.name},{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+      const data = response.data;
+
+
+      console.log(data);
+
+      if (data.success){
+        //response is success and has trips
+        if (data.has_trips){
+          fillActivity(i,data.activity_name,data.activity_price);
+          //done?
+        } else {
+          //apologize for not findings any activities
+          console.log(data.message);
+          setAutoFillMessages(prevMessages => ({
+            ...prevMessages,
+            [i]: { name: "Could not find any activities", price: "" },
+          }));
+        }
+      } else {
+        console.log("An error has occurred!")
+      }
+    } catch(error){
+      console.log("Error during login: ",error.response);
+    }
+
+    
+  };
+
+  /*
+  This is called when you have an activity name, and the day that it should go into
+  Inserts into the autoFillMessages array!
+
+  This should call a function to save that activity to the database
+  */
+  const fillActivity = async(day,name,price) => {
+
+
+    setAutoFillMessages(prevMessages => ({
+      ...prevMessages,
+      [day]: { name: name, price: "Price: " + price },
+    }));
+
+    storeActivity(day,name,price);
+
+
+    setPlaceholderText(prevPlaceholder => ({
+      ...prevPlaceholder,
+      [day]: "Enter price",
+    }));
+
+  }
+
+/*
+Takes activity information to be stored in the database
+Will just be using the day, name, and price of it for now, 
+but can expand it in the future, if need (or want) be!
+*/
+  const storeActivity = async(day,name,price) => {
+    try{
+      
+      /*
+      send day, name of activity, price, and start date of trip
+      start date of trip is used as a safety precaution in case you have
+      multiple different trips to the same place
+
+      This safety measure assumes that a user will not create mutiple trips 
+      to the same location on the same day, because why would they?
+      */
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",{day:day,name:name,price:price,start:startDate},{
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+
+      const data = response.data;
+
+
+      console.log(data);
+
+      if (data.success){
+        console.log("Activity has been added successfully");
+      } else {
+        console.log("An error was encountered adding the activity");
+      }
+    } catch(error){
+      console.log("Error during login: ",error.response);
+    }
+  }
+
+  /*
+  This will handle when the manual "add activity" button is clicked
+  Should get the input from a text box and day, and make a new activity from that!
+  Will also call the fill activity function!
+  */
+  const addActivityButton = async(day,name) => {
+    //check if price is entered
+    if (placeholderText[day] == "Enter price"){
+      console.log("Detected that price is recieved!");
+
+      const activity_price = name;
+      const activityName = autoFillMessages[day]?.name;
+
+      console.log("Custom user activity: " + activityName + " and corresponding price: " + activity_price + " will be processed");
+
+      //update text box to include user entered price
+      setAutoFillMessages(prevMessages => ({
+        ...prevMessages,
+        [day]: { ...prevMessages[day], price: "Price: " + name },
+      }));
+
+      //change text box place holder to be "Done"
+      setPlaceholderText(prevPlaceholder => ({
+        ...prevPlaceholder,
+        [day]: "Done",
+      }));
+    
+      //sets value of input box to empty
+      setLocation(prevLocation => ({
+        ...prevLocation,
+        [day]: "",
+      }));
+
+      //store the custom activity
+      storeActivity(day,activityName,activity_price);
+
+    } else {
+
+      //sets text in text box
+      setAutoFillMessages(prevMessages => ({
+        ...prevMessages,
+        [day]: { name: name, price: "Price:  "},
+      }));
+
+      //sets place holder text in input box
+      setPlaceholderText(prevPlaceholder => ({
+        ...prevPlaceholder,
+        [day]: "Enter price",
+      }));
+    
+      //sets value of input box to empty
+      setLocation(prevLocation => ({
+        ...prevLocation,
+        [day]: "",
+      }));
+
+      //change button text after it's clicked for first time
+      setAddActivityButtonText(prevText => ({
+        ...prevText,
+        [day]: "Add Price", 
+      }));
+
+  }
+  }
+
+  
+
   const navigate = useNavigate();
   const generateDayAccordions = () => {
     if (!trip.startDate || !trip.endDate) return [];
-    const startDate = new Date(trip.startDate);
-    const endDate = new Date(trip.endDate);
+    //const startDate = new Date(trip.startDate);
+    //const endDate = new Date(trip.endDate);
     const dayAccordions = [];
 
-    const diffTime = Math.abs(endDate - startDate);
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    //const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
 
     for (let i = 0; i < diffDays; i++) {
       const currentDate = new Date(startDate);
@@ -29,6 +302,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const dayActivities =
         trip.days && trip.days[i] ? trip.days[i].activities : [];
+      
 
       dayAccordions.push(
         <Accordion key={i} title={dateString}>
@@ -52,17 +326,33 @@ const Itinerary = ({ trip, setShowModal }) => {
                 ))}
               </div>
             ) : (
-              <p>No activities planned yet.</p>
+              <p>{autoFillMessages[i]?.name ? (
+                <>
+                  {autoFillMessages[i].name}
+                  <br />
+                  {autoFillMessages[i].price}
+                </>
+              ) : (
+                "No activities planned yet."
+              )}</p>
             )}
             <div className="activity-controls">
               <input
                 type="text"
-                placeholder="Enter location"
+                placeholder={placeholderText[i] || "Enter location"}
                 className="location-input"
-                value={""} 
-                onChange={() => {}} 
+                value={location[i] || ""}
+                onChange={
+                  (e) => {
+                    setLocation(prevLocation => ({
+                      ...prevLocation,
+                      [i]: e.target.value,
+                    }));
+                  }
+                }
               />
-              <button className="add-activity-btn">+ Add activity</button>
+              <button className="add-activity-btn" onClick={() => addActivityButton(i,location[i])}>{addActivityButtonText[i] || "Add activity"}</button>
+              <button className="auto-fill-btn" onClick={() =>autoFillBtn(i)}>Auto-fill my day</button>
             </div>
           </div>
         </Accordion>
