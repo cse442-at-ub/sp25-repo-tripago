@@ -426,6 +426,10 @@
   .profile-container {
     margin-left: 270px;
   }
+
+  .trip-image {
+    max-height: 100px;
+  }
 }
 
 @media (max-width: 480px) {
