@@ -156,6 +156,10 @@
   display: none;
 }
 
+.settings-right select {
+  color: var(--black);
+}
+
 
 
 @media screen and (max-width: 430px) {
