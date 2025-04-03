@@ -102,6 +102,7 @@ const Community = () => {
   }
 
   //called when you click "view sent requests" button
+  //Will show you requests that you sent
   const getSentRequests = async(e) => {
     
     try {
@@ -237,7 +238,7 @@ const Community = () => {
             View Incoming Requests
           </button>
           <button className="view-requests-btn" onClick={() => {setModalType("sent"); getSentRequests();}}>
-            View Sent Requests
+            View Friends
           </button>
         </div>
       </div>
