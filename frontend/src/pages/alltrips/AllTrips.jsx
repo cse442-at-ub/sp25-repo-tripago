@@ -131,7 +131,7 @@ const AllTrips = () => {
               </p>
             ) : (
               trips.map((trip) => (
-                <div key={trip.id} className="trip-card">
+                <div key={trip.id} className="at-trip-card">
                   {/* View Button */}
                   <button
                     className="view-button"
@@ -183,7 +183,7 @@ const AllTrips = () => {
                       "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
                     }
                     alt={encode(trip.destination)}
-                    className="trip-image"
+                    className="at-trip-image"
                   />
                 </div>
               ))

@@ -5,11 +5,10 @@ import { resolvePath, useNavigate } from "react-router-dom";
 import "../../styles/trip/TripDetails.css";
 import { FaEdit, FaTimes } from "react-icons/fa";
 import { encode } from "html-entities";
-import axios from 'axios'
-
+import axios from "axios";
+import autofillIcon from "../../assets/autofill.png";
 
 const Itinerary = ({ trip, setShowModal }) => {
-
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
   //Need to get saved activities from DB, (or at least check!)
   //its called "autofillMessages", but should handle manual ones too!
@@ -23,7 +22,6 @@ const Itinerary = ({ trip, setShowModal }) => {
   const diffTime = Math.abs(endDate - startDate);
 
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    
 
   /*
   This should be called exactly once when generating the day accordians
@@ -33,26 +31,26 @@ const Itinerary = ({ trip, setShowModal }) => {
   Will also want to use fill activity function to fill any retrieved activities
   once you get them!
   */
-  
+
   const getActivitiesFromDB = async () => {
-  
-   console.log("Fetching activities from DB...");
+    console.log("Fetching activities from DB...");
 
+    try {
+      //use trip start date and user email to get activities for trip
+      //ASSUMES USER DOES NOT MAKE MULTIPLE TRIPS THAT START ON THE SAME DAY!!!!!!
 
-   try{
-      
-    //use trip start date and user email to get activities for trip
-    //ASSUMES USER DOES NOT MAKE MULTIPLE TRIPS THAT START ON THE SAME DAY!!!!!!
+      console.log("Before post");
 
-    console.log("Before post");
-
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",{start_date:startDate},{
-        headers:{
-          'Content-Type':'application/json'
+      const response = await axios.post(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",
+        { start_date: startDate },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      })
+      );
 
-      
       console.log(response.data);
 
       const data = response.data.activities;
@@ -61,95 +59,90 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       //should have a list which contains "activities"
 
-      for (let i=0;i<data.length;i++){
+      for (let i = 0; i < data.length; i++) {
         let day = data[i].day;
         let name = data[i].name;
         let price;
 
         //null check for safety
-        if (data.price == null){
+        if (data.price == null) {
           price = data[i].price;
         } else {
           price = "";
         }
 
-        
-
-
-        setAutoFillMessages(prevMessages => ({
+        setAutoFillMessages((prevMessages) => ({
           ...prevMessages,
-          [day]: { name: name, price: "Price: "+ price },
+          [day]: { name: name, price: "Price: " + price },
         }));
       }
 
       console.log(data);
-
-    } catch(error){
+    } catch (error) {
       if (error.response) {
         console.error("Server responded with:", error.response.data);
         console.error("Status code:", error.response.status);
         console.error("Headers:", error.response.headers);
-     } else if (error.request) {
-       console.error("No response received. Request:", error.request);
-     } else {  
-       console.error("Error setting up the request:", error.message);
-     }
-       console.error("Original error:", error); // Log the full error for debugging.
+      } else if (error.request) {
+        console.error("No response received. Request:", error.request);
+      } else {
+        console.error("Error setting up the request:", error.message);
+      }
+      console.error("Original error:", error); // Log the full error for debugging.
     }
-    
-  }
+  };
 
   useEffect(() => {
     getActivitiesFromDB();
   }, []);
-  
+
   /*
   Main purpose of this is to get a activity from the API call
   Should call fillActivity function, since you want to immediately fill that
   activity!
   */
-  const autoFillBtn = async(i) => {
+  const autoFillBtn = async (i) => {
     //gets day number in i, so we can set the correspending accordians activity
 
-    setAutoFillMessages(prevMessages => ({
+    setAutoFillMessages((prevMessages) => ({
       ...prevMessages,
       [i]: { name: "Fetching activity ideas...", price: null },
     }));
-  
-    try{
-      
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",{location:trip.name},{
-        headers:{
-          'Content-Type':'application/json'
+
+    try {
+      const response = await axios.post(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",
+        { location: trip.name },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      })
+      );
 
       const data = response.data;
 
-
       console.log(data);
 
-      if (data.success){
+      if (data.success) {
         //response is success and has trips
-        if (data.has_trips){
-          fillActivity(i,data.activity_name,data.activity_price);
+        if (data.has_trips) {
+          fillActivity(i, data.activity_name, data.activity_price);
           //done?
         } else {
           //apologize for not findings any activities
           console.log(data.message);
-          setAutoFillMessages(prevMessages => ({
+          setAutoFillMessages((prevMessages) => ({
             ...prevMessages,
             [i]: { name: "Could not find any activities", price: "" },
           }));
         }
       } else {
-        console.log("An error has occurred!")
+        console.log("An error has occurred!");
       }
-    } catch(error){
-      console.log("Error during login: ",error.response);
+    } catch (error) {
+      console.log("Error during login: ", error.response);
     }
-
-    
   };
 
   /*
@@ -158,32 +151,27 @@ const Itinerary = ({ trip, setShowModal }) => {
 
   This should call a function to save that activity to the database
   */
-  const fillActivity = async(day,name,price) => {
-
-
-    setAutoFillMessages(prevMessages => ({
+  const fillActivity = async (day, name, price) => {
+    setAutoFillMessages((prevMessages) => ({
       ...prevMessages,
       [day]: { name: name, price: "Price: " + price },
     }));
 
-    storeActivity(day,name,price);
+    storeActivity(day, name, price);
 
-
-    setPlaceholderText(prevPlaceholder => ({
+    setPlaceholderText((prevPlaceholder) => ({
       ...prevPlaceholder,
       [day]: "Enter price",
     }));
+  };
 
-  }
-
-/*
+  /*
 Takes activity information to be stored in the database
 Will just be using the day, name, and price of it for now, 
 but can expand it in the future, if need (or want) be!
 */
-  const storeActivity = async(day,name,price) => {
-    try{
-      
+  const storeActivity = async (day, name, price) => {
+    try {
       /*
       send day, name of activity, price, and start date of trip
       start date of trip is used as a safety precaution in case you have
@@ -192,93 +180,100 @@ but can expand it in the future, if need (or want) be!
       This safety measure assumes that a user will not create mutiple trips 
       to the same location on the same day, because why would they?
       */
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",{day:day,name:name,price:price,start:startDate},{
-        headers:{
-          'Content-Type':'application/json'
+      const response = await axios.post(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",
+        { day: day, name: name, price: price, start: startDate },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      })
+      );
 
       const data = response.data;
 
-
       console.log(data);
 
-      if (data.success){
+      if (data.success) {
         console.log("Activity has been added successfully");
       } else {
         console.log("An error was encountered adding the activity");
       }
-    } catch(error){
-      console.log("Error during login: ",error.response);
+    } catch (error) {
+      console.log("Error during login: ", error.response);
     }
-  }
+  };
 
+  const handleRemoveAutofilled = () => {
+        
+  }
   /*
   This will handle when the manual "add activity" button is clicked
   Should get the input from a text box and day, and make a new activity from that!
   Will also call the fill activity function!
   */
-  const addActivityButton = async(day,name) => {
+  const addActivityButton = async (day, name) => {
     //check if price is entered
-    if (placeholderText[day] == "Enter price"){
+    if (placeholderText[day] == "Enter price") {
       console.log("Detected that price is recieved!");
 
       const activity_price = name;
       const activityName = autoFillMessages[day]?.name;
 
-      console.log("Custom user activity: " + activityName + " and corresponding price: " + activity_price + " will be processed");
+      console.log(
+        "Custom user activity: " +
+          activityName +
+          " and corresponding price: " +
+          activity_price +
+          " will be processed"
+      );
 
       //update text box to include user entered price
-      setAutoFillMessages(prevMessages => ({
+      setAutoFillMessages((prevMessages) => ({
         ...prevMessages,
         [day]: { ...prevMessages[day], price: "Price: " + name },
       }));
 
       //change text box place holder to be "Done"
-      setPlaceholderText(prevPlaceholder => ({
+      setPlaceholderText((prevPlaceholder) => ({
         ...prevPlaceholder,
         [day]: "Done",
       }));
-    
+
       //sets value of input box to empty
-      setLocation(prevLocation => ({
+      setLocation((prevLocation) => ({
         ...prevLocation,
         [day]: "",
       }));
 
       //store the custom activity
-      storeActivity(day,activityName,activity_price);
-
+      storeActivity(day, activityName, activity_price);
     } else {
-
       //sets text in text box
-      setAutoFillMessages(prevMessages => ({
+      setAutoFillMessages((prevMessages) => ({
         ...prevMessages,
-        [day]: { name: name, price: "Price:  "},
+        [day]: { name: name, price: "Price:  " },
       }));
 
       //sets place holder text in input box
-      setPlaceholderText(prevPlaceholder => ({
+      setPlaceholderText((prevPlaceholder) => ({
         ...prevPlaceholder,
         [day]: "Enter price",
       }));
-    
+
       //sets value of input box to empty
-      setLocation(prevLocation => ({
+      setLocation((prevLocation) => ({
         ...prevLocation,
         [day]: "",
       }));
 
       //change button text after it's clicked for first time
-      setAddActivityButtonText(prevText => ({
+      setAddActivityButtonText((prevText) => ({
         ...prevText,
-        [day]: "Add Price", 
+        [day]: "Add Price",
       }));
-
-  }
-  }
-
-  
+    }
+  };
 
   const navigate = useNavigate();
   const generateDayAccordions = () => {
@@ -288,7 +283,6 @@ but can expand it in the future, if need (or want) be!
     const dayAccordions = [];
 
     //const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
 
     for (let i = 0; i < diffDays; i++) {
       const currentDate = new Date(startDate);
@@ -302,7 +296,6 @@ but can expand it in the future, if need (or want) be!
 
       const dayActivities =
         trip.days && trip.days[i] ? trip.days[i].activities : [];
-      
 
       dayAccordions.push(
         <Accordion key={i} title={dateString}>
@@ -315,7 +308,9 @@ but can expand it in the future, if need (or want) be!
                       <h3>{encode(activity.name)}</h3>
                     </div>
                     {activity.time && (
-                      <p className="activity-time">Open {encode(activity.time)}</p>
+                      <p className="activity-time">
+                        Open {encode(activity.time)}
+                      </p>
                     )}
                     {activity.description && (
                       <p className="activity-description">
@@ -326,15 +321,29 @@ but can expand it in the future, if need (or want) be!
                 ))}
               </div>
             ) : (
-              <p>{autoFillMessages[i]?.name ? (
-                <>
-                  {autoFillMessages[i].name}
-                  <br />
-                  {autoFillMessages[i].price}
-                </>
-              ) : (
-                "No activities planned yet."
-              )}</p>
+              <div className="autofilled-activity-container">
+                <button
+                  className="autofilled-close-btn"
+                  onClick={() => handleRemoveAutofilled(i)} // replace with actual delete function
+                  aria-label="Remove activity"
+                >
+                  ×
+                </button>
+                <p>
+                  {autoFillMessages[i]?.name ? (
+                    <>
+                      <p className="autofilled-activity-name">
+                        {autoFillMessages[i].name}
+                      </p>
+                      <p className="autofilled-activity-price">
+                        {autoFillMessages[i].price}
+                      </p>
+                    </>
+                  ) : (
+                    "No activities planned yet."
+                  )}
+                </p>
+              </div>
             )}
             <div className="activity-controls">
               <input
@@ -342,17 +351,28 @@ but can expand it in the future, if need (or want) be!
                 placeholder={placeholderText[i] || "Enter location"}
                 className="location-input"
                 value={location[i] || ""}
-                onChange={
-                  (e) => {
-                    setLocation(prevLocation => ({
-                      ...prevLocation,
-                      [i]: e.target.value,
-                    }));
-                  }
-                }
+                onChange={(e) => {
+                  setLocation((prevLocation) => ({
+                    ...prevLocation,
+                    [i]: e.target.value,
+                  }));
+                }}
               />
-              <button className="add-activity-btn" onClick={() => addActivityButton(i,location[i])}>{addActivityButtonText[i] || "Add activity"}</button>
-              <button className="auto-fill-btn" onClick={() =>autoFillBtn(i)}>Auto-fill my day</button>
+              <button
+                className="add-activity-btn"
+                onClick={() => addActivityButton(i, location[i])}
+              >
+                {addActivityButtonText[i] || "Add activity"}
+              </button>
+              {/* <button className="auto-fill-btn" onClick={() =>autoFillBtn(i)}>Autofill my day</button> */}
+              <button className="auto-fill-btn" onClick={() => autoFillBtn(i)}>
+                <img
+                  src={autofillIcon}
+                  alt="Autofill"
+                  className="auto-fill-icon"
+                />
+                Autofill my day
+              </button>
             </div>
           </div>
         </Accordion>
@@ -421,7 +441,8 @@ but can expand it in the future, if need (or want) be!
               ) : (
                 <>
                   <p className="no-hotel-message">
-                    Looks like you haven&apos;t booked a hotel yet for this trip.
+                    Looks like you haven&apos;t booked a hotel yet for this
+                    trip.
                   </p>
                   <button
                     className="find-hotel-btn"
@@ -450,11 +471,14 @@ but can expand it in the future, if need (or want) be!
           </div>
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
-            <h3>Trip Dates:</h3>
+              <h3>Trip Dates:</h3>
 
-              <button className="edit-budget-btn" onClick={() => setShowModal(true)}>
-            <FaEdit /> Edit dates
-          </button>
+              <button
+                className="edit-budget-btn"
+                onClick={() => setShowModal(true)}
+              >
+                <FaEdit /> Edit dates
+              </button>
             </div>
             <div className="days-container">{generateDayAccordions()}</div>
           </div>
@@ -465,22 +489,24 @@ but can expand it in the future, if need (or want) be!
 };
 
 const Budgeting = ({ trip }) => {
-
   const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
   const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
 
   useEffect(() => {
-    console.log("Incoming trip.budget.amount in Budgeting:", trip.budget?.amount);
+    console.log(
+      "Incoming trip.budget.amount in Budgeting:",
+      trip.budget?.amount
+    );
     setBudget(trip.budget?.amount ?? 0);
-    console.log("Setting budget to," , trip.budget?.amount ?? 0)
+    console.log("Setting budget to,", trip.budget?.amount ?? 0);
   }, [trip.budget?.amount]);
 
   useEffect(() => {
     setExpenses(trip.budget?.expenses ?? []);
-    console.log("Setting expenses to," , trip.budget?.expenses ?? [])
-  }, [trip.budget?.expenses]);  
+    console.log("Setting expenses to,", trip.budget?.expenses ?? []);
+  }, [trip.budget?.expenses]);
 
   const totalExpenses = expenses.reduce((sum, expense) => {
     const amount = parseFloat(expense.amount);
@@ -494,16 +520,19 @@ const Budgeting = ({ trip }) => {
 
   const handleSaveBudget = async (newBudget) => {
     setBudget(newBudget);
-  
+
     try {
-      await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          city_name: trip.name,
-          budget_amount: newBudget, // triggers the update block
-        }),
-      });
+      await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            city_name: trip.name,
+            budget_amount: newBudget, // triggers the update block
+          }),
+        }
+      );
     } catch (err) {
       console.error("Error saving budget amount:", err);
     }
@@ -511,44 +540,49 @@ const Budgeting = ({ trip }) => {
 
   const handleAddExpense = async (newExpense) => {
     setExpenses((prev) => [...prev, newExpense]);
-  
+
     try {
-      await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          city_name: trip.name,
-          category: newExpense.category,
-          amount: newExpense.amount,
-        }),
-      });
+      await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            city_name: trip.name,
+            category: newExpense.category,
+            amount: newExpense.amount,
+          }),
+        }
+      );
     } catch (err) {
       console.error("Error saving expense:", err);
     }
   };
-  
 
-    // Whenever totalExpenses is updated
-    useEffect(() => {
-      const loadExpenses = async () => {
-        try {
-          const res = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(trip.name)}`);
-          const data = await res.json();
-          if (data.success) {
-            setExpenses(data.expenses || []);
-          } else {
-            console.warn("No expenses found:", data.message);
-          }
-        } catch (err) {
-          console.error("Error fetching expenses:", err);
+  // Whenever totalExpenses is updated
+  useEffect(() => {
+    const loadExpenses = async () => {
+      try {
+        const res = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(
+            trip.name
+          )}`
+        );
+        const data = await res.json();
+        if (data.success) {
+          setExpenses(data.expenses || []);
+        } else {
+          console.warn("No expenses found:", data.message);
         }
-      };
-    
-      if (trip.name) {
-        loadExpenses();
+      } catch (err) {
+        console.error("Error fetching expenses:", err);
       }
-    }, [trip.name]);
-    
+    };
+
+    if (trip.name) {
+      loadExpenses();
+    }
+  }, [trip.name]);
 
   return (
     <div className="budgeting-container">
@@ -763,7 +797,7 @@ const ExpenseModal = ({ onClose, onSave }) => {
 const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
 
-  console.log("Trip is:", trip)
+  console.log("Trip is:", trip);
 
   const [currentTab, setCurrentTab] = useState("itinerary");
 
@@ -778,9 +812,13 @@ const TripDetails = ({ trip, setShowModal }) => {
               <span className="title-accent">{encode(trip.name)}.</span>
             </h2>
             {/* <p>Select a different trip</p> */}
-            <p className="select-different-p" onClick={() => navigate("/all-trips")} style={{ cursor: "pointer", textDecoration: "none"}}>
-  Select a different trip
-</p>
+            <p
+              className="select-different-p"
+              onClick={() => navigate("/all-trips")}
+              style={{ cursor: "pointer", textDecoration: "none" }}
+            >
+              Select a different trip
+            </p>
           </div>
           <div className="itin-budget-container">
             <p

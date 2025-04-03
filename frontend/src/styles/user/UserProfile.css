@@ -34,7 +34,7 @@
   justify-content: center; /* keeps it centered inside */
 }
 
-.all-trips-trips-container.single-trip .trip-card {
+.all-trips-trips-container.single-trip .at-trip-card {
   width: 100%;
   max-width: 800px;
 }
@@ -263,7 +263,7 @@
   margin-bottom: 100px;
 }
 
-.trip-card {
+.at-trip-card {
   background: var(--white);
   border: none;
   border-radius: 10px;
@@ -274,7 +274,7 @@
   width: 40%;
 }
 
-.trip-card .view-button {
+.at-trip-card .view-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -287,13 +287,13 @@
   cursor: pointer;
 }
 
-.trip-card .trip-destination {
+.at-trip-card .trip-destination {
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--primary-color);
 }
 
-.trip-card .trip-dates {
+.at-trip-card .trip-dates {
   font-size: 14px;
   color: var(--dark-grey);
 }
@@ -317,7 +317,7 @@
   color: var(--black);
 }
 
-.trip-image {
+.at-trip-image {
   width: 100%;
   height: 40%;
 }
@@ -392,7 +392,7 @@
     justify-content: center;
   }
 
-  .trip-card {
+  .at-trip-card {
     width: 100%;
   }
 

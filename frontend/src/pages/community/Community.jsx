@@ -61,12 +61,6 @@ const Community = () => {
     setSelectedTrip(null);
   };
 
-  /*
-  const incomingRequests = [
-    { id: 1, name: "Anna" },
-    { id: 2, name: "Michael" },
-  ];
-*/
 
   const [incomingRequests,setIncomingRequests] = useState([]); 
 
@@ -236,48 +230,6 @@ const Community = () => {
         onClick={handleSend}>Send</button> 
         </div>
         </div>
-        {/* <div className="requests-list">
-          <div className="incoming-requests">
-            <h3>Incoming Requests</h3>
-            <ul>
-              <li>
-                Anna
-                <div>
-                  <button className="accept-btn">Accept</button>
-                  <button className="reset-btn">Delete</button>
-                </div>
-              </li>
-              <li>
-                Michael
-                <div>
-                  <button className="accept-btn">Accept</button>
-                  <button className="reset-btn">Delete</button>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="requests-list">
-          <div className="incoming-requests">
-            <h3>Sent Requests</h3>
-            <ul>
-              <li>
-                Anna
-                <div>
-                  <button className="accept-btn">Accept</button>
-                  <button className="reset-btn">Delete</button>
-                </div>
-              </li>
-              <li>
-                Michael
-                <div>
-                  <button className="accept-btn">Accept</button>
-                  <button className="reset-btn">Delete</button>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div> */}
           {/* Requests Section */}
           <div className="requests-section">
           <h3>Requests</h3>
