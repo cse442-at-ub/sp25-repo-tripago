@@ -6,8 +6,9 @@
   height: auto;
   min-height: 100vh;
   margin-top: 100px;
-  margin-left: 350px;
-  padding: 300px;
+  margin-left: 0px;
+  padding: 400px;
+  padding-left: 800px;
 }
 
 .community-top {
