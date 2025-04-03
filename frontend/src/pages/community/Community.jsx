@@ -286,7 +286,7 @@ const Community = () => {
             View Incoming Requests
           </button>
           <button className="view-requests-btn" onClick={() => {setModalType("sent"); getSentRequests();}}>
-            View Sent Requests
+            View Friends
           </button>
         </div>
       </div>

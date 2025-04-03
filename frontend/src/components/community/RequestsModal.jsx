@@ -110,7 +110,7 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
     <div className="request-modal-overlay modal-overlay">
       <div className="request-modal-content modal-content">
         <button className="close-btn" onClick={onClose}>×</button>
-        <h2>{type === "incoming" ? "Incoming Requests" : "Sent Requests"}</h2>
+        <h2>{type === "incoming" ? "Incoming Requests" : "Friends"}</h2>
 
         {type === "incoming" ? (
           <ul className="requests-list">
