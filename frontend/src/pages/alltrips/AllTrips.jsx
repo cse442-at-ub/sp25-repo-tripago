@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle";
 import Sidebar from "../../components/Sidebar";
+import axios from 'axios';
 
 const AllTrips = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const AllTrips = () => {
     const fetchTrips = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
+          "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/getAllTrips.php",
           {
             credentials: "include",
           }
@@ -91,7 +92,7 @@ const AllTrips = () => {
     setNotLogged(sortedTrips.filter((trip) => trip.logged != true))
   };
 
-  const postToLog = (trip) => {
+  const postToLog = async (trip) => {
     
     trip.logged = true
 
@@ -99,7 +100,19 @@ const AllTrips = () => {
     setNotLogged(trips.filter((trip) => trip.logged != true))
 
     // TODO: Change this trip's travel_log column in the database to true
-  }
+    try {
+      await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/postToLog.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          city_name: trip.name,
+          budget_amount: newBudget
+        }),
+      });
+    } catch(err) {
+      console.log("Error posting to log: ", err)
+    };
+  };
 
   const removeFromLog = (trip) => {
     
