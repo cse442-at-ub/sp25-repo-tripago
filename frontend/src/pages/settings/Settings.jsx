@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Settings.css';
 import MobileSidebarToggle from "../../components/MobileSidebarToggle";
 import Sidebar from "../../components/Sidebar";
+import { FaCog } from 'react-icons/fa';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -10,6 +11,27 @@ const Settings = () => {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+      
+      const handleResize = () => {
+        const isNowMobile = window.innerWidth <= 480;
+        console.log(
+          "Window width:",
+          window.innerWidth,
+          "| isMobile:",
+          isNowMobile
+        );
+        setIsMobile(isNowMobile);
+      };
+  
+      handleResize(); // Run on first load
+      window.addEventListener("resize", handleResize); // Watch for resizes
+  
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
 
   return (
     <>
@@ -27,8 +49,8 @@ const Settings = () => {
     <div className="settings-container">
 
        {/* Hamburger Button */}
-       <button className="hamburger-menu" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
+       <button className="gear-menu" onClick={() => setMenuOpen(!menuOpen)}>
+        <FaCog></FaCog>
       </button>
 
       {/* Left Sidebar */}
@@ -54,7 +76,11 @@ const Settings = () => {
       {/* Right Content Area */}
       <div className="settings-right">
         <h2>Settings</h2>
-        <p>Select a category from the left to view and update your preferences.</p>
+        {isMobile ? (
+          <p>Tap the gear icon in the top right, then select a category to view and update your preferences.</p>
+        ) : (
+          <p>Select a category from the left to view and update your preferences.</p>
+        )}
       </div>
 
     </div>
