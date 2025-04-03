@@ -148,9 +148,7 @@ const AllTrips = () => {
           <h3>Private Trips</h3>
           {/* cName changed from trips-container */}
           <div
-            className={`trips-container all-trips-trips-container ${
-              notLogged.length === 1 ? "single-trip" : ""
-            }`}
+            className={`trips-container all-trips-trips-container`}
           >
             {notLogged.length === 0 ? (
               <p className="no-trips-message">
@@ -230,9 +228,7 @@ const AllTrips = () => {
           <h3>Travel Log</h3>
           {/* cName changed from trips-container */}
           <div
-            className={`trips-container all-trips-trips-container ${
-              logged.length === 1 ? "single-trip" : ""
-            }`}
+            className={`trips-container all-trips-trips-container`}
           >
             {logged.length === 0 ? (
               <p className="no-trips-message">

@@ -30,15 +30,6 @@
   font-size: 25px;
 }
 
-.all-tripstrips-container.single-trip {
-  justify-content: center; /* keeps it centered inside */
-}
-
-.all-trips-trips-container.single-trip .trip-card {
-  width: 100%;
-  max-width: 800px;
-}
-
 .profile-container::after,
 .all-trips-container::after {
   content: "";
@@ -301,7 +292,7 @@
 }
 
 .trip-card .trip-destination {
-  font-size: 1.2rem;
+  font-size: 1.8em;
   font-weight: bold;
   color: var(--primary-color);
 }
@@ -316,6 +307,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
+  width: 95%;
 }
 
 .trip-icons img {
