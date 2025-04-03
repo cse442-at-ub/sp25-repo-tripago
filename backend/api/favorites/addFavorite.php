@@ -38,7 +38,7 @@ if (!$email || !$name) {
 // SQL query to insert into the favorites table
 
 $query = "INSERT INTO favorites (email, name, country_code) VALUES (?, ?, ?)";
-$stmt = mysqli_prepare($conn, $query);
+$stmt = mysqli_prepare($mysqli, $query);
 mysqli_stmt_bind_param($stmt, "sss", $email, $name, $country_code);
 
 if (mysqli_stmt_execute($stmt)) {
@@ -48,4 +48,4 @@ if (mysqli_stmt_execute($stmt)) {
 }
 
 mysqli_stmt_close($stmt);
-mysqli_close($conn);
+mysqli_close($mysqli);

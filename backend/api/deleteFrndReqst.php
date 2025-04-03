@@ -36,7 +36,7 @@ $result = $stmt->get_result();
 $result = $result->fetch_assoc();
 
 $recipient_email = $result["email"];
-if (!$sender) {
+if (!$recipient_email) {
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
 }

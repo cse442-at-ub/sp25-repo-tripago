@@ -28,8 +28,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 $result = $result->fetch_assoc();
 
-$sender = $result["email"];
-if (!$sender) {
+$recipient = $result["email"];
+if (!$recipient) {
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
 }

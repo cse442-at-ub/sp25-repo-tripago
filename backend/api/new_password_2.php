@@ -59,13 +59,12 @@ session_start();
 		//echo json_encode(["status" => "success", "message" => "value: {$key}"]);
 
 		// Query to check if a user exists with the given reset_token
-		$query = "SELECT * FROM users WHERE reset_token='$key' LIMIT 1";
-		
+		$stmt = $con->prepare("SELECT * FROM users WHERE reset_token=? LIMIT 1");
+		$stmt->bind_param("s", $key);
+		$stmt->execute();
 
-		
-
-		// Execute the query
-		$result = mysqli_query($con, $query);
+		$result = $stmt->get_result();
+		$result = $result->fetch_assoc();
 
 		// Check if the query was successful and if a row is returned
 		if ($result) {
@@ -102,7 +101,7 @@ session_start();
 				$hashed_password = password_hash($password , PASSWORD_BCRYPT);
 				
 				// Update the password in the database
-				$stmt = $mysqli->prepare("UPDATE users SET password_hash=? WHERE reset_token=?");
+				$stmt = $con->prepare("UPDATE users SET password_hash=? WHERE reset_token=?");
 				$stmt->bind_param("ss", $hashed_password, $key);
 				$stmt->execute();
 
