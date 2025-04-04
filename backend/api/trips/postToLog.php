@@ -28,15 +28,18 @@ if (!$email) {
 // Get input data
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!$email || !$data || !isset($data["destination"])) {
+$city = $data["destination"];
+$tripId = $data["id"];
+$logged = $data["logged"];
+
+if (!$email || !$data || !isset($city)) {
     echo json_encode(["success" => false, "message" => "Invalid input"]);
     exit();
 }
 
-// Get trip ID
-$city = $data["destination"];
-$stmt = $mysqli->prepare("SELECT id FROM trips WHERE email=? AND city_name=?");
-$stmt->bind_param("ss", $email, $city);
+// Check if ID is valid
+$stmt = $mysqli->prepare("SELECT * FROM trips WHERE email=? AND city_name=? AND id=?");
+$stmt->bind_param("ssi", $email, $city, $tripId);
 $stmt->execute();
 $result = $stmt->get_result();
 $trip = $result->fetch_assoc();
@@ -44,11 +47,10 @@ if (!$trip) {
     echo json_encode(["success" => false, "message" => "Trip not found"]);
     exit();
 }
-$tripId = $trip["id"];
 
 // Set travel_log in database
 $stmt = $mysqli->prepare("UPDATE trips SET travel_log=? WHERE id=?");
-$stmt->bind_param("ii", $data["logged"], $tripId);
+$stmt->bind_param("ii", $logged, $tripId);
 $stmt->execute();
 
 echo json_encode(["success" => true, "message" => "Successfully posted to travel log."]);

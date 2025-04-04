@@ -27,7 +27,7 @@ const AllTrips = () => {
     const fetchTrips = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/getAllTrips.php",
+          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
           {
             credentials: "include",
           }
@@ -100,7 +100,7 @@ const AllTrips = () => {
     setNotLogged(trips.filter((trip) => trip.logged != true))
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/postToLog.php", trip, {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php", trip, {
         headers: { "Content-Type": "application/json" },
       });
       const result = response.data
@@ -118,7 +118,7 @@ const AllTrips = () => {
     setNotLogged(trips.filter((trip) => trip.logged != true))
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/postToLog.php", trip, {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php", trip, {
         headers: { "Content-Type": "application/json" },
       });
       const result = response.data
