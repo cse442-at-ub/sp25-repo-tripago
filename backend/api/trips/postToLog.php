@@ -30,7 +30,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$email || !$data || !isset($data["destination"])) {
     echo json_encode(["success" => false, "message" => "Invalid input"]);
-exit();
+    exit();
 }
 
 // Get trip ID
@@ -41,14 +41,14 @@ $stmt->execute();
 $result = $stmt->get_result();
 $trip = $result->fetch_assoc();
 if (!$trip) {
-  echo json_encode(["success" => false, "message" => "Trip not found"]);
-  exit();
+    echo json_encode(["success" => false, "message" => "Trip not found"]);
+    exit();
 }
 $tripId = $trip["id"];
 
 // Set travel_log in database
-$stmt = $mysqli->prepare("UPDATE trips SET travel_log = ? WHERE id = ?");
-$stmt->bind_param("ii", 1, $tripId);
+$stmt = $mysqli->prepare("UPDATE trips SET travel_log=? WHERE id=?");
+$stmt->bind_param("ii", $data["logged"], $tripId);
 $stmt->execute();
 
 echo json_encode(["success" => true, "message" => "Successfully posted to travel log."]);
