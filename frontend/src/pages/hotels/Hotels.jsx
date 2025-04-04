@@ -10,6 +10,7 @@ import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
 import { searchLocations, searchHotels, formatLocationName } from "../../services/hotelService";
+import { encode } from "html-entities";
 
 const Hotels = () => {
   // URL and Navigation State
@@ -533,8 +534,8 @@ const Hotels = () => {
           const offer = hotelOffers[hotel.hotelId];
           const hotelData = {
             ...hotel,
-            name: hotel.name,
-            location: `${formatLocationName(selectedLocation.name)}, ${selectedLocation.address.countryCode}`,
+            name: encode(hotel.name),
+            location: `${encode(formatLocationName(selectedLocation.name))}, ${selectedLocation.address.countryCode}`,
             distance: hotel.distance.value,
             rating: parseInt(hotel.rating),
             reviews: 0,

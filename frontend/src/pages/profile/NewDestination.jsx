@@ -6,6 +6,7 @@ import traveler from "../../assets/tripagoTraveler.png";
 import suitcase from "../../assets/tripagoSuitcase.png";
 import Sidebar from "../../components/Sidebar";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle";
+import { encode } from "html-entities";
 
 const NewDestination = () => {
   const navigate = useNavigate();
@@ -237,7 +238,7 @@ const NewDestination = () => {
                     setShowSuggestions(false);
                   }}
                 >
-                  {city.name}, {getCountryName(city.countryCode)}
+                  {encode(city.name)}, {encode(getCountryName(city.countryCode))}
                 </li>
               ))}
             </ul>

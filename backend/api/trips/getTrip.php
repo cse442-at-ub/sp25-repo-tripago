@@ -5,9 +5,9 @@ header("Content-Type: application/json");
 $token = $_COOKIE['authCookie'];
 
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_error != 0){
-    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-    exit();
+if ($mysqli->connect_errno) {
+  echo json_encode(["success" => false, "message" => "Database connection failed"]);
+  exit();
 }
 
 $stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
@@ -18,6 +18,7 @@ $result = $stmt->get_result();
 $result = $result->fetch_assoc();
 
 $email = $result["email"];
+
 if (!$email) {
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
@@ -78,6 +79,7 @@ while ($row = $expensesResult->fetch_assoc()) {
 echo json_encode([
   "success" => true,
   "trip" => [
+    "id" => (int)$trip["id"],
     "city_name" => $trip["city_name"],
     "country_name" => $trip["country_name"],
     "start_date" => $trip["start_date"],

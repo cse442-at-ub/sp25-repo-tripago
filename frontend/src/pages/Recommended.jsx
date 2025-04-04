@@ -158,13 +158,14 @@ const VerifyLocation = () => {
         </h2>
 
         <input
+        className="location-search-input"
           type="text"
           placeholder="Search for a location..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             marginTop: "1rem",
-            width: "100%",
+            width: "50%",
             maxWidth: "1000px",
             padding: "0.5rem",
             borderRadius: "0.5rem",

@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa';
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext.jsx";
+import { encode } from "html-entities";
 
 const Sidebar = ({isOpen = true}) => {
   const { user } = useContext(UserContext);
@@ -25,7 +26,7 @@ const Sidebar = ({isOpen = true}) => {
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <p>
-          Hello, <span className="username">{username}</span>.
+          Hello, <span className="username">{encode(username)}</span>.
         </p>
       </div>
 

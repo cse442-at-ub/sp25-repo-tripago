@@ -46,8 +46,8 @@ checkForActivity($email,$start);
 
 
 
-
 function checkForActivity($email,$activity_start_date){
+    global $mysqli;
     
     $stmt = $mysqli->prepare("SELECT * FROM activities WHERE email=? AND start_date=?");
     $stmt->bind_param("ss",$email,$activity_start_date);

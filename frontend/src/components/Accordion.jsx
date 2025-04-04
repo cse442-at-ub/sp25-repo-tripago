@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../styles/Accordion.css";
+import { encode } from "html-entities";
+
 
 const Accordion = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +26,7 @@ const Accordion = ({ title, children }) => {
         onClick={toggleAccordion}
       >
         <span className={`accordion-icon ${isOpen && "open"}`}>▼</span>
-        <span>{title}</span>
+        <span>{encode(title)}</span>
       </button>
       <div
         className="accordion-content"

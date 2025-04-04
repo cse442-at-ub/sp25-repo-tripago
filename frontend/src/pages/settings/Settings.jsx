@@ -70,9 +70,7 @@ const Settings = () => {
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-
-        <h3>Profile</h3>
-        <button className="return-home-btn" onClick={() => navigate("/profile")}>Return to Trip Profile</button>
+        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
       </div>
 
       {/* Right Content Area */}

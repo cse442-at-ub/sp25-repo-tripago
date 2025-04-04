@@ -79,7 +79,7 @@
   .sidebar.open {
     display: block;
     position: absolute;
-    top: 60px; 
+    top: 45px; 
     left: 0;
     background-color: #fff;
     z-index: 1;

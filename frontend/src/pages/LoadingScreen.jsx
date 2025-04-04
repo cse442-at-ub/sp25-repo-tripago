@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { encode } from "html-entities";
 import { searchLocations, searchHotels } from "../services/hotelService";
 import "../styles/LoadingScreen.css";
 

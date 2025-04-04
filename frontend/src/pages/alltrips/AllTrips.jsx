@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle";
 import Sidebar from "../../components/Sidebar";
+import { encode } from "html-entities";
 import axios from 'axios';
 
 const AllTrips = () => {
@@ -161,7 +162,7 @@ const AllTrips = () => {
             </div>
           </div>
 
-          <h3>Private Trips</h3>
+          <h4 className="alltrips-h4">Private Trips</h4>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container`}
@@ -173,10 +174,11 @@ const AllTrips = () => {
               </p>
             ) : (
               notLogged.map((trip) => (
-                <div key={trip.id} className="trip-card">
-                  
-                  {/* Post to Travel Log Button */}
-                  <button
+                <div key={trip.id} 
+
+                className="at-trip-card">
+                   {/* Post to Travel Log Button */}
+                   <button
                     className="log-button"
                     onClick={() => postToLog(trip)}
                   >
@@ -213,8 +215,8 @@ const AllTrips = () => {
 
                   {/* Trip Info */}
                   <div className="trip-info">
-                    <h4 className="trip-destination">{trip.destination}</h4>
-                    <p className="trip-dates">{trip.dates}</p>
+                    <h4 className="trip-destination">{encode(trip.destination)}</h4>
+                    <p className="trip-dates">{encode(trip.dates)}</p>
 
                     {/* Bottom Row: Icons + Price */}
                     <div className="trip-bottom-row">
@@ -233,15 +235,15 @@ const AllTrips = () => {
                       trip.image_url ||
                       "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
                     }
-                    alt={trip.destination}
-                    className="trip-image"
+                    alt={encode(trip.destination)}
+                    className="at-trip-image"
                   />
                 </div>
               ))
             )}
           </div>
 
-          <h3>Travel Log</h3>
+          <h4 className="alltrips-h4">Travel Log</h4>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container`}
@@ -252,7 +254,7 @@ const AllTrips = () => {
               </p>
             ) : (
               logged.map((trip) => (
-                <div key={trip.id} className="trip-card">
+                <div key={trip.id} className="at-trip-card">
 
                   {/* Remove from Travel Log Button */}
                   <button
@@ -288,7 +290,7 @@ const AllTrips = () => {
 
                   {/* Trip Info */}
                   <div className="trip-info">
-                    <h4 className="trip-destination">{trip.destination}</h4>
+                    <h4 className="trip-destination">{encode(trip.destination)}</h4>
                     <p className="trip-dates">{trip.dates}</p>
 
                     {/* Bottom Row: Icons + Price */}
@@ -308,14 +310,13 @@ const AllTrips = () => {
                       trip.image_url ||
                       "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
                     }
-                    alt={trip.destination}
-                    className="trip-image"
+                    alt={encode(trip.destination)}
+                    className="at-trip-image"
                   />
                 </div>
               ))
             )}
           </div>
-
         </div>
       </div>
     </>

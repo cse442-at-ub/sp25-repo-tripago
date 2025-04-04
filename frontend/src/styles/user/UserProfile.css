@@ -30,6 +30,15 @@
   font-size: 25px;
 }
 
+.all-trips-trips-container.single-trip {
+  justify-content: center;
+}
+
+.all-trips-trips-container.single-trip .at-trip-card {
+  width: 100%;
+  max-width: 800px;
+}
+
 .profile-container::after,
 .all-trips-container::after {
   content: "";
@@ -80,6 +89,10 @@
   text-decoration: underline;
 }
 
+.alltrips-h4 {
+  color: var(--dark-grey);
+  font-size: 20px;
+}
 /* Travel Bucket List */
 .bucket-list {
   background: var(--white);
@@ -159,6 +172,20 @@
   color: var(--dark-grey);
   margin: 5px 0;
 }
+
+.find-new-friends-p {
+  margin-top: 10px;
+  cursor: pointer;
+  color: var(--secondary-text);
+  transition: all 0.5s ease-in-out;
+}
+
+.find-new-friends-p:hover {
+  color: var(--primary-color);
+
+}
+
+
 
 /* Friends List */
 .friends-list,
@@ -254,7 +281,7 @@
   margin-bottom: 100px;
 }
 
-.trip-card {
+.at-trip-card {
   background: var(--white);
   border: none;
   border-radius: 10px;
@@ -265,7 +292,7 @@
   width: 40%;
 }
 
-.trip-card .view-button {
+.at-trip-card .view-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -278,7 +305,7 @@
   cursor: pointer;
 }
 
-.trip-card .log-button {
+.at-trip-card .log-button {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -291,13 +318,13 @@
   cursor: pointer;
 }
 
-.trip-card .trip-destination {
-  font-size: 1.8em;
+.at-trip-card .trip-destination {
+  font-size: 1.2rem;
   font-weight: bold;
   color: var(--primary-color);
 }
 
-.trip-card .trip-dates {
+.at-trip-card .trip-dates {
   font-size: 14px;
   color: var(--dark-grey);
 }
@@ -322,7 +349,7 @@
   color: var(--black);
 }
 
-.trip-image {
+.at-trip-image {
   width: 100%;
   height: 40%;
 }
@@ -397,7 +424,7 @@
     justify-content: center;
   }
 
-  .trip-card {
+  .at-trip-card {
     width: 100%;
   }
 

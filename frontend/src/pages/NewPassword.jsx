@@ -3,14 +3,6 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import '../styles/Login.css'
 import axios from "axios";
 
-/*const SearchPage = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const key = queryParams.get('key');
-  console.log("key: " + key);
-  return key;
-}*/
-
 const NewPassword = () => {
 
   const navigate = useNavigate();
@@ -36,22 +28,6 @@ const NewPassword = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    //if (formData.password !== formData.confirmPassword) {
-    //  alert("Passwords do not match!");
-    //  return;
-    //}
-
-
-    //axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/new_password_2.php", formData).then(function(responce){
-      //axios.post(`http://localhost/tripago/new_password_2.php?key=${token}`, formData).then(function(responce){
-      //axios.post(`http://localhost/tripago/new_password_2.php`, formData).then(function(responce){
-      //console.log(responce.data);
-      //console.log(responce.status);
-      //navigate('https://aptitude.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/npula/#/login');
-      
-    //}).catch(() => { console.log(formData); });
-  
     
     try {
       const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/new_password_2.php", {

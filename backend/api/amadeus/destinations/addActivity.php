@@ -75,7 +75,7 @@ function checkForActivity($email,$activity_start_date,$activity_day){
     $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
     if ($mysqli->connect_error != 0){
         echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-        extit();
+        exit();
     }
 
 

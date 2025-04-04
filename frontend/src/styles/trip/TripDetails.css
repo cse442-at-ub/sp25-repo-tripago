@@ -15,6 +15,35 @@ p {
   color: #666;
 }
 
+.trip-title-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+
+.autofilled-close-btn {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: none;
+  border: none;
+  color: #888; /* soft grey */
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 6px;
+  line-height: 1;
+  box-shadow: none;
+}
+
+.autofilled-close-btn:hover {
+  color: #555; /* darker on hover */
+  box-shadow: none;
+}
+
 .select-different-p {
   transition: 3ms ease-in;
 }
@@ -502,19 +531,57 @@ p {
 
 .auto-fill-btn {
   background: none;
-  border: 1px solid var(--primary-color);
+  border: none;
   color: var(--primary-color);
-  padding: 8px 16px;
-  border-radius: 8px;
+  font-size: .7rem;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  margin-left: 12px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  box-shadow: none;
+  width: 100%;
 }
 
 .auto-fill-btn:hover {
-  background-color: var(--primary-color);
-  color: white;
+  text-decoration: none;
+  box-shadow: none;
+  color: #6746e7; /* darker purple */
 }
+
+.auto-fill-icon {
+  width: 13px;
+  height: 13px;
+  object-fit: contain;
+}
+
+.autofilled-activity-container {
+  position: relative;
+  border: 1px solid #e5d4cd;         /* subtle mauve-gray border */
+  border-radius: 12px;
+  padding: 12px 16px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 12px 0;
+}
+
+.autofilled-activity-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #111827; /* dark gray text */
+  margin-bottom: 4px;
+}
+
+.autofilled-activity-price {
+  font-size: 14px;
+  color: #4b5563; /* soft gray */
+}
+
 
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
@@ -566,7 +633,8 @@ p {
   }
 
   .hotel-details {
-    padding: 0px;
+    padding: 0px !important;
+    width: 300px !important;
   }
 
   .find-hotel-btn {
