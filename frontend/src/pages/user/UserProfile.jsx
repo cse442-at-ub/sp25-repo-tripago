@@ -248,7 +248,7 @@ const UserProfile = () => {
               <p>No destinations added yet.</p>
             ) : (
               bucketList.map((place, index) => (
-                <li key={index}>{encode(place)}</li>
+                <li key={index}>{place}</li>
               ))
             )}
           </ul>

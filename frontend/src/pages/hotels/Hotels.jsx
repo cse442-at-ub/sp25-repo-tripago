@@ -10,6 +10,7 @@ import profileIcon from "../../assets/profile.png";
 import bedIcon from "../../assets/bed.png";
 import TravelersModal from "../../components/hotel/TravelersModal";
 import { searchLocations, searchHotels, formatLocationName } from "../../services/hotelService";
+import { encode } from "html-entities";
 
 const Hotels = () => {
   // URL and Navigation State
