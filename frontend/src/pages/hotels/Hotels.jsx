@@ -533,8 +533,8 @@ const Hotels = () => {
           const offer = hotelOffers[hotel.hotelId];
           const hotelData = {
             ...hotel,
-            name: hotel.name,
-            location: `${formatLocationName(selectedLocation.name)}, ${selectedLocation.address.countryCode}`,
+            name: encode(hotel.name),
+            location: `${encode(formatLocationName(selectedLocation.name))}, ${selectedLocation.address.countryCode}`,
             distance: hotel.distance.value,
             rating: parseInt(hotel.rating),
             reviews: 0,

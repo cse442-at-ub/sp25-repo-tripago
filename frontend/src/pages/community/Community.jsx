@@ -7,6 +7,7 @@ import RequestsModal from "../../components/community/RequestsModal.jsx";
 import axios from 'axios'
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
+import { encode } from "html-entities";
 
 const trips = [
   {
@@ -252,10 +253,10 @@ const Community = () => {
               {/* Left Side: Text & Buttons */}
               <div className="trip-info">
                 <h2>
-                  <span className="bold">{trip.user}'s</span> trip to{" "}
-                  <span className="highlight">{trip.location}</span>.
+                  <span className="bold">{encode(trip.user)}'s</span> trip to{" "}
+                  <span className="highlight">{encode(trip.location)}</span>.
                 </h2>
-                <p className="trip-comment">"{trip.comment}"</p>
+                <p className="trip-comment">"{encode(trip.comment)}"</p>
                 {/* Hide "Send Request" button if already friends */}
                 {!friendsList.includes(trip.user) && (
                   <button className="send-request-btn">Send Request</button>
@@ -272,7 +273,7 @@ const Community = () => {
               <div className="community-image">
                 <img
                   src={trip.imageUrl}
-                  alt={trip.location}
+                  alt={encode(trip.location)}
                   className="trip-image"
                 />
               </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/community/RequestsModal.css";
 import axios from 'axios'
-
+import { encode } from "html-entities";
 
 const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequests, sentRequests }) => {
   if (!isOpen) return null;
@@ -116,7 +116,7 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
           <ul className="requests-list">
             {incomingRequests.map((req) => (
               <li key={req.id}>
-                {req.name}
+                {encode(req.name)}
                 <div>
                   <button className="approve-btn"onClick={() => approveRequest(req.name)}>Approve</button>
                   <button className="reset-btn" onClick={() => deleteRequest(req.name)}>Delete</button>
@@ -128,7 +128,7 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
           <ul className="requests-list">
             {sentRequests.map((req) => (
               <li key={req.id}>
-                {req.name} <span className={`status ${req.status.toLowerCase()}`}>{req.status}</span>
+                {encode(req.name)} <span className={`status ${req.status.toLowerCase()}`}>{req.status}</span>
               </li>
             ))}
           </ul>

@@ -204,9 +204,7 @@ but can expand it in the future, if need (or want) be!
     }
   };
 
-  const handleRemoveAutofilled = () => {
-        
-  }
+  const handleRemoveAutofilled = () => {};
   /*
   This will handle when the manual "add activity" button is clicked
   Should get the input from a text box and day, and make a new activity from that!
@@ -320,31 +318,24 @@ but can expand it in the future, if need (or want) be!
                   </div>
                 ))}
               </div>
-            ) : (
+            ) : autoFillMessages[i]?.name ? (
               <div className="autofilled-activity-container">
                 <button
                   className="autofilled-close-btn"
-                  onClick={() => handleRemoveAutofilled(i)} // replace with actual delete function
+                  onClick={() => handleRemoveAutofilled(i)}
                   aria-label="Remove activity"
                 >
                   ×
                 </button>
-                <p>
-                  {autoFillMessages[i]?.name ? (
-                    <>
-                      <p className="autofilled-activity-name">
-                        {autoFillMessages[i].name}
-                      </p>
-                      <p className="autofilled-activity-price">
-                        {autoFillMessages[i].price}
-                      </p>
-                    </>
-                  ) : (
-                    "No activities planned yet."
-                  )}
+                <p className="autofilled-activity-name">
+                  {encode(autoFillMessages[i].name)}
+                </p>
+                <p className="autofilled-activity-price">
+                  {encode(autoFillMessages[i].price)}
                 </p>
               </div>
-            )}
+            ) : null}
+
             <div className="activity-controls">
               <input
                 type="text"
@@ -589,9 +580,9 @@ const Budgeting = ({ trip }) => {
       <div className="budget-info">
         <div className="budget-header">
           <h2>Budgeting</h2>
-            <button className="edit-budget-btn" onClick={handleEditBudget}>
-              <FaEdit /> Edit budget
-            </button>
+          <button className="edit-budget-btn" onClick={handleEditBudget}>
+            <FaEdit /> Edit budget
+          </button>
         </div>
 
         <div className="budget-overview">
@@ -807,10 +798,12 @@ const TripDetails = ({ trip, setShowModal }) => {
         // if trip is selected
         <div className="trips-status">
           <div className="title-container divider">
-            <h2>
-              Your trip to{" "}
-              <span className="title-accent">{encode(trip.name)}.</span>
-            </h2>
+            <div className="trip-title-wrapper">
+              <h2>
+                Your trip to{" "}
+                <span className="title-accent">{encode(trip.name)}</span>
+              </h2>
+            </div>
             {/* <p>Select a different trip</p> */}
             <p
               className="select-different-p"

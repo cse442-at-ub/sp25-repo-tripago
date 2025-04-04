@@ -58,7 +58,7 @@ const LoadingScreen = () => {
 
   return (
     <div className="loading-screen">
-      <h2>{encode(headerText)}</h2>
+      <h2>{headerText}</h2>
       <div className="loading-spinner"></div>
       <p>This may take a while...</p>
       <p className="powered-by">

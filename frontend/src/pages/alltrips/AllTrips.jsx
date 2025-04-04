@@ -146,7 +146,7 @@ const AllTrips = () => {
             </div>
           </div>
 
-          <h3>Private Trips</h3>
+          <h4>Private Trips</h4>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container`}
@@ -158,7 +158,17 @@ const AllTrips = () => {
               </p>
             ) : (
               trips.map((trip) => (
-                <div key={trip.id} className="at-trip-card">
+                <div key={trip.id} 
+
+                className="at-trip-card">
+                   {/* Post to Travel Log Button */}
+                   <button
+                    className="log-button"
+                    onClick={() => postToLog(trip)}
+                  >
+                    Post to Travel Log
+                  </button>
+
                   {/* View Button */}
                   <button
                     className="view-button"
@@ -217,7 +227,7 @@ const AllTrips = () => {
             )}
           </div>
 
-          <h3>Travel Log</h3>
+          <h4>Travel Log</h4>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container`}
@@ -228,7 +238,7 @@ const AllTrips = () => {
               </p>
             ) : (
               logged.map((trip) => (
-                <div key={trip.id} className="trip-card">
+                <div key={trip.id} className="at-trip-card">
 
                   {/* Remove from Travel Log Button */}
                   <button
@@ -264,7 +274,7 @@ const AllTrips = () => {
 
                   {/* Trip Info */}
                   <div className="trip-info">
-                    <h4 className="trip-destination">encode({trip.destination})</h4>
+                    <h4 className="trip-destination">{encode(trip.destination)}</h4>
                     <p className="trip-dates">{trip.dates}</p>
 
                     {/* Bottom Row: Icons + Price */}

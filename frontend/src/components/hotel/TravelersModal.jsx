@@ -3,7 +3,6 @@ import bedIcon from "../../assets/bed.png";
 import personIcon from "../../assets/profile.png";
 import childIcon from "../../assets/child.png";
 import "../../styles/hotels/TravelersModal.css"; 
-import { encode } from "html-entities";
 
 const TravelersModal = ({ isOpen, setIsOpen, rooms, setRooms, adults, setAdults }) => {
   if (!isOpen) return null;

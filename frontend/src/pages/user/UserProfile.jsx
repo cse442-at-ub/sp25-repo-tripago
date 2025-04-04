@@ -17,6 +17,8 @@ const UserProfile = () => {
     profilePic: UserAvatar,
   });
 
+  const [friends, setFriends] = useState([]);
+
   const [stats, setStats] = useState({
     totalTrips: 0,
     countriesVisited: 0,
@@ -78,6 +80,27 @@ const UserProfile = () => {
 
     fetchStats();
 
+    const fetchFriends = async () => {
+      try {
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+          {
+            credentials: "include",
+          }
+        );
+        const data = await res.json();
+        if (data.success) {
+          setFriends(data.friends);
+        } else {
+          console.warn("Failed to fetch friends:", data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching friends:", err);
+      }
+    };
+
+    fetchFriends();
+
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
       console.log(
@@ -89,7 +112,6 @@ const UserProfile = () => {
 
       setIsMobile(isNowMobile);
       console.log("is mobile: ", isNowMobile);
-
     };
 
     handleResize(); // Run on first load
@@ -193,7 +215,7 @@ const UserProfile = () => {
 
           <div className="header-info">
             <h1>
-            {encode(user.firstName)} {encode(user.lastName)}
+              {encode(user.firstName)} {encode(user.lastName)}
             </h1>
 
             <button
@@ -225,7 +247,9 @@ const UserProfile = () => {
             {bucketList.length === 0 ? (
               <p>No destinations added yet.</p>
             ) : (
-              bucketList.map((place, index) => <li key={index}>{encode(place)}</li>)
+              bucketList.map((place, index) => (
+                <li key={index}>{encode(place)}</li>
+              ))
             )}
           </ul>
           <div className="add-destination">
@@ -249,13 +273,32 @@ const UserProfile = () => {
         </div>
 
         {/* Friends List */}
-        <div className="friends-list user-profile-section">
+        {/* <div className="friends-list user-profile-section">
           <h3>Friends</h3>
           <ul>
             {friendsData.map((friend, index) => (
               <li key={index}>{friend}</li>
             ))}
           </ul>
+        </div> */}
+        {/* Friends List */}
+        <div className="friends-list user-profile-section">
+          <h3>Friends</h3>
+          <ul>
+            {friends.length === 0 ? (
+              <p>You have no friends yet.</p>
+            ) : (
+              friends.map((friend, index) => (
+                <li key={index}>{encode(friend)}</li>
+              ))
+            )}
+          </ul>
+          <p
+            onClick={() => navigate("/community")}
+            className="find-new-friends-p"
+          >
+            Find new friends in the Community tab →
+          </p>
         </div>
       </div>
     </>
