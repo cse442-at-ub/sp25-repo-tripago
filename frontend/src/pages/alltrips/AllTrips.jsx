@@ -162,7 +162,7 @@ const AllTrips = () => {
             </div>
           </div>
 
-          <h4>Private Trips</h4>
+          <h4 className="alltrips-h4">Private Trips</h4>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container`}
@@ -173,7 +173,7 @@ const AllTrips = () => {
                 started.
               </p>
             ) : (
-              trips.map((trip) => (
+              notLogged.map((trip) => (
                 <div key={trip.id} 
 
                 className="at-trip-card">
@@ -243,7 +243,7 @@ const AllTrips = () => {
             )}
           </div>
 
-          <h4>Travel Log</h4>
+          <h4 className="alltrips-h4">Travel Log</h4>
           {/* cName changed from trips-container */}
           <div
             className={`trips-container all-trips-trips-container`}

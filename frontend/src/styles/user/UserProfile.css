@@ -89,6 +89,10 @@
   text-decoration: underline;
 }
 
+.alltrips-h4 {
+  color: var(--dark-grey);
+  font-size: 20px;
+}
 /* Travel Bucket List */
 .bucket-list {
   background: var(--white);
