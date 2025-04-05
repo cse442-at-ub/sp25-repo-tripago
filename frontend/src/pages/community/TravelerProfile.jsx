@@ -5,7 +5,7 @@ import UserAvatar from "../../assets/UserAvatar.png";
 import { encode } from "html-entities";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const TravelerProfile = () => {
   const { email } = useParams();
@@ -22,39 +22,6 @@ const TravelerProfile = () => {
   const [bucketList, setBucketList] = useState([]);
   const [newDestination, setNewDestination] = useState("");
   const navigate = useNavigate();
-
-  // Handle adding a destination to the bucket list
-  const addDestination = async () => {
-    if (!newDestination.trim()) return;
-  
-    try {
-      const response = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addToBucketList.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email, // from useParams()
-            destination: newDestination.trim(),
-          }),
-        }
-      );
-  
-      const result = await response.json();
-  
-      if (result.success) {
-        setBucketList((prev) => [...prev, newDestination.trim()]);
-        setNewDestination("");
-      } else {
-        alert("Failed to add destination: " + result.message);
-      }
-    } catch (error) {
-      console.error("Error adding destination:", error);
-      alert("Something went wrong while adding the destination.");
-    }
-  };  
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -84,7 +51,9 @@ const TravelerProfile = () => {
 
     const fetchBucketList = async () => {
       try {
-        const res = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php?email=${email}`);
+        const res = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php?email=${email}`
+        );
         const data = await res.json();
         if (data.success) {
           setBucketList(data.bucketList);
@@ -93,7 +62,7 @@ const TravelerProfile = () => {
         console.error("Failed to fetch bucket list:", err);
       }
     };
-    
+
     fetchBucketList();
 
     const handleResize = () => {
@@ -108,11 +77,6 @@ const TravelerProfile = () => {
 
   return (
     <>
-      <button className="back-btn" onClick={() => navigate("/community")}>
-  ← Back to Community
-</button>
-
-
       {isMobile && (
         <MobileSidebarToggle
           isOpen={isSidebarOpen}
@@ -121,6 +85,9 @@ const TravelerProfile = () => {
       )}
       <Sidebar isOpen={!isMobile || isSidebarOpen} />
       <div className="profile-container">
+        <button className="back-btn" onClick={() => navigate("/community")}>
+          ← Back to Community
+        </button>
         <div className="profile-header user-profile-section">
           <img
             src={user.profilePic}
@@ -149,17 +116,6 @@ const TravelerProfile = () => {
               bucketList.map((place, index) => <li key={index}>{place}</li>)
             )}
           </ul>
-          <div className="add-destination">
-            <input
-              type="text"
-              value={newDestination}
-              onChange={(e) => setNewDestination(e.target.value)}
-              placeholder="Add a new destination..."
-            />
-            <button onClick={addDestination} className="add-new-dest-btn">
-              Add
-            </button>
-          </div>
         </div>
       </div>
     </>
