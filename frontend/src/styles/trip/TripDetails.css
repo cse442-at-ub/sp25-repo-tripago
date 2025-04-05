@@ -15,6 +15,42 @@ p {
   color: #666;
 }
 
+.trip-title-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+
+.autofilled-close-btn {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: none;
+  border: none;
+  color: #888; /* soft grey */
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 6px;
+  line-height: 1;
+  box-shadow: none;
+}
+
+.autofilled-close-btn:hover {
+  color: #555; /* darker on hover */
+  box-shadow: none;
+}
+
+.select-different-p {
+  transition: 3ms ease-in;
+}
+.select-different-p:hover {
+  color: var(--primary-color);
+}
+
 /* TITLE CONTAINER */
 .title-container {
   display: flex;
@@ -74,7 +110,7 @@ p {
 .no-dates-selected {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   margin: 0;
   font-size: 16px;
@@ -198,8 +234,9 @@ p {
 
 /* HOTEL DETAILS */
 .hotel-details {
-  width: 100%;
-  padding: 20px;
+  width: 520px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   margin-bottom: 20px;
   border-bottom: 1px solid #e0e0e0;
   text-align: left;
@@ -475,6 +512,77 @@ p {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.trip-dates-edit {
+  width: 100%;
+}
+
+.trip-dates-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.trip-dates-bar h3 {
+  color: var(--black);
+  margin-bottom: 5px;
+}
+
+.auto-fill-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: .7rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  margin-left: 12px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  box-shadow: none;
+  width: 100%;
+}
+
+.auto-fill-btn:hover {
+  text-decoration: none;
+  box-shadow: none;
+  color: #6746e7; /* darker purple */
+}
+
+.auto-fill-icon {
+  width: 13px;
+  height: 13px;
+  object-fit: contain;
+}
+
+.autofilled-activity-container {
+  position: relative;
+  border: 1px solid #e5d4cd;         /* subtle mauve-gray border */
+  border-radius: 12px;
+  padding: 12px 16px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 12px 0;
+}
+
+.autofilled-activity-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #111827; /* dark gray text */
+  margin-bottom: 4px;
+}
+
+.autofilled-activity-price {
+  font-size: 14px;
+  color: #4b5563; /* soft gray */
+}
+
+
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
   .title-container {
@@ -525,7 +633,8 @@ p {
   }
 
   .hotel-details {
-    padding: 0px;
+    padding: 0px !important;
+    width: 300px !important;
   }
 
   .find-hotel-btn {
@@ -563,4 +672,40 @@ p {
   .category-button {
     width: 100%;
   }
+}
+
+.booked-hotel-details {
+  width: 100%;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.booked-hotel-details h4 {
+  text-align: left;
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.hotel-price {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.change-hotel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.change-hotel-btn:hover {
+  background-color: #5a6268;
 }

@@ -1,17 +1,94 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/Settings.css';
+import MobileSidebarToggle from "../../components/MobileSidebarToggle";
+import Sidebar from "../../components/Sidebar";
+import { FaCog } from 'react-icons/fa';
+import axios from 'axios';
 
 const SettingsProfileDetails = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [formData, setFormData] = useState({
+    displayName: "",
+    email: "",
+  });
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Get the current email
+  useEffect(() => {
+    const callCurrentEmail = async () => {
+      await axios.get("/CSE442/2025-Spring/cse-442aj/backend/api/getemail.php")
+      .then(res => setFormData({
+        "displayName": "",
+        "email": res.data
+      }))
+      .catch(err => console.log(err))
+    }
+    callCurrentEmail()
+    
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth <= 480;
+      console.log(
+        "Window width:",
+        window.innerWidth,
+        "| isMobile:",
+        isNowMobile
+      );
+      setIsMobile(isNowMobile);
+    };
+  
+    handleResize(); // Run on first load
+    window.addEventListener("resize", handleResize); // Watch for resizes
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [])
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    console.log("Profile Details Form Data:", formData);
+
+    try {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/settingsprofiledetails.php", formData, {
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      })
+      const result = response.data
+      console.log("Profile Details Form Response: ", result);
+      alert(result.message)
+    } catch(error) {
+      console.log("Error updating profile details:", error)
+    }
+  };
+
   return (
+    <>
+    {/* Hamburger toggle for mobile */}
+    {isMobile && (
+      <MobileSidebarToggle
+        isOpen={isSidebarOpen}
+        toggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+      />
+    )}
+
+    {/* Sidebar: always visible on desktop, toggled on mobile */}
+    <Sidebar isOpen={!isMobile || isSidebarOpen && !menuOpen} />
+
     <div className="settings-container">
 
-       {/* Hamburger Button */}
-       <button className="hamburger-menu" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
+      {/* Gear Button */}
+      <button className="gear-menu" onClick={() => setMenuOpen(!menuOpen)}>
+        <FaCog></FaCog>
       </button>
 
       {/* Left Sidebar */}
@@ -31,21 +108,36 @@ const SettingsProfileDetails = () => {
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
+        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
       </div>
 
       {/* Right Panel */}
       <div className="settings-right">
         <h2>Profile Details</h2>
         
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="display-name">Display Name</label>
-            <input type="text" id="display-name" placeholder="Enter new name" />
+            <label>Display Name</label>
+            <input
+              type="text"
+              name="displayName"
+              placeholder="Enter new name"
+              value={formData.displayName}
+              onChange={handleChange}
+              // required
+            />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" placeholder="Enter new email" />
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter new email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <button type="submit">Save Changes</button>
@@ -53,6 +145,7 @@ const SettingsProfileDetails = () => {
       </div>
 
     </div>
+    </>
   );
 };
 

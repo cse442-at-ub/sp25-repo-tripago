@@ -1,17 +1,56 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/Settings.css';
+import MobileSidebarToggle from "../../components/MobileSidebarToggle";
+import Sidebar from "../../components/Sidebar";
+import { FaCog } from 'react-icons/fa';
 
 const SettingsMyData = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+      
+      const handleResize = () => {
+        const isNowMobile = window.innerWidth <= 480;
+        console.log(
+          "Window width:",
+          window.innerWidth,
+          "| isMobile:",
+          isNowMobile
+        );
+        setIsMobile(isNowMobile);
+      };
+  
+      handleResize(); // Run on first load
+      window.addEventListener("resize", handleResize); // Watch for resizes
+  
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+  }, []);
+
   return (
+    <>
+    {/* Hamburger toggle for mobile */}
+    {isMobile && (
+      <MobileSidebarToggle
+        isOpen={isSidebarOpen}
+        toggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+      />
+    )}
+
+    {/* Sidebar: always visible on desktop, toggled on mobile */}
+    <Sidebar isOpen={!isMobile || isSidebarOpen && !menuOpen} />
+
     <div className="settings-container">
 
-       {/* Hamburger Button */}
-       <button className="hamburger-menu" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
+      {/* Gear Button */}
+      <button className="gear-menu" onClick={() => setMenuOpen(!menuOpen)}>
+        <FaCog></FaCog>
       </button>
 
       {/* Left Sidebar */}
@@ -31,6 +70,7 @@ const SettingsMyData = () => {
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
+        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
       </div>
 
       {/* Right Panel */}
@@ -42,6 +82,7 @@ const SettingsMyData = () => {
       </div>
 
     </div>
+    </>
   );
 };
 
