@@ -5,6 +5,7 @@ import UserAvatar from "../../assets/UserAvatar.png";
 import { encode } from "html-entities";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TravelerProfile = () => {
   const { email } = useParams();
@@ -17,10 +18,50 @@ const TravelerProfile = () => {
   const [friends, setFriends] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
+
+  const [bucketList, setBucketList] = useState([]);
+  const [newDestination, setNewDestination] = useState("");
+  const navigate = useNavigate();
+
+  // Handle adding a destination to the bucket list
+  const addDestination = async () => {
+    if (!newDestination.trim()) return;
+  
+    try {
+      const response = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addToBucketList.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email, // from useParams()
+            destination: newDestination.trim(),
+          }),
+        }
+      );
+  
+      const result = await response.json();
+  
+      if (result.success) {
+        setBucketList((prev) => [...prev, newDestination.trim()]);
+        setNewDestination("");
+      } else {
+        alert("Failed to add destination: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error adding destination:", error);
+      alert("Something went wrong while adding the destination.");
+    }
+  };  
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getPublicUserInfo.php?email=${email}`);
+        const res = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getPublicUserInfo.php?email=${email}`
+        );
         const data = await res.json();
         if (data.success) {
           setUser({
@@ -38,21 +79,40 @@ const TravelerProfile = () => {
         console.error("Failed to fetch traveler info:", err);
       }
     };
-  
+
     fetchUserInfo();
-  
+
+    const fetchBucketList = async () => {
+      try {
+        const res = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php?email=${email}`);
+        const data = await res.json();
+        if (data.success) {
+          setBucketList(data.bucketList);
+        }
+      } catch (err) {
+        console.error("Failed to fetch bucket list:", err);
+      }
+    };
+    
+    fetchBucketList();
+
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
       setIsMobile(isNowMobile);
     };
-  
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [email]);
-  
+
   return (
     <>
+      <button className="back-btn" onClick={() => navigate("/community")}>
+  ← Back to Community
+</button>
+
+
       {isMobile && (
         <MobileSidebarToggle
           isOpen={isSidebarOpen}
@@ -80,17 +140,26 @@ const TravelerProfile = () => {
           <p>Countries Visited: {stats.countriesVisited}</p>
         </div>
 
-        <div className="friends-list user-profile-section">
-          <h3>Friends</h3>
+        <div className="bucket-list user-profile-section">
+          <h3>Travel Bucket List</h3>
           <ul>
-            {friends.length === 0 ? (
-              <p>This traveler has no friends yet.</p>
+            {bucketList.length === 0 ? (
+              <p>No destinations added yet.</p>
             ) : (
-              friends.map((friend, index) => (
-                <li key={index}>{encode(friend.name)}</li>
-              ))
+              bucketList.map((place, index) => <li key={index}>{place}</li>)
             )}
           </ul>
+          <div className="add-destination">
+            <input
+              type="text"
+              value={newDestination}
+              onChange={(e) => setNewDestination(e.target.value)}
+              placeholder="Add a new destination..."
+            />
+            <button onClick={addDestination} className="add-new-dest-btn">
+              Add
+            </button>
+          </div>
         </div>
       </div>
     </>

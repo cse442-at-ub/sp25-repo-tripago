@@ -119,6 +119,22 @@
   color: var(--dark-grey);
 }
 
+.back-btn {
+  margin: 20px;
+  background-color: #f4f4f4;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #ddd;
+}
+
+
 .add-destination {
   display: flex;
   margin-top: 10px;
