@@ -18,6 +18,8 @@ const FriendsModal = ({
   const [newComment, setNewComment] = useState("");
   const [itinerary, setItinerary] = useState([]);
 
+  console.log("is friend is: ", isFriend)
+
   // Load comments and itinerary
   useEffect(() => {
     if (isOpen && isFriend && tripId && userEmail) {
@@ -34,7 +36,7 @@ const FriendsModal = ({
         })
         .catch((err) => console.error("Error loading comments:", err));
 
-      console.log("Getting community activities");
+      console.log("Getting community activities and tripid, useremail are: ", tripId, userEmail);
       axios
         .post(
           "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getCommunityActivities.php",

@@ -43,7 +43,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getAllActivities.php",
-        {start_date:startDate},
+        { start_date: startDate, city_name: trip.name },
         {
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const Itinerary = ({ trip, setShowModal }) => {
         }
       );
 
-      console.log("After generating an activity,:")
+      console.log("After generating an activity,:");
       const data = response.data;
 
       console.log(data);
@@ -183,7 +183,13 @@ but can expand it in the future, if need (or want) be!
       */
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/addActivity.php",
-        {day:day,name:name,price:price,start:startDate},
+        {
+          day: day,
+          name: name,
+          price: price,
+          start: startDate,
+          city_name: trip.name,
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -193,6 +199,7 @@ but can expand it in the future, if need (or want) be!
 
       const data = response.data;
 
+      console.log("After addActivity: ");
       console.log(data);
 
       if (data.success) {

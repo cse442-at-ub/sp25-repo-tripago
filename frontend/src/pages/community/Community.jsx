@@ -17,7 +17,7 @@ const Community = () => {
   const [trips, setTrips] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTrip, setSelectedTrip] = useState(null);
-  const friendsList = ["John"]; //  Assume user is only friends with John
+  const [friendsList, setFriendsList] = useState([]); //
   const [modalType, setModalType] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
@@ -45,6 +45,31 @@ const Community = () => {
   }, []);
 
   useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php",
+          {
+            credentials: "include",
+          }
+        );
+        const data = await res.json();
+        if (data.success) {
+          // Save emails only
+          const emails = data.friends.map((friend) => friend.email);
+          setFriendsList(emails);
+        } else {
+          console.warn("Failed to fetch friends:", data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching friends:", err);
+      }
+    };
+
+    fetchFriends();
+  }, []);
+
+  useEffect(() => {
     console.log("Fetching community trips:");
 
     axios
@@ -61,7 +86,7 @@ const Community = () => {
   }, []);
 
   const isFriend = selectedTrip
-    ? friendsList.includes(selectedTrip.user)
+    ? friendsList.includes(selectedTrip.email)
     : false;
   // Open modal with selected trip
   const handleViewMore = (trip) => {
@@ -305,7 +330,7 @@ const Community = () => {
                           )
                         }
                       >
-                        {encode(trip.user)}
+                        {encode(trip.user)}'s
                       </span>{" "}
                       trip to{" "}
                       <span className="highlight">{encode(trip.location)}</span>
@@ -317,7 +342,7 @@ const Community = () => {
                     <p className="trip-comment">"{encode(trip.comment)}"</p>
                   )}
                   {/* Hide "Send Request" button if already friends */}
-                  {!friendsList.includes(trip.user) && (
+                  {!friendsList.includes(trip.email) && (
                     <button className="send-request-btn">Send Request</button>
                   )}
                   <button

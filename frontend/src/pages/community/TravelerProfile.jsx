@@ -17,10 +17,9 @@ const TravelerProfile = () => {
   const [stats, setStats] = useState({ totalTrips: 0, countriesVisited: 0 });
   const [friends, setFriends] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [userTrips, setUserTrips] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
-
   const [bucketList, setBucketList] = useState([]);
-  const [newDestination, setNewDestination] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,6 +63,25 @@ const TravelerProfile = () => {
     };
 
     fetchBucketList();
+
+    const fetchUserTrips = async () => {
+      try {
+        const res = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getTripsByEmail.php?email=${email}`
+        );
+        const data = await res.json();
+
+        console.log("Trips fetched: ", data);
+
+        if (data.success) {
+          setUserTrips(data.trips);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user trips:", err);
+      }
+    };
+
+    fetchUserTrips();
 
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
@@ -116,6 +134,35 @@ const TravelerProfile = () => {
               bucketList.map((place, index) => <li key={index}>{place}</li>)
             )}
           </ul>
+        </div>
+
+        <div className="trip-list user-profile-section">
+          <h3>Shared Trips</h3>
+          {userTrips.length === 0 ? (
+            <p>No trips shared publicly.</p>
+          ) : (
+            userTrips.map((trip) => (
+              <div key={trip.id} className="trip-card">
+                <div className="trip-info">
+                  <h2>
+                    <span className="bold">{encode(user.firstName)}'s</span>{" "}
+                    trip to{" "}
+                    <span className="highlight">{encode(trip.city_name)}</span>
+                  </h2>
+                  {trip.comment && (
+                    <p className="trip-comment">"{encode(trip.comment)}"</p>
+                  )}
+                </div>
+                <div className="community-image">
+                  <img
+                    src={trip.image_url}
+                    alt={trip.city_name}
+                    className="trip-image"
+                  />
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </>
