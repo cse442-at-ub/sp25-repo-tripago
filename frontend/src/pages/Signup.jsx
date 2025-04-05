@@ -29,7 +29,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/signup.php",formData,{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/signup.php",formData,{
         headers:{
           'Content-Type':'application/json'
         }

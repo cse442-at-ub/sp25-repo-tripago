@@ -38,7 +38,7 @@ if (!$data) {
 }
 
 // Default fallback image if none provided
-$image_url = $data["image_url"] ?? "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
+$image_url = $data["image_url"] ?? "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png";
 
 // 1. First check for EXACT duplicate
 $checkStmt = $mysqli->prepare("

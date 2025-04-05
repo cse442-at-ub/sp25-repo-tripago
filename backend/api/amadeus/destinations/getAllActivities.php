@@ -41,10 +41,7 @@ if (!$email) {
   exit();
 }
 
-
 checkForActivity($email,$start);
-
-
 
 function checkForActivity($email,$activity_start_date){
     global $mysqli;

@@ -1,40 +1,129 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/community/FriendsModal.css"
+import "../../styles/community/FriendsModal.css";
+import axios from "axios";
 
-const FriendsModal = ({ isOpen, onClose, user, location, imageUrl, comment, isFriend}) => {
-  const [comments, setComments] = useState([
-    { id: 1, user: "Emily", text: "This looks amazing! I want to visit too!" },
-    { id: 2, user: "Michael", text: "Hope you had a great time!" },
-  ]);
+const FriendsModal = ({
+  isOpen,
+  onClose,
+  user,
+  location,
+  imageUrl,
+  comment,
+  isFriend,
+  tripId,
+  userEmail,
+  currentUserEmail,
+}) => {
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
- 
-  if (!isOpen) return null;
+  const [itinerary, setItinerary] = useState([]);
 
-    // Handle comment submission
-    const handleAddComment = () => {
-      if (newComment.trim() === "") return; // Prevent empty comments
-  
-      const newCommentObj = {
-        id: comments.length + 1,
-        user: "You", // Replace with actual logged-in user later
-        text: newComment,
-      };
-  
-      setComments([...comments, newCommentObj]);
-      setNewComment(""); // Reset input field
-    };
-  
+  // Load comments and itinerary
+  useEffect(() => {
+    if (isOpen && isFriend && tripId && userEmail) {
+      axios
+        .post(
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getComments.php",
+          {
+            tripId: tripId,
+          }
+        )
+        .then((res) => {
+          console.log("After getComments.php, result is: ", res.data);
+          setComments(res.data);
+        })
+        .catch((err) => console.error("Error loading comments:", err));
+
+      console.log("Getting community activities");
+      axios
+        .post(
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getCommunityActivities.php",
+          {
+            tripId: tripId,
+            email: userEmail,
+          }
+        )
+        .then((res) => {
+          console.log("getCommunityActivities.php returned:", res.data);
+          if (res.data.success && Array.isArray(res.data.activities)) {
+            setItinerary(res.data.activities);
+          } else {
+            setItinerary([]);
+          }
+        })
+        .catch((err) => console.error("Error loading itinerary:", err));
+    }
+  }, [isOpen, isFriend, tripId, userEmail]);
+
+  // Submit a new comment
+  const handleAddComment = async () => {
+    if (newComment.trim() === "") return;
+
+    try {
+      await axios.post(
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addComment.php",
+        {
+          tripId: tripId,
+          commenter: currentUserEmail,
+          text: newComment,
+        }
+      );
+      // Optimistically update UI
+      setComments((prev) => [
+        ...prev,
+        {
+          commenter_email: currentUserEmail,
+          comment_text: newComment,
+        },
+      ]);
+      setNewComment("");
+      console.log("After addComment.php, we get new comments as: ", comments);
+    } catch (err) {
+      console.error("Error posting comment:", err);
+    }
+  };
+
+  const handleSendRequest = async () => {
+    try {
+      const response = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/sendFriendRequest.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ searchTerm: userEmail }), // friend email
+        }
+      );
+
+      const result = await response.json();
+      console.log("After sendFriendRequest: ", result);
+      if (result.success) {
+        alert("Friend request sent!");
+      } else {
+        alert(result.message || "Request failed.");
+      }
+    } catch (error) {
+      console.error("Error sending friend request:", error);
+      alert("Something went wrong.");
+    }
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-btn" onClick={onClose}>×</button>
+        <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
         <h2>
           <span className="bold">{user}'s</span> trip to{" "}
           <span className="highlight">{location}</span>.
         </h2>
-        <p className="trip-comment">"{comment}"</p>
-        
+        {comment && <p className="trip-comment">"{comment}"</p>}
+
         <div className="modal-image-container">
           <img src={imageUrl} alt={location} className="modal-image" />
           <p className="trip-location">Downtown {location}</p>
@@ -43,43 +132,48 @@ const FriendsModal = ({ isOpen, onClose, user, location, imageUrl, comment, isFr
         {!isFriend ? (
           <div className="friends-restriction">
             <p>You must be friends to view the itinerary and comments.</p>
-            <button className="send-request-btn">Send Friend Request</button>
+            <button className="send-request-btn" onClick={handleSendRequest}>
+              Send Friend Request
+            </button>
           </div>
         ) : (
-          /* If friends, show itinerary (In future, we will grab this information from db, maybe) */
           <>
-          <div className="itinerary-section">
-            <h3>Itinerary</h3>
-            <ul>
-              <li><b>Friday, January 24th:</b> Arrive at the Marriott, Beach sunset, Dinner at Surfside Taphouse</li>
-              <li><b>Saturday, January 25th:</b> Explore downtown, Visit museums</li>
-              <li><b>Sunday, January 26th:</b> Departure</li>
-            </ul>
-          </div>
+            <div className="itinerary-section">
+              <h3>Itinerary</h3>
+              <ul>
+                {itinerary.map((item, i) => (
+                  <li key={i}>
+                    <b>{item.day}:</b> {item.name} (${item.price})
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-         <div className="comments-section">
-  <h3>Comments</h3>
-  <div className="comments-list">
-    {comments.map((c) => (
-      <div key={c.id} className="comment">
-        <span className="comment-user">{c.user}:</span> {c.text}
-      </div>
-    ))}
-  </div>
+            <div className="comments-section">
+              <h3>Comments</h3>
+              <div className="comments-list">
+                {comments.map((c, i) => (
+                  <div key={i} className="comment">
+                    <span className="comment-user">{c.commenter_email}:</span>{" "}
+                    {c.comment_text}
+                  </div>
+                ))}
+              </div>
 
-  {/* Add New Comment */}
-  <div className="add-comment">
-    <input
-      type="text"
-      placeholder="Write a comment..."
-      value={newComment}
-      onChange={(e) => setNewComment(e.target.value)}
-      className="comment-input"
-    />
-    <button className="comment-btn" onClick={handleAddComment}>Post</button>
-  </div>
-</div>
-         </>
+              <div className="add-comment">
+                <input
+                  type="text"
+                  placeholder="Write a comment..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="comment-input"
+                />
+                <button className="comment-btn" onClick={handleAddComment}>
+                  Post
+                </button>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>

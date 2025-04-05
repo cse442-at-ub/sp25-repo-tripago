@@ -60,7 +60,7 @@ exit();
 
 function getLatLong($location){
     //MAKE SURE THIS TOKEN PATH IS DIRECT PATH TO THAT FILE :D
-    $tokenPath = "/data/web/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAccessToken.php";
+    $tokenPath = "/data/web/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getAccessToken.php";
     if (!file_exists($tokenPath)) {
         echo json_encode(['error' => 'Token file not found: ' . $tokenPath]);
         exit;
@@ -101,7 +101,7 @@ function getLatLong($location){
 
 
 function getActivity($lat,$long){
-    $tokenPath = "/data/web/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAccessToken.php";
+    $tokenPath = "/data/web/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getAccessToken.php";
     if (!file_exists($tokenPath)) {
         echo json_encode(['error' => 'Token file not found: ' . $tokenPath]);
         exit;

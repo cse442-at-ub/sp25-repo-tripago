@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       console.log("Fetching user")
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php", {
+        const res = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/getUserInfo.php", {
           credentials: "include",
         });
         const data = await res.json();
@@ -24,6 +24,7 @@ export const UserProvider = ({ children }) => {
             firstName: data.user.first_name,
             lastName: data.user.last_name,
             username: data.user.first_name,
+            email: data.user.email
           });
         }
       } catch (err) {

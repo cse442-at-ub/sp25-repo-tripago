@@ -32,7 +32,7 @@ const UserProfile = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/getUserInfo.php",
           {
             credentials: "include",
           }
@@ -59,7 +59,7 @@ const UserProfile = () => {
     const fetchStats = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripStats.php",
           {
             credentials: "include",
           }
@@ -83,7 +83,7 @@ const UserProfile = () => {
     const fetchFriends = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php",
           {
             credentials: "include",
           }
@@ -135,7 +135,7 @@ const UserProfile = () => {
 
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/uploadUserImage.php",
         {
           method: "POST",
           body: formData,
@@ -272,15 +272,6 @@ const UserProfile = () => {
           <p>Countries Visited: {stats.countriesVisited}</p>
         </div>
 
-        {/* Friends List */}
-        {/* <div className="friends-list user-profile-section">
-          <h3>Friends</h3>
-          <ul>
-            {friendsData.map((friend, index) => (
-              <li key={index}>{friend}</li>
-            ))}
-          </ul>
-        </div> */}
         {/* Friends List */}
         <div className="friends-list user-profile-section">
           <h3>Friends</h3>
