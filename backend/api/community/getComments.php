@@ -19,16 +19,33 @@ if ($mysqli->connect_errno) {
   exit();
 }
 
-// Fetch comments
-$stmt = $mysqli->prepare("SELECT commenter_email, comment_text, created_at FROM comments WHERE trip_id = ? ORDER BY created_at ASC");
+// Fetch comments with names
+$stmt = $mysqli->prepare("
+  SELECT 
+    c.commenter_email, 
+    c.comment_text, 
+    c.created_at, 
+    u.first_name, 
+    u.last_name 
+  FROM comments c
+  LEFT JOIN users u ON c.commenter_email = u.email
+  WHERE c.trip_id = ?
+  ORDER BY c.created_at ASC
+");
 $stmt->bind_param("i", $tripId);
 $stmt->execute();
 $result = $stmt->get_result();
 
 $comments = [];
 while ($row = $result->fetch_assoc()) {
-  $comments[] = $row;
+  $comments[] = [
+    "commenter_email" => $row["commenter_email"],
+    "comment_text" => $row["comment_text"],
+    "created_at" => $row["created_at"],
+    "first_name" => $row["first_name"] ?? null,
+    "last_name" => $row["last_name"] ?? null
+  ];
 }
 
-echo json_encode($comments);
+echo json_encode(["success" => true, "comments" => $comments]);
 ?>

@@ -18,7 +18,7 @@ const FriendsModal = ({
   const [newComment, setNewComment] = useState("");
   const [itinerary, setItinerary] = useState([]);
 
-  console.log("is friend is: ", isFriend)
+  console.log("is friend is: ", isFriend);
 
   // Load comments and itinerary
   useEffect(() => {
@@ -32,11 +32,15 @@ const FriendsModal = ({
         )
         .then((res) => {
           console.log("After getComments.php, result is: ", res.data);
-          setComments(res.data);
+          setComments(res.data.comments);
         })
         .catch((err) => console.error("Error loading comments:", err));
 
-      console.log("Getting community activities and tripid, useremail are: ", tripId, userEmail);
+      console.log(
+        "Getting community activities and tripid, useremail are: ",
+        tripId,
+        userEmail
+      );
       axios
         .post(
           "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getCommunityActivities.php",
@@ -60,7 +64,7 @@ const FriendsModal = ({
   // Submit a new comment
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
-
+  
     try {
       await axios.post(
         "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addComment.php",
@@ -70,20 +74,25 @@ const FriendsModal = ({
           text: newComment,
         }
       );
-      // Optimistically update UI
-      setComments((prev) => [
-        ...prev,
-        {
-          commenter_email: currentUserEmail,
-          comment_text: newComment,
-        },
-      ]);
+  
+      // Re-fetch updated comments after successful post
+      const res = await axios.post(
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getComments.php",
+        { tripId: tripId }
+      );
+  
+      if (res.data.success) {
+        setComments(res.data.comments);
+      } else {
+        console.warn("Could not refresh comments.");
+      }
+  
       setNewComment("");
-      console.log("After addComment.php, we get new comments as: ", comments);
     } catch (err) {
       console.error("Error posting comment:", err);
     }
   };
+  
 
   const handleSendRequest = async () => {
     try {
@@ -145,7 +154,9 @@ const FriendsModal = ({
               <ul>
                 {itinerary.map((item, i) => (
                   <li key={i}>
-                    <b>{item.day}:</b> {item.name} (${item.price})
+                    <span className="itinerary-day">Day {item.day + 1}:</span>
+                    <span className="itinerary-name">{item.name}</span>
+                    <span className="itinerary-price"> (${item.price})</span>
                   </li>
                 ))}
               </ul>
@@ -156,7 +167,7 @@ const FriendsModal = ({
               <div className="comments-list">
                 {comments.map((c, i) => (
                   <div key={i} className="comment">
-                    <span className="comment-user">{c.commenter_email}:</span>{" "}
+                    <span className="comment-user">{c.first_name} {c.last_name}:</span>{" "}
                     {c.comment_text}
                   </div>
                 ))}
