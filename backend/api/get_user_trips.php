@@ -18,7 +18,7 @@
 	if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['email'])) {
 		$email = $_GET['email'];
 
-		$stmt = $conn->prepare("SELECT first_name, last_name, city_name, country_name, start_date, end_date, created_at FROM trips WHERE email = ?");
+		$stmt = $conn->prepare("SELECT first_name, last_name, city_name, country_name, start_date, end_date, created_at, image_url FROM trips WHERE email = ?");
 		$stmt->bind_param("s", $email);
 		$stmt->execute();
 		$result = $stmt->get_result();
