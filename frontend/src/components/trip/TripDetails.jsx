@@ -831,6 +831,14 @@ const TripDetails = ({ trip, setShowModal }) => {
             >
               Budgeting
             </p>
+            <p
+              className={`itin-budget-tab ${
+                currentTab === "memories" && "active"
+              }`}
+              onClick={() => setCurrentTab("memories")}
+            >
+              Memories
+            </p>
           </div>
 
           <div className="tab-content">
