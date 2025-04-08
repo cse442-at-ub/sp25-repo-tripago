@@ -7,6 +7,8 @@ import { FaEdit, FaTimes } from "react-icons/fa";
 import { encode } from "html-entities";
 import axios from "axios";
 import autofillIcon from "../../assets/autofill.png";
+import { Slide } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css'
 
 const Itinerary = ({ trip, setShowModal }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
@@ -795,23 +797,30 @@ const Memories = () => {
     // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
     const fetchMemories = async () => {
       setMemories([
-        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"], image_index: 0},
-        {id: 53, caption: "hello", images: [], image_index: 0},
-        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"], image_index: 0}
+        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
+        {id: 53, caption: "hello", images: []},
+        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
       ])
     };
 
     fetchMemories();
   });
 
-  const next = (memory) => {
-    memory.image_index += 1;
-    // if (memory.image_index >= memory.images.length) {
-    //   memory.image_index = 0;
-    // };
-    console.log(memory.image_index)
-  };
+  // Style for image slideshow
+  const divStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundSize: 'cover',
+    height: '400px'
+  }
 
+  const properties = {
+    transitionDuration: 200,
+    prevArrow: <a className="prev">◀</a>,
+    nextArrow: <a className="next">▶</a>,
+  }
+  
   return (
     <div className="memories-container">
       {memories.length === 0 ? (
@@ -822,10 +831,15 @@ const Memories = () => {
         memories.map((memory) => (
           <div key={memory.id} className="memory-card">
 
-            <img src={memory.images[memory.image_index]}/>
-            
-            <a className="prev">◀</a>
-            <a className="next" onClick={() => next(memory)}>▶</a>
+            <div className="slide-container">
+              <Slide { ...properties}>
+                {memory.images.map((slideImage, index) => (
+                  <div key={index}>
+                    <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}/>
+                  </div>
+                ))}
+              </Slide>
+            </div>
 
             <p>{memory.caption}</p>
           </div>
