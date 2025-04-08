@@ -793,7 +793,11 @@ const Memories = () => {
   useEffect(() => {
 
     const fetchMemories = async () => {
-      setMemories([{caption: "hi", id: 23}, {caption: "hello", id: 53}, {caption: "I am a memory", id: 12}])
+      setMemories([
+        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
+        {id: 53, caption: "hello", images: []},
+        {id: 12, caption: "I am a memory", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]}
+      ])
     }
 
     fetchMemories()
@@ -808,7 +812,9 @@ const Memories = () => {
       ) : (
         memories.map((memory) => (
           <div key={memory.id} className="memory-card">
-            <img src="/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"/>
+            {memory.images.map((image) => (
+              <img src={image}/>
+            ))}
             <p>{memory.caption}</p>
           </div>
         ))
