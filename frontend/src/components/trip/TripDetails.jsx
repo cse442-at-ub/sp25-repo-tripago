@@ -787,15 +787,32 @@ const ExpenseModal = ({ onClose, onSave }) => {
 };
 
 const Memories = () => {
+
+  const [memories, setMemories] = useState([]);
+
+  useEffect(() => {
+
+    const fetchMemories = async () => {
+      setMemories([{caption: "hi", id: 23}, {caption: "hello", id: 53}, {caption: "I am a memory", id: 12}])
+    }
+
+    fetchMemories()
+  })
+
   return (
     <div className="memories-container">
-      tripsharemodal goes here
-
-      image
-      caption
-
-      image
-      caption
+      {memories.length === 0 ? (
+        <p className="no-memories-message">
+          Looks like this trip has no memories. Use the button above to post a memory to this trip.
+        </p>
+      ) : (
+        memories.map((memory) => (
+          <div key={memory.id} className="memory-card">
+            <img src="/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"/>
+            <p>{memory.caption}</p>
+          </div>
+        ))
+      )}
     </div>
   );
 }
