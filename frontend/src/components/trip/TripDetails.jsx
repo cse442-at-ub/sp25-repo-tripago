@@ -795,14 +795,22 @@ const Memories = () => {
     // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
     const fetchMemories = async () => {
       setMemories([
-        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
-        {id: 53, caption: "hello", images: []},
-        {id: 12, caption: "I am a memory", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]}
+        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"], image_index: 0},
+        {id: 53, caption: "hello", images: [], image_index: 0},
+        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"], image_index: 0}
       ])
-    }
+    };
 
-    fetchMemories()
-  })
+    fetchMemories();
+  });
+
+  const next = (memory) => {
+    memory.image_index += 1;
+    // if (memory.image_index >= memory.images.length) {
+    //   memory.image_index = 0;
+    // };
+    console.log(memory.image_index)
+  };
 
   return (
     <div className="memories-container">
@@ -814,16 +822,10 @@ const Memories = () => {
         memories.map((memory) => (
           <div key={memory.id} className="memory-card">
 
-            <div className="slideshow-container">
-              <div className="slide">
-                {memory.images.map((image) => (
-                  <img src={image}/>
-                ))}
-              </div>
-            </div>
-
+            <img src={memory.images[memory.image_index]}/>
+            
             <a className="prev">◀</a>
-            <a className="next">▶</a>
+            <a className="next" onClick={() => next(memory)}>▶</a>
 
             <p>{memory.caption}</p>
           </div>

@@ -409,10 +409,6 @@ p {
   position: relative;
 }
 
-.slide {
-  display: none;
-}
-
 .prev, .next {
   cursor: pointer;
   color: var(--black);
