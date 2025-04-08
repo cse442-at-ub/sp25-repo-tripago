@@ -789,7 +789,7 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
-const Memories = () => {
+const Memories = ({ trip }) => {
 
   const [memories, setMemories] = useState([]);
 
@@ -828,7 +828,7 @@ const Memories = () => {
   
   return (
     <div className="memories-container">
-      <ShareTripButton />
+      <ShareTripButton trip={trip} />
       {memories.length === 0 ? (
         <p className="no-memories-message">
           Looks like this trip has no memories. Use the button above to post a memory to this trip. Memories can include pictures and comments about your trip.
@@ -915,7 +915,7 @@ const TripDetails = ({ trip, setShowModal }) => {
               <Itinerary trip={trip} setShowModal={setShowModal} />
             )}
             {currentTab === "budgeting" && <Budgeting trip={trip} />}
-            {currentTab === "memories" && <Memories />}
+            {currentTab === "memories" && <Memories trip={trip} />}
           </div>
         </div>
       ) : (
@@ -990,5 +990,8 @@ BudgetModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
+Memories.propTypes = {
+  trip: tripProps,
+}
 
 export default TripDetails;

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { FaImage, FaQuoteLeft, FaTrash } from "react-icons/fa";
 import "../../styles/trip/ShareTripModal.css";
 
-const ShareTripModal = ({ onClose }) => {
+const ShareTripModal = ({ onClose, trip }) => {
   const [quote, setQuote] = useState("");
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
@@ -144,6 +144,7 @@ const ShareTripModal = ({ onClose }) => {
 
 ShareTripModal.propTypes = {
   onClose: PropTypes.func.isRequired,
+  trip: PropTypes.object.isRequired,
 };
 
 export default ShareTripModal;
