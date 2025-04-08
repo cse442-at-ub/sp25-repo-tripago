@@ -9,6 +9,7 @@
   flex-direction: column;
   margin-top: 300px;
   left: 0;
+  z-index: 99999;
 }
 
 .sidebar-closed {
