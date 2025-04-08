@@ -406,6 +406,33 @@ p {
   border: none;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.slide {
+  display: none;
+}
+
+.prev, .next {
+  cursor: pointer;
+  color: var(--black);
+  transition: 0.6s ease;
+  user-select: none;
+  position: absolute;
+}
+
+.prev:hover, .next:hover {
+  text-decoration: none;
+  box-shadow: none;
+  color: var(--primary-color);
+}
+
+.next {
+  right: 2%;
+}
+
+.prev {
+  left: 2%;
 }
 
 /* Modal Styles */

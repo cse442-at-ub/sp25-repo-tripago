@@ -815,13 +815,15 @@ const Memories = () => {
           <div key={memory.id} className="memory-card">
 
             <div className="slideshow-container">
-              {memory.images.map((image) => (
-                <img src={image}/>
-              ))}
+              <div className="slide">
+                {memory.images.map((image) => (
+                  <img src={image}/>
+                ))}
+              </div>
             </div>
 
-            <a className="prev">←</a>
-            <a className="next">→</a>
+            <a className="prev">◀</a>
+            <a className="next">▶</a>
 
             <p>{memory.caption}</p>
           </div>
