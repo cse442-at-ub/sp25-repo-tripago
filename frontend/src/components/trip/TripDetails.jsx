@@ -786,6 +786,20 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
+const Memories = () => {
+  return (
+    <div className="memories-container">
+      tripsharemodal goes here
+
+      image
+      caption
+
+      image
+      caption
+    </div>
+  );
+}
+
 const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
 
@@ -846,6 +860,7 @@ const TripDetails = ({ trip, setShowModal }) => {
               <Itinerary trip={trip} setShowModal={setShowModal} />
             )}
             {currentTab === "budgeting" && <Budgeting trip={trip} />}
+            {currentTab === "memories" && <Memories />}
           </div>
         </div>
       ) : (

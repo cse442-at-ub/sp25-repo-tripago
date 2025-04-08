@@ -388,6 +388,11 @@ p {
   font-size: 20px;
 }
 
+/* MEMORIES */
+.memories-container {
+  width: 520px;
+}
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
