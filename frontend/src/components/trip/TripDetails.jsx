@@ -792,6 +792,7 @@ const Memories = () => {
 
   useEffect(() => {
 
+    // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
     const fetchMemories = async () => {
       setMemories([
         {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
@@ -807,14 +808,21 @@ const Memories = () => {
     <div className="memories-container">
       {memories.length === 0 ? (
         <p className="no-memories-message">
-          Looks like this trip has no memories. Use the button above to post a memory to this trip.
+          Looks like this trip has no memories. Use the button above to post a memory to this trip. Memories can include pictures and comments about your trip.
         </p>
       ) : (
         memories.map((memory) => (
           <div key={memory.id} className="memory-card">
-            {memory.images.map((image) => (
-              <img src={image}/>
-            ))}
+
+            <div className="slideshow-container">
+              {memory.images.map((image) => (
+                <img src={image}/>
+              ))}
+            </div>
+
+            <a className="prev">←</a>
+            <a className="next">→</a>
+
             <p>{memory.caption}</p>
           </div>
         ))
