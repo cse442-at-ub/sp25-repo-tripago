@@ -393,6 +393,25 @@ p {
   width: 520px;
 }
 
+.memories-container {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-top: 50px;
+  margin-bottom: 10%;
+}
+
+.memory-card {
+  background: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  height: 300px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+  /* position: relative; */
+  /* width: 40%; */
+}
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
