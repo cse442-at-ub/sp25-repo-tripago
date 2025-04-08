@@ -405,11 +405,7 @@ p {
   background: var(--white);
   border: none;
   border-radius: 10px;
-  padding: 20px;
-  height: 300px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-  /* position: relative; */
-  /* width: 40%; */
 }
 
 /* Modal Styles */
@@ -626,6 +622,11 @@ p {
   }
 
   .budgeting-container {
+    width: 335px;
+    padding: unset;
+  }
+
+  .memories-container {
     width: 335px;
     padding: unset;
   }
