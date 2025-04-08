@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FaImage, FaQuoteLeft, FaTrash } from "react-icons/fa";
 import "../../styles/trip/ShareTripModal.css";
+import axios from 'axios';
 
 const ShareTripModal = ({ onClose, trip }) => {
   const [quote, setQuote] = useState("");
@@ -39,8 +40,21 @@ const ShareTripModal = ({ onClose, trip }) => {
     setImages(updatedImages);
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
     // TODO: Implement the actual sharing functionality
+
+    // TODO include images here
+    const data = {trip: trip, caption: quote}
+
+    try {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php", data, {
+        headers: { "Content-Type": "application/json" },
+      })
+      const result = response.data
+      console.log("saveMemory Form Response: ", result);
+    } catch(err) {
+      console.log("Error saving memory: ", err)
+    }
 
     onClose();
   };
