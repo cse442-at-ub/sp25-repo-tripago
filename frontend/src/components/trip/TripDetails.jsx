@@ -800,7 +800,7 @@ const Memories = () => {
         {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
         {id: 53, caption: "hello", images: []},
         {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
-      ])
+      ]);
     };
 
     fetchMemories();
@@ -812,14 +812,18 @@ const Memories = () => {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundSize: 'cover',
-    height: '400px'
-  }
+    height: '400px',
+  };
 
+  // Properties of image slideshow
   const properties = {
     transitionDuration: 200,
     prevArrow: <a className="prev">◀</a>,
     nextArrow: <a className="next">▶</a>,
-  }
+    autoplay: false,
+    canSwipe: true,
+    cssClass: "slide-container"
+  };
   
   return (
     <div className="memories-container">
@@ -832,10 +836,10 @@ const Memories = () => {
           <div key={memory.id} className="memory-card">
 
             <div className="slide-container">
-              <Slide { ...properties}>
+              <Slide { ...properties} arrows={memory.images.length > 1}>
                 {memory.images.map((slideImage, index) => (
                   <div key={index}>
-                    <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}/>
+                    <div className="memory-image" style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}/>
                   </div>
                 ))}
               </Slide>

@@ -409,12 +409,27 @@ p {
   position: relative;
 }
 
+.slide-container {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.memory-image {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
 .prev, .next {
   cursor: pointer;
   color: var(--black);
   transition: 0.6s ease;
   user-select: none;
   position: absolute;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  line-height: 30px;
 }
 
 .prev:hover, .next:hover {
@@ -423,12 +438,14 @@ p {
   color: var(--primary-color);
 }
 
-.next {
-  right: 2%;
+.prev {
+  float: left;
+  margin-left: 2%;
 }
 
-.prev {
-  left: 2%;
+.next {
+  float: right;
+  margin-right: 2%;
 }
 
 /* Modal Styles */
