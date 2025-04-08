@@ -13,7 +13,7 @@ const ShareTripButton = () => {
         onClick={() => setShowShareModal(true)}
         aria-label="Share Trip"
       >
-        Share a Memory <FaShare />
+        Share a Memory&nbsp;<FaShare />
       </button>
 
       {showShareModal && (
