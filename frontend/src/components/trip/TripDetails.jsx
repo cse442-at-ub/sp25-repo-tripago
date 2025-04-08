@@ -9,6 +9,7 @@ import axios from "axios";
 import autofillIcon from "../../assets/autofill.png";
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
+import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 
 const Itinerary = ({ trip, setShowModal }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
@@ -827,6 +828,7 @@ const Memories = () => {
   
   return (
     <div className="memories-container">
+      <ShareTripButton />
       {memories.length === 0 ? (
         <p className="no-memories-message">
           Looks like this trip has no memories. Use the button above to post a memory to this trip. Memories can include pictures and comments about your trip.

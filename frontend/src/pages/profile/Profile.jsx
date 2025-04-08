@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import TripHeader from "../../components/trip/TripHeader.jsx";
 import TripDetails from "../../components/trip/TripDetails.jsx";
-import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 import "../../styles/Profile.css";
 import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
@@ -441,7 +440,6 @@ const Profile = () => {
 
             <TripDetails trip={trip} setShowModal={setShowModal} />
 
-            {trip && <ShareTripButton />}
           </div>
         </div>
       </div>
