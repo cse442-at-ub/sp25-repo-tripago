@@ -37,7 +37,36 @@ $stmt = $mysqli->prepare("INSERT INTO memories (trip_id, caption) VALUES (?, ?)"
 $stmt->bind_param("is", $data["trip"]["id"], $data["caption"]);
 $stmt->execute();
 
-// TODO: implement functionality to save images
+// Prepare image directory
+$uploadDir = __DIR__ . "/pictures/";
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0777, true);
+}
+
+// For image in images
+for ($i = 0; $i < count($_FILES["images"]); $i++) {
+    
+    // Prepare filename
+    $filename = basename($_FILES['images']['name'][$i]);
+    $uniqueName = uniqid() . "_" . $filename;
+    $targetFile = $uploadDir . $uniqueName;
+
+    // Move file
+    move_uploaded_file($_FILES['images']['tmp_name'][$i], $targetFile);
+}
+
+
+
+
+foreach($_FILES["files"]["tmp_name"] as $key=>$tmp_name) {
+    $file_name = $_FILES["files"]["name"][$key];
+    $file_tmp = $_FILES["files"]["tmp_name"][[$key]];
+    $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+
+}
+
+
+
 
 echo json_encode(["success" => true, "message" => "Memory saved"]);
 
