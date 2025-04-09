@@ -32,7 +32,7 @@ if (!$result) {
     exit();
 }
 
-// Add trip to database
+// Add memory to database
 $stmt = $mysqli->prepare("INSERT INTO memories (trip_id, caption) VALUES (?, ?)");
 $stmt->bind_param("is", $data["trip"]["id"], $data["caption"]);
 $stmt->execute();

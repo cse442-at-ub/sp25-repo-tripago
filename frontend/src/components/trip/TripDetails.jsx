@@ -810,13 +810,14 @@ const Memories = ({ trip }) => {
           mem.push(memory);
         }
         setMemories(mem);
+
       } catch(err) {
           console.log("Error fetching memories: ", err);
       }
     };
 
     fetchMemories();
-  });
+  }, []);
 
   // Style for image slideshow
   const divStyle = {

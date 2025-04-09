@@ -42,8 +42,7 @@ const ShareTripModal = ({ onClose, trip }) => {
 
   const handleShare = async () => {
 
-    // TODO include images here
-    const data = {trip: trip, caption: quote};
+    const data = {trip: trip, caption: quote, images: images};
 
     try {
       const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php", data, {
