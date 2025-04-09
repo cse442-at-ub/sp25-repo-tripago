@@ -1,4 +1,4 @@
-const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/hotels";
+const API_BASE_URL = "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/hotels";
 
 
 // Function to format location name properly

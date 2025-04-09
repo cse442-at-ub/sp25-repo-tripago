@@ -71,7 +71,7 @@ if (!move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
 fwrite($debugLog, "File moved successfully\n");
 
 // 6. Prepare DB
-$relativePath = "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/pictures/" . $uniqueName;
+$relativePath = "/CSE442/2025-Spring/cse-442aj/backend/api/users/pictures/" . $uniqueName;
 
 $stmt = $mysqli->prepare("UPDATE users SET user_image_url = ? WHERE email = ?");
 $stmt->bind_param("ss", $relativePath, $email);

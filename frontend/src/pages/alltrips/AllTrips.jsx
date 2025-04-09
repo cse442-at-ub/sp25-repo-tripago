@@ -28,7 +28,7 @@ const AllTrips = () => {
     const fetchTrips = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getAllTrips.php",
+          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
           {
             credentials: "include",
           }
@@ -101,7 +101,7 @@ const AllTrips = () => {
     setNotLogged(trips.filter((trip) => trip.logged != true))
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/postToLog.php", trip, {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php", trip, {
         headers: { "Content-Type": "application/json" },
       });
       const result = response.data
@@ -119,7 +119,7 @@ const AllTrips = () => {
     setNotLogged(trips.filter((trip) => trip.logged != true))
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/postToLog.php", trip, {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php", trip, {
         headers: { "Content-Type": "application/json" },
       });
       const result = response.data
@@ -233,7 +233,7 @@ const AllTrips = () => {
                   <img
                     src={
                       trip.image_url ||
-                      "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png"
+                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
                     }
                     alt={encode(trip.destination)}
                     className="at-trip-image"
@@ -308,7 +308,7 @@ const AllTrips = () => {
                   <img
                     src={
                       trip.image_url ||
-                      "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png"
+                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
                     }
                     alt={encode(trip.destination)}
                     className="at-trip-image"
