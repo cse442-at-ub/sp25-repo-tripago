@@ -46,18 +46,25 @@ if (!is_dir($uploadDir)) {
 }
 
 // For image in images
-for ($i = 0; $i < count($_FILES["images"]); $i++) {
+for ($i = 0; $i < count($data["images"]); $i++) {    
     
     // Prepare filename
-    $filename = basename($_FILES['images']['name'][$i]);
-    $uniqueName = uniqid() . "_" . $filename;
+    $uniqueName = uniqid();
     $targetFile = $uploadDir . $uniqueName;
-
+    
     // Move file
-    move_uploaded_file($_FILES['images']['tmp_name'][$i], $targetFile);
+    if (!move_uploaded_file($data["images"][$i], $targetFile)) {
+        echo json_encode(["success" => false, "message" => "Upload failed"]);
+        exit();
+    }
+    
+    // This is basically just to interrupt the flow to see errors
+    echo json_encode(["success" => false, "message" => $targetFile . ""]);
+    exit();
 
     // Prepare DB
-    $relativePath = "/CSE442/2025-Spring/cse-442aj/backend/api/trips/pictures/" . $uniqueName;
+    /* TODO MAKE SURE THIS SAYS BACKEND NOT OWENBACKEND !!!! */
+    $relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
     $stmt = $mysqli->prepare("INSERT INTO memory_images (memory_id, image_url) VALUES (?, ?)");
     $stmt->bind_param("is", $memId, $relativePath);
     $stmt->execute();
