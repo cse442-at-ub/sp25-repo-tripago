@@ -6,6 +6,7 @@ import { encode } from "html-entities";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { useNavigate } from "react-router-dom";
+import FriendsModal from "../../components/community/FriendsModal.jsx";
 
 const TravelerProfile = () => {
   const { email } = useParams();
@@ -15,12 +16,23 @@ const TravelerProfile = () => {
     profilePic: UserAvatar,
   });
   const [stats, setStats] = useState({ totalTrips: 0, countriesVisited: 0 });
+  const [friendsList, setFriendsList] = useState([]);
   const [friends, setFriends] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [userTrips, setUserTrips] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [bucketList, setBucketList] = useState([]);
   const navigate = useNavigate();
+
+  const [selectedTrip, setSelectedTrip] = useState(null);
+
+  const handleViewMore = (trip) => {
+    setSelectedTrip(trip);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTrip(null);
+  };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -74,7 +86,11 @@ const TravelerProfile = () => {
         console.log("Trips fetched: ", data);
 
         if (data.success) {
-          setUserTrips(data.trips);
+          const tripsWithEmail = data.trips.map(trip => ({
+            ...trip,
+            email: email // inject the email from useParams
+          }));
+          setUserTrips(tripsWithEmail);
         }
       } catch (err) {
         console.error("Failed to fetch user trips:", err);
@@ -92,6 +108,30 @@ const TravelerProfile = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [email]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php",
+          { credentials: "include" }
+        );
+        const data = await res.json();
+        if (data.success) {
+          const emails = data.friends.map((friend) => friend.email);
+          setFriendsList(emails);
+        } else {
+          console.warn("Failed to fetch friends:", data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching friends:", err);
+      }
+    };
+
+    fetchFriends();
+  }, []);
+
+  const isFriend = selectedTrip ? friendsList.includes(selectedTrip.email) : false;
 
   return (
     <>
@@ -152,6 +192,12 @@ const TravelerProfile = () => {
                   {trip.comment && (
                     <p className="trip-comment">"{encode(trip.comment)}"</p>
                   )}
+                  <button
+                    className="view-more-btn"
+                    onClick={() => handleViewMore(trip)}
+                  >
+                    View More
+                  </button>
                 </div>
                 <div className="community-image">
                   <img
@@ -164,6 +210,18 @@ const TravelerProfile = () => {
             ))
           )}
         </div>
+        <FriendsModal
+          isOpen={selectedTrip !== null}
+          onClose={handleCloseModal}
+          user={`${user.firstName} ${user.lastName}`}
+          location={selectedTrip?.city_name}
+          imageUrl={selectedTrip?.image_url}
+          comment={selectedTrip?.comment}
+          isFriend={isFriend} 
+          tripId={selectedTrip?.id}
+          userEmail={email} // traveler’s email from useParams
+          currentUserEmail={user?.email} 
+        />
       </div>
     </>
   );

@@ -181,6 +181,7 @@ color: var(--primary-color);
   flex-direction: column;
   gap: 20px;
   flex: 1;
+  padding-bottom: 100px;
 }
 
 .trip-list h3 {
