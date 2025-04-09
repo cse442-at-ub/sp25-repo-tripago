@@ -16,6 +16,7 @@ if ($mysqli->connect_errno) {
 $query = "SELECT t.*, u.first_name, u.last_name, u.user_image_url 
           FROM trips t 
           JOIN users u ON t.email = u.email 
+          WHERE t.travel_log = 1
           ORDER BY t.created_at DESC";
 
 $result = $mysqli->query($query);
