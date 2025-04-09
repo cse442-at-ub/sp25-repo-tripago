@@ -296,7 +296,7 @@ const Community = () => {
           {/* Main Section: List of Trips */}
           <div className="trip-list">
             <h3>Discover Friends</h3>
-            {trips.map((trip) => (
+            {trips.filter((trip) => trip.email !== user?.email).map((trip) => (
               <div key={trip.id} className="trip-card">
                 {/* Left Side: Text & Buttons */}
 

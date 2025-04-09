@@ -16,7 +16,7 @@ if (!$email) {
 }
 
 // Get trips by email
-$stmt = $mysqli->prepare("SELECT * FROM trips WHERE email = ? ORDER BY created_at DESC");
+$stmt = $mysqli->prepare("SELECT * FROM trips WHERE email = ? AND travel_log = 1 ORDER BY created_at DESC");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $tripResult = $stmt->get_result();
