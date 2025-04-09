@@ -26,7 +26,7 @@ const TravelerProfile = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getPublicUserInfo.php?email=${email}`
+          `/CSE442/2025-Spring/cse-442aj/backend/api/community/getPublicUserInfo.php?email=${email}`
         );
         const data = await res.json();
         if (data.success) {
@@ -51,7 +51,7 @@ const TravelerProfile = () => {
     const fetchBucketList = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php?email=${email}`
+          `/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php?email=${email}`
         );
         const data = await res.json();
         if (data.success) {
@@ -67,7 +67,7 @@ const TravelerProfile = () => {
     const fetchUserTrips = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getTripsByEmail.php?email=${email}`
+          `/CSE442/2025-Spring/cse-442aj/backend/api/community/getTripsByEmail.php?email=${email}`
         );
         const data = await res.json();
 
