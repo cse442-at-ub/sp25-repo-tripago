@@ -10,12 +10,32 @@ try {
         throw new Exception("Database connection failed: " . $mysqli->connect_error);
     }
 
-    // Get target email from parameter
-    if (!isset($_GET['email'])) {
-        throw new Exception("Email parameter is required");
+    // Get email from parameter or auth cookie
+    $targetEmail = null;
+
+    if (isset($_GET['email'])) {
+        $targetEmail = $_GET['email'];
+    } else {
+        // Get email from auth cookie
+        $token = $_COOKIE['authCookie'] ?? null;
+        if ($token) {
+            $stmt = $mysqli->prepare("SELECT email FROM users WHERE token=?");
+            if (!$stmt) {
+                throw new Exception("Prepare failed: " . $mysqli->error);
+            }
+            $stmt->bind_param("s", $token);
+            if (!$stmt->execute()) {
+                throw new Exception("Execute failed: " . $stmt->error);
+            }
+            $result = $stmt->get_result();
+            $userData = $result->fetch_assoc();
+            $targetEmail = $userData['email'] ?? null;
+        }
     }
 
-    $targetEmail = $_GET['email'];
+    if (!$targetEmail) {
+        throw new Exception("No email provided and not logged in");
+    }
 
     // Verify the target user exists
     $stmt = $mysqli->prepare("SELECT first_name, last_name FROM users WHERE email = ?");
@@ -40,10 +60,12 @@ try {
         throw new Exception("Prepare failed: " . $mysqli->error);
     }
     $stmt->bind_param("s", $targetEmail);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception("Execute failed: " . $stmt->error);
+    }
     $tripCountResult = $stmt->get_result();
     $tripCountData = $tripCountResult->fetch_assoc();
-    $tripCountPoints = ($tripCountData['trip_count'] ?? 0) * 50; // 50 points per trip
+    $tripCountPoints = ($tripCountData['trip_count'] ?? 0) * 100; // 100 points per trip
 
     // Calculate points based on total trip days
     $tripDaysQuery = "SELECT COALESCE(SUM(DATEDIFF(end_date, start_date)), 0) as total_days 
@@ -54,10 +76,12 @@ try {
         throw new Exception("Prepare failed: " . $mysqli->error);
     }
     $stmt->bind_param("s", $targetEmail);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception("Execute failed: " . $stmt->error);
+    }
     $tripResult = $stmt->get_result();
     $tripData = $tripResult->fetch_assoc();
-    $tripPoints = ($tripData['total_days'] ?? 0) * 20; // 20 points per day
+    $tripPoints = ($tripData['total_days'] ?? 0) * 25; // 25 points per day
 
     // Calculate points based on number of expenses
     $expensesQuery = "SELECT COUNT(*) as expense_count 
@@ -69,22 +93,25 @@ try {
         throw new Exception("Prepare failed: " . $mysqli->error);
     }
     $stmt->bind_param("s", $targetEmail);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception("Execute failed: " . $stmt->error);
+    }
     $expenseResult = $stmt->get_result();
     $expenseData = $expenseResult->fetch_assoc();
-    $expensePoints = ($expenseData['expense_count'] ?? 0) * 5; // 5 points per expense
+    $expensePoints = ($expenseData['expense_count'] ?? 0) * 15; // 15 points per expense
 
     // Calculate points based on number of activities
     $activitiesQuery = "SELECT COUNT(*) as activity_count 
-                        FROM activities a 
-                        JOIN trips t ON a.trip_id = t.id 
-                        WHERE t.email = ?";
+                        FROM activities
+                        WHERE email = ?";
     $stmt = $mysqli->prepare($activitiesQuery);
     if (!$stmt) {
         throw new Exception("Prepare failed: " . $mysqli->error);
     }
     $stmt->bind_param("s", $targetEmail);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception("Execute failed: " . $stmt->error);
+    }
     $activityResult = $stmt->get_result();
     $activityData = $activityResult->fetch_assoc();
     $activityPoints = ($activityData['activity_count'] ?? 0) * 10; // 10 points per activity
