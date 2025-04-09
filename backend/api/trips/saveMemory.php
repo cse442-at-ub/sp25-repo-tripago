@@ -6,6 +6,10 @@ header("Content-Type: application/json");
 // Get form data
 $jsonData = file_get_contents("php://input");
 $data = json_decode($jsonData,true);
+$tripId = $data["tripId"];
+
+echo json_encode(["success" => false, "message" => $data . ""]);
+exit();
 
 // Get email from auth token
 $token = $_COOKIE['authCookie'];
@@ -23,18 +27,18 @@ if (!$email) {
 
 // Check if the trip id from data really belongs to the user
 $stmt = $mysqli->prepare("SELECT * FROM trips WHERE id=? AND email=?");
-$stmt->bind_param("is", $data["trip"]["id"], $email);
+$stmt->bind_param("is", $tripId, $email);
 $stmt->execute();
 $result = $stmt->get_result();
 $result = $result->fetch_assoc();
 if (!$result) {
-    echo json_encode(["success" => false, "message" => "Trip not found"]);
+    echo json_encode(["success" => false, "message" => "Trip not found: id=" . $tripId]);
     exit();
 }
 
 // Add memory to database
 $stmt = $mysqli->prepare("INSERT INTO memories (trip_id, caption) VALUES (?, ?)");
-$stmt->bind_param("is", $data["trip"]["id"], $data["caption"]);
+$stmt->bind_param("is", $tripId, $data["caption"]);
 $stmt->execute();
 
 $memId = $stmt->insert_id;
@@ -45,6 +49,24 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
+// Prepare filename
+$uniqueName = uniqid();
+$targetFile = $uploadDir . $uniqueName;
+
+// Move file
+if (!move_uploaded_file($_FILES["images"]["tmp_name"], $targetFile)) {
+    echo json_encode(["success" => false, "message" => "Upload failed"]);
+    exit();
+}
+
+// Prepare DB
+// TODO MAKE SURE THIS SAYS BACKEND NOT OWENBACKEND !!!!
+$relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
+$stmt = $mysqli->prepare("INSERT INTO memory_images (memory_id, image_url) VALUES (?, ?)");
+$stmt->bind_param("is", $memId, $relativePath);
+$stmt->execute();
+
+/*
 // For image in images
 for ($i = 0; $i < count($data["images"]); $i++) {    
     
@@ -63,12 +85,13 @@ for ($i = 0; $i < count($data["images"]); $i++) {
     exit();
 
     // Prepare DB
-    /* TODO MAKE SURE THIS SAYS BACKEND NOT OWENBACKEND !!!! */
+    // TODO MAKE SURE THIS SAYS BACKEND NOT OWENBACKEND !!!!
     $relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
     $stmt = $mysqli->prepare("INSERT INTO memory_images (memory_id, image_url) VALUES (?, ?)");
     $stmt->bind_param("is", $memId, $relativePath);
     $stmt->execute();
 }
+*/
 
 echo json_encode(["success" => true, "message" => "Memory saved"]);
 

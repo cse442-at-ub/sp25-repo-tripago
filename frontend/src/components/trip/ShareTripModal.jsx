@@ -42,10 +42,11 @@ const ShareTripModal = ({ onClose, trip }) => {
 
   const handleShare = async () => {
 
-    const formData = new FormData();
-    formData.append("trip", trip);
-    formData.append("caption", quote);
-    formData.append("images", images[0]);
+    const formData = {
+      tripId: trip.id,
+      caption: quote,
+      images: images[0], // TODO: make this handle multiple images
+    }
 
     try {
 
