@@ -28,7 +28,6 @@ const AllTrips = () => {
   const [showModal, setShowModal] = useState(false);
   const { user } = useContext(UserContext);
 
-
   useEffect(() => {
     console.log("Fetching trips...");
 
@@ -105,19 +104,25 @@ const AllTrips = () => {
   const postToLog = async (trip) => {
     const updatedTrip = { ...trip, logged: true };
 
-    setLogged(trips.filter((trip) => trip.logged == true));
-    setNotLogged(trips.filter((trip) => trip.logged != true));
-
     try {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php",
-        trip,
+        updatedTrip,
         {
           headers: { "Content-Type": "application/json" },
         }
       );
       const result = response.data;
       console.log("postToLog Form Response: ", result);
+
+      if (result.success) {
+        const newTrips = trips.map((t) =>
+          t.id === updatedTrip.id ? updatedTrip : t
+        );
+        setTrips(newTrips);
+        setLogged(newTrips.filter((t) => t.logged));
+        setNotLogged(newTrips.filter((t) => !t.logged));
+      }
     } catch (err) {
       console.log("Error posting to log: ", err);
     }
@@ -126,22 +131,27 @@ const AllTrips = () => {
   const removeFromLog = async (trip) => {
     const updatedTrip = { ...trip, logged: false };
 
-
-    setLogged(trips.filter((trip) => trip.logged == true));
-    setNotLogged(trips.filter((trip) => trip.logged != true));
-
     try {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php",
-        trip,
+        updatedTrip,
         {
           headers: { "Content-Type": "application/json" },
         }
       );
       const result = response.data;
       console.log("postToLog Form Response: ", result);
+
+      if (result.success) {
+        const newTrips = trips.map((t) =>
+          t.id === updatedTrip.id ? updatedTrip : t
+        );
+        setTrips(newTrips);
+        setLogged(newTrips.filter((t) => t.logged));
+        setNotLogged(newTrips.filter((t) => !t.logged));
+      }
     } catch (err) {
-      console.log("Error posting to log: ", err);
+      console.log("Error removing from log: ", err);
     }
   };
 
@@ -268,8 +278,8 @@ const AllTrips = () => {
           <div className={`trips-container all-trips-trips-container`}>
             {logged.length === 0 ? (
               <p className="no-trips-message">
-                Share a trip with the community by clicking the button on the top
-                left of each trip card.
+                Share a trip with the community by clicking the button on the
+                top left of each trip card.
               </p>
             ) : (
               logged.map((trip) => (
@@ -284,7 +294,7 @@ const AllTrips = () => {
 
                   {/* View Button */}
                   <button
-                    className="view-button at-view-btn"
+                    className="view-button at-view"
                     onClick={() => {
                       const selected = {
                         name: trip.destination,
@@ -352,7 +362,7 @@ const AllTrips = () => {
           location={selectedTrip?.destination}
           imageUrl={selectedTrip?.image_url}
           comment={selectedTrip?.comment}
-          isFriend={true} 
+          isFriend={true}
           tripId={selectedTrip?.id}
           userEmail={user?.email} // current user's email
           currentUserEmail={user?.email}
