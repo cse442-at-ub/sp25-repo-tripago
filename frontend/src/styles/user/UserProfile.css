@@ -119,6 +119,26 @@
   color: var(--dark-grey);
 }
 
+.back-btn {
+  margin: 20px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  background: none;
+  color: var(--primary-color);
+}
+
+.back-btn:hover {
+  background-color: #ddd;
+  color: var(--primary-color);
+  border: 1px solid #ccc;
+
+}
+
+
 .add-destination {
   display: flex;
   margin-top: 10px;

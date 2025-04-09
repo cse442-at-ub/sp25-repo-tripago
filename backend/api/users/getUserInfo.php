@@ -53,6 +53,7 @@ echo json_encode([
   "user" => [
     "first_name" => $user["first_name"],
     "last_name" => $user["last_name"],
+    "email" => $email,
     "user_image_url" => $user["user_image_url"] ?? null  
   ]
 ]);

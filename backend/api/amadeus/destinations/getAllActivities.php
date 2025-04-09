@@ -2,73 +2,91 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
-header('Content-Type: application/json');
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Content-Type: application/json");
 
+// Write log to current directory
+$logPath = __DIR__ . "/activity_fetch_debug.log";
+function log_msg($msg) {
+    global $logPath;
+    file_put_contents($logPath, "[" . date("Y-m-d H:i:s") . "] $msg\n", FILE_APPEND);
+}
 
+// Get JSON input
 $jsonData = file_get_contents("php://input");
+$data = json_decode($jsonData, true);
 
-$data = json_decode($jsonData,true);
-
-if ($data == null){
-  echo json_encode(["success"=>false,"message"=>"Error with data recieved"]);
-  exit();
+if (!$data) {
+    log_msg("ERROR: Invalid JSON input.");
+    echo json_encode(["success" => false, "message" => "Invalid JSON input"]);
+    exit();
 }
 
+$start = $data['start_date'] ?? null;
+$city = $data['city_name'] ?? null;
 
-//get the location of trip from frontend
-$start = $data['start_date'];
+if (!$start || !$city) {
+    log_msg("ERROR: Missing start_date or city_name in input.");
+    echo json_encode(["success" => false, "message" => "Missing required trip info"]);
+    exit();
+}
 
-$token = $_COOKIE['authCookie'];
+// Authenticate user via token
+$token = $_COOKIE['authCookie'] ?? '';
+$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
 
-$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
 if ($mysqli->connect_errno) {
-  echo json_encode(["success" => false, "message" => "Database connection failed"]);
-  exit();
+    log_msg("ERROR: Database connection failed: " . $mysqli->connect_error);
+    echo json_encode(["success" => false, "message" => "Database connection failed"]);
+    exit();
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
-$stmt->bind_param("s",$token);
-$stmt->execute();
+$userStmt = $mysqli->prepare("SELECT email FROM users WHERE token = ?");
+$userStmt->bind_param("s", $token);
+$userStmt->execute();
+$userResult = $userStmt->get_result()->fetch_assoc();
 
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
+$email = $userResult['email'] ?? null;
+log_msg("Auth token resolved to email: " . ($email ?? "NULL"));
 
-$email = $result["email"];
 if (!$email) {
-  echo json_encode(["success" => false, "message" => "Not logged in"]);
-  exit();
+    log_msg("ERROR: Invalid token, no email found.");
+    echo json_encode(["success" => false, "message" => "User not logged in"]);
+    exit();
 }
 
+// Get the correct trip_id using both start_date and city_name
+$tripStmt = $mysqli->prepare("SELECT id FROM trips WHERE email = ? AND start_date = ? AND city_name = ?");
+$tripStmt->bind_param("sss", $email, $start, $city);
+$tripStmt->execute();
+$tripResult = $tripStmt->get_result()->fetch_assoc();
 
-checkForActivity($email,$start);
+$tripId = $tripResult['id'] ?? null;
+log_msg("Trip ID resolved for $email | $start | $city: " . ($tripId ?? "NULL"));
 
-
-
-function checkForActivity($email,$activity_start_date){
-    global $mysqli;
-    
-    $stmt = $mysqli->prepare("SELECT * FROM activities WHERE email=? AND start_date=?");
-    $stmt->bind_param("ss",$email,$activity_start_date);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $result = $result->fetch_all();
-    $mysqli -> close();
-
-    //gets all rows which can be activities from the users trip
-    $all_activities = [];
-
-    foreach ($result as $activities){
-        //filling array with corresponding columns, and adding to list
-        $all_activities[] = ["day"=>$activities[5],"name"=>$activities[3],"price"=>$activities[6]];
-    }
-
-    echo json_encode(["success"=>true,"activities"=>$all_activities]);
-
+if (!$tripId) {
+    log_msg("ERROR: No trip found for given user, start_date, and city_name.");
+    echo json_encode(["success" => false, "message" => "No trip found"]);
+    exit();
 }
 
+// Now fetch activities using trip_id
+$activityStmt = $mysqli->prepare("SELECT day_number, activity_name, price FROM activities WHERE trip_id = ?");
+$activityStmt->bind_param("i", $tripId);
+$activityStmt->execute();
+$res = $activityStmt->get_result();
 
+$activities = [];
+while ($row = $res->fetch_assoc()) {
+    $activities[] = [
+        "day" => $row["day_number"],
+        "name" => $row["activity_name"],
+        "price" => $row["price"]
+    ];
+}
 
-
+log_msg("Activities fetched for trip_id $tripId: " . json_encode($activities));
+echo json_encode(["success" => true, "activities" => $activities]);
 ?>
