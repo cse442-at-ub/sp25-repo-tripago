@@ -5,7 +5,9 @@ header("Content-Type: application/json");
 
 // Get form data
 $jsonData = file_get_contents("php://input");
-$trip = json_decode($jsonData,true);
+$data = json_decode($jsonData,true);
+$tripId = $data["id"];
+
 
 // Get email from auth token
 $token = $_COOKIE['authCookie'];
@@ -23,7 +25,7 @@ if (!$email) {
 
 // Check if the trip id from data really belongs to the user
 $stmt = $mysqli->prepare("SELECT * FROM trips WHERE id=? AND email=?");
-$stmt->bind_param("is", $trip["id"], $email);
+$stmt->bind_param("is", $tripId, $email);
 $stmt->execute();
 $result = $stmt->get_result();
 $result = $result->fetch_assoc();
@@ -34,7 +36,7 @@ if (!$result) {
 
 // Fetch memories
 $stmt = $mysqli->prepare("SELECT * FROM memories WHERE trip_id=? ORDER BY created_at DESC");
-$stmt->bind_param("i", $trip["id"]);
+$stmt->bind_param("i", $tripId);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -50,11 +52,9 @@ while ($row = $result->fetch_assoc()) {
     ];
 }
 
-// Return result
-if (empty($memories)) {
-    echo json_encode(["success" => false, "message" => "No memories found"]);
-    exit();
-}
+// TODO: implement way to get pictures
 
+// Return result
 echo json_encode(["success" => true, "memories" => $memories]);
+
 ?>

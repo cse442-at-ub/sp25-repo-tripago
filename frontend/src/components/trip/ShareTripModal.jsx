@@ -41,19 +41,18 @@ const ShareTripModal = ({ onClose, trip }) => {
   };
 
   const handleShare = async () => {
-    // TODO: Implement the actual sharing functionality
 
     // TODO include images here
-    const data = {trip: trip, caption: quote}
+    const data = {trip: trip, caption: quote};
 
     try {
       const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php", data, {
         headers: { "Content-Type": "application/json" },
-      })
-      const result = response.data
+      });
+      const result = response.data;
       console.log("saveMemory Form Response: ", result);
     } catch(err) {
-      console.log("Error saving memory: ", err)
+      console.log("Error saving memory: ", err);
     }
 
     onClose();

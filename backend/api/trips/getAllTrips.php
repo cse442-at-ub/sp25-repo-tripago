@@ -80,10 +80,6 @@ while ($row = $result->fetch_assoc()) {
 }
 
 // Return result
-if (empty($trips)) {
-  echo json_encode(["success" => false, "message" => "No trips found"]);
-  exit();
-}
-
 echo json_encode(["success" => true, "trips" => $trips]);
+
 ?>

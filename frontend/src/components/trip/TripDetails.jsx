@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Accordion from "../Accordion";
 import { resolvePath, useNavigate } from "react-router-dom";
@@ -795,13 +795,21 @@ const Memories = ({ trip }) => {
 
   useEffect(() => {
 
-    // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
     const fetchMemories = async () => {
-      setMemories([
-        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
-        {id: 53, caption: "hello", images: []},
-        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
-      ]);
+
+      try {
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/getMemories.php", {id: trip.id}, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const result = response.data;
+        console.log("getMemories form response: ", result);
+        for (let memory in result.memories) {
+          memory["images"] = ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Orange_tabby_kitten.jpg/640px-Orange_tabby_kitten.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Labrador_Retriever_portrait.jpg/1200px-Labrador_Retriever_portrait.jpg"];
+        }
+        setMemories(result);
+      } catch(err) {
+          console.log("Error fetching memories: ", err);
+      }
     };
 
     fetchMemories();
