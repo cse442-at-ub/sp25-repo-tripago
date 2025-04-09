@@ -10,6 +10,44 @@ const ShareTripModal = ({ onClose }) => {
   const [isShared, setIsShared] = useState(false);
   const modalRef = useRef(null);
 
+  /* Email trip */
+  const handleChange = (e) => {
+    setShareData({ ...shareData, [e.target.name]: e.target.value });
+  };
+
+  const [shareData, setShareData] = useState({
+    email: "",
+    quote: "",
+    trip: "",
+    userName: ""
+  });
+
+  
+  const handleEmailSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost/tripago/send_trip.php', {
+      //const response = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/send_trip.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: shareData.email,
+          quote: quote,
+          trip: JSON.parse(localStorage.getItem("selectedTrip"))?.name,
+          userName: "Jane"
+        })
+      });
+      
+      const result = await response.json();
+      console.log(result.message);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  /*---------------------------------*/
+
   const handleQuoteChange = (e) => {
     setQuote(e.target.value);
   };
@@ -102,6 +140,23 @@ const ShareTripModal = ({ onClose }) => {
                 </label>
               </div>
             </div>
+
+            {/* Email trip */}
+            <p style={{width: '40%', margin: '0', padding: '0'}} >Send info to another user</p>
+            <div style={{width: '100%', display: 'block'}}>
+              <input style={{width: '50%', margin: '0'}}
+                type="email"
+                name="email"
+                placeholder="Email address"
+                value={shareData.email}
+                onChange={handleChange}
+                required
+              />
+              <button onClick={handleEmailSubmit}>
+                Send
+              </button>
+            </div>
+            {/* ------------------ */}
 
             {images.length < 1 && (
               <span className="upload-info">No images selected</span>
