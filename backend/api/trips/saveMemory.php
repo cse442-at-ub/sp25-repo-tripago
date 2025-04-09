@@ -37,6 +37,8 @@ $stmt = $mysqli->prepare("INSERT INTO memories (trip_id, caption) VALUES (?, ?)"
 $stmt->bind_param("is", $data["trip"]["id"], $data["caption"]);
 $stmt->execute();
 
+$memId = $stmt->insert_id;
+
 // Prepare image directory
 $uploadDir = __DIR__ . "/pictures/";
 if (!is_dir($uploadDir)) {
@@ -53,20 +55,13 @@ for ($i = 0; $i < count($_FILES["images"]); $i++) {
 
     // Move file
     move_uploaded_file($_FILES['images']['tmp_name'][$i], $targetFile);
+
+    // Prepare DB
+    $relativePath = "/CSE442/2025-Spring/cse-442aj/backend/api/trips/pictures/" . $uniqueName;
+    $stmt = $mysqli->prepare("INSERT INTO memory_images (memory_id, image_url) VALUES (?, ?)");
+    $stmt->bind_param("is", $memId, $relativePath);
+    $stmt->execute();
 }
-
-
-
-
-foreach($_FILES["files"]["tmp_name"] as $key=>$tmp_name) {
-    $file_name = $_FILES["files"]["name"][$key];
-    $file_tmp = $_FILES["files"]["tmp_name"][[$key]];
-    $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-
-}
-
-
-
 
 echo json_encode(["success" => true, "message" => "Memory saved"]);
 
