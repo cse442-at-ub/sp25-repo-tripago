@@ -42,24 +42,21 @@ const ShareTripModal = ({ onClose, trip }) => {
 
   const handleShare = async () => {
 
-    const formData = {
-      tripId: trip.id,
-      caption: quote,
-      images: images[0], // TODO: make this handle multiple images
-    }
+    const formData = new FormData();
+    
+    formData.set("tripId", trip.id);
+    formData.set("caption", quote);
+    formData.append("images", images[0]); // TODO: make this handle multiple images
 
     try {
 
-      const response = await fetch(
+      const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php",
-        {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        }
+        formData,
+        {headers: {"Content-Type": "application/json"}},
       );
 
-      const data = await response.json();
+      const data = await response.data;
       console.log("Data recieved after saving memory: ", data);
 
       if (data.success) {

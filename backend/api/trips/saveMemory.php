@@ -8,9 +8,6 @@ $jsonData = file_get_contents("php://input");
 $data = json_decode($jsonData,true);
 $tripId = $data["tripId"];
 
-echo json_encode(["success" => false, "message" => $data . ""]);
-exit();
-
 // Get email from auth token
 $token = $_COOKIE['authCookie'];
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
@@ -42,6 +39,12 @@ $stmt->bind_param("is", $tripId, $data["caption"]);
 $stmt->execute();
 
 $memId = $stmt->insert_id;
+
+// Make sure the file works (THIS IS TEMP)
+if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+    echo json_encode(["success" => false, "message" => "Invalid file upload"]);
+    exit();
+}
 
 // Prepare image directory
 $uploadDir = __DIR__ . "/pictures/";
