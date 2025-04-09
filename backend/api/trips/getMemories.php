@@ -5,7 +5,7 @@ header("Content-Type: application/json");
 
 // Get form data
 $jsonData = file_get_contents("php://input");
-$data = json_decode($jsonData,true);
+$trip = json_decode($jsonData,true);
 
 // Get email from auth token
 $token = $_COOKIE['authCookie'];
@@ -23,7 +23,7 @@ if (!$email) {
 
 // Check if the trip id from data really belongs to the user
 $stmt = $mysqli->prepare("SELECT * FROM trips WHERE id=? AND email=?");
-$stmt->bind_param("is", $data["trip"]["id"], $email);
+$stmt->bind_param("is", $trip["id"], $email);
 $stmt->execute();
 $result = $stmt->get_result();
 $result = $result->fetch_assoc();
@@ -32,13 +32,29 @@ if (!$result) {
     exit();
 }
 
-// Add trip to database
-$stmt = $mysqli->prepare("INSERT INTO memories (trip_id, caption) VALUES (?, ?)");
-$stmt->bind_param("is", $data["trip"]["id"], $data["caption"]);
+// Fetch memories
+$stmt = $mysqli->prepare("SELECT * FROM memories WHERE trip_id=? ORDER BY created_at DESC");
+$stmt->bind_param("i", $trip["id"]);
 $stmt->execute();
+$result = $stmt->get_result();
 
-// TODO: implement functionality to save images
+$memories = [];
 
-echo json_encode(["success" => true, "message" => "Memory saved"]);
+while ($row = $result->fetch_assoc()) {
+    $id = $row["id"];
+    $caption = $row["caption"];
 
+    $memories[] = [
+        "id" => $id,
+        "caption" => $caption,
+    ];
+}
+
+// Return result
+if (empty($memories)) {
+    echo json_encode(["success" => false, "message" => "No memories found"]);
+    exit();
+}
+
+echo json_encode(["success" => true, "memories" => $memories]);
 ?>
