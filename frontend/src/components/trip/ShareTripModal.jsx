@@ -42,20 +42,37 @@ const ShareTripModal = ({ onClose, trip }) => {
 
   const handleShare = async () => {
 
-    const data = {trip: trip, caption: quote, images: images};
+    const formData = new FormData();
+    formData.append("trip", trip);
+    formData.append("caption", quote);
+    formData.append("images", images[0]);
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php", data, {
-        headers: { "Content-Type": "application/json" },
-      });
-      const result = response.data;
-      console.log("saveMemory Form Response: ", result);
+
+      const response = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php",
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+      console.log("Data recieved after saving memory: ", data);
+
+      if (data.success) {
+        console.log("saveMemory form response: ", data.message);
+      } else {
+        console.error("Saving memory failed: ", data.message);
+      }
+
     } catch(err) {
-      console.log("Error saving memory: ", err);
+      console.error("Error saving memory: ", err);
     }
 
     onClose();
-  };
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
