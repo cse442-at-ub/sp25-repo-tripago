@@ -300,9 +300,9 @@ const UserProfile = () => {
             <h4>Total Points: {stats.points.total}</h4>
             <div className="points-breakdown">
               <p data-points={stats.points.breakdown.trips}>Trip Bonus</p>
-              <p data-points={stats.points.breakdown.trip_days}>Travel Days</p>
-              <p data-points={stats.points.breakdown.expenses}>Expenses</p>
-              <p data-points={stats.points.breakdown.activities}>Activities</p>
+              <p data-points={stats.points.breakdown.trip_days}>Day Bonus</p>
+              <p data-points={stats.points.breakdown.expenses}>Expense Bonus</p>
+              <p data-points={stats.points.breakdown.activities}>Activity Bonus</p>
             </div>
           </div>
         </div>
