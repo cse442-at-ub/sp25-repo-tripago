@@ -299,10 +299,10 @@ const UserProfile = () => {
           <div className="points-section">
             <h4>Total Points: {stats.points.total}</h4>
             <div className="points-breakdown">
-              <p>Trip Points: {stats.points.breakdown.trips}</p>
-              <p>Travel Day Points: {stats.points.breakdown.trip_days}</p>
-              <p>Expense Points: {stats.points.breakdown.expenses}</p>
-              <p>Activity Points: {stats.points.breakdown.activities}</p>
+              <p data-points={stats.points.breakdown.trips}>Trip Bonus</p>
+              <p data-points={stats.points.breakdown.trip_days}>Travel Days</p>
+              <p data-points={stats.points.breakdown.expenses}>Expenses</p>
+              <p data-points={stats.points.breakdown.activities}>Activities</p>
             </div>
           </div>
         </div>
