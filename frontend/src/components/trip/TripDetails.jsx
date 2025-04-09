@@ -803,10 +803,13 @@ const Memories = ({ trip }) => {
         });
         const result = response.data;
         console.log("getMemories form response: ", result);
-        for (let memory in result.memories) {
+
+        const mem = []
+        for (const memory of result.memories) {
           memory["images"] = ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Orange_tabby_kitten.jpg/640px-Orange_tabby_kitten.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Labrador_Retriever_portrait.jpg/1200px-Labrador_Retriever_portrait.jpg"];
+          mem.push(memory);
         }
-        setMemories(result);
+        setMemories(mem);
       } catch(err) {
           console.log("Error fetching memories: ", err);
       }
