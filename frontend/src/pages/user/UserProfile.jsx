@@ -291,7 +291,7 @@ const UserProfile = () => {
           <p>Total Trips Taken: {stats.totalTrips}</p>
           <p>Countries Visited: {stats.countriesVisited}</p>
           <div className="points-section">
-            <h4>Total Points: {stats.points.total}</h4>
+            <h4>Travel Points: {stats.points.total}</h4>
             <div className="points-breakdown">
               <p data-points={stats.points.breakdown.trips}>Trip Bonus</p>
               <p data-points={stats.points.breakdown.trip_days}>Day Bonus</p>
