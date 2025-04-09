@@ -24,6 +24,7 @@ export const UserProvider = ({ children }) => {
             firstName: data.user.first_name,
             lastName: data.user.last_name,
             username: data.user.first_name,
+            email: data.user.email
           });
         }
       } catch (err) {

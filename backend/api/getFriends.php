@@ -45,30 +45,32 @@ $result = $stmt->get_result();
 $friendEmails = [];
 
 while ($row = $result->fetch_assoc()) {
-    if ($row["sender"] === $email) {
-        $friendEmails[] = $row["recipient"];
-    } else {
-        $friendEmails[] = $row["sender"];
-    }
+    $friendEmail = ($row["sender"] === $email) ? $row["recipient"] : $row["sender"];
+    $friendEmails[] = $friendEmail;
 }
 
-// If there are friends, fetch their names
+// 5. Fetch first_name, last_name, and email for each friend
 if (count($friendEmails) > 0) {
-    $in = str_repeat('?,', count($friendEmails) - 1) . '?';
+    $placeholders = implode(',', array_fill(0, count($friendEmails), '?'));
     $types = str_repeat('s', count($friendEmails));
 
-    $stmt = $mysqli->prepare("SELECT first_name, last_name FROM users WHERE email IN ($in)");
+    $stmt = $mysqli->prepare("SELECT email, first_name, last_name FROM users WHERE email IN ($placeholders)");
     $stmt->bind_param($types, ...$friendEmails);
     $stmt->execute();
     $res = $stmt->get_result();
 
-    $friendNames = [];
+    $friends = [];
 
     while ($row = $res->fetch_assoc()) {
-        $friendNames[] = $row["first_name"] . " " . $row["last_name"];
+        $friends[] = [
+            "email" => $row["email"],
+            "first_name" => $row["first_name"],
+            "last_name" => $row["last_name"]
+        ];
     }
 
-    echo json_encode(["success" => true, "friends" => $friendNames]);
+    echo json_encode(["success" => true, "friends" => $friends]);
+
 } else {
     echo json_encode(["success" => true, "friends" => []]);
 }
