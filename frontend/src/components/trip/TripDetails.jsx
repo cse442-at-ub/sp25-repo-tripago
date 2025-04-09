@@ -7,6 +7,9 @@ import { FaEdit, FaTimes } from "react-icons/fa";
 import { encode } from "html-entities";
 import axios from "axios";
 import autofillIcon from "../../assets/autofill.png";
+import { Slide } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css'
+import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 
 const Itinerary = ({ trip, setShowModal }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
@@ -793,6 +796,72 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
+const Memories = () => {
+
+  const [memories, setMemories] = useState([]);
+
+  useEffect(() => {
+
+    // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
+    const fetchMemories = async () => {
+      setMemories([
+        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
+        {id: 53, caption: "hello", images: []},
+        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
+      ]);
+    };
+
+    fetchMemories();
+  });
+
+  // Style for image slideshow
+  const divStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundSize: 'cover',
+    height: '400px',
+  };
+
+  // Properties of image slideshow
+  const properties = {
+    transitionDuration: 200,
+    prevArrow: <a className="prev">◀</a>,
+    nextArrow: <a className="next">▶</a>,
+    autoplay: false,
+    canSwipe: true,
+    cssClass: "slide-container"
+  };
+  
+  return (
+    <div className="memories-container">
+      <ShareTripButton />
+      {memories.length === 0 ? (
+        <p className="no-memories-message">
+          Looks like this trip has no memories. Use the button above to post a memory to this trip. Memories can include pictures and comments about your trip.
+        </p>
+      ) : (
+        memories.map((memory) => (
+          <div key={memory.id} className="memory-card">
+
+            <div className="slide-container">
+              <Slide { ...properties} arrows={memory.images.length > 1}>
+                {memory.images.map((slideImage, index) => (
+                  <div key={index}>
+                    <div className="memory-image" style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}/>
+                  </div>
+                ))}
+              </Slide>
+            </div>
+
+            <p>{memory.caption}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
 const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
 
@@ -838,6 +907,14 @@ const TripDetails = ({ trip, setShowModal }) => {
             >
               Budgeting
             </p>
+            <p
+              className={`itin-budget-tab ${
+                currentTab === "memories" && "active"
+              }`}
+              onClick={() => setCurrentTab("memories")}
+            >
+              Memories
+            </p>
           </div>
 
           <div className="tab-content">
@@ -845,6 +922,7 @@ const TripDetails = ({ trip, setShowModal }) => {
               <Itinerary trip={trip} setShowModal={setShowModal} />
             )}
             {currentTab === "budgeting" && <Budgeting trip={trip} />}
+            {currentTab === "memories" && <Memories />}
           </div>
         </div>
       ) : (
