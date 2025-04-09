@@ -4,9 +4,8 @@ header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
 // Get form data
-$jsonData = file_get_contents("php://input");
-$data = json_decode($jsonData,true);
-$tripId = $data["tripId"];
+$tripId = $_POST["tripId"];
+$caption = $_POST["caption"];
 
 // Get email from auth token
 $token = $_COOKIE['authCookie'];
@@ -35,14 +34,14 @@ if (!$result) {
 
 // Add memory to database
 $stmt = $mysqli->prepare("INSERT INTO memories (trip_id, caption) VALUES (?, ?)");
-$stmt->bind_param("is", $tripId, $data["caption"]);
+$stmt->bind_param("is", $tripId, $caption);
 $stmt->execute();
 
 $memId = $stmt->insert_id;
 
 // Make sure the file works (THIS IS TEMP)
-if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-    echo json_encode(["success" => false, "message" => "Invalid file upload"]);
+if (!isset($_FILES['images']) || $_FILES['images']['error'] !== UPLOAD_ERR_OK) {
+    echo json_encode(["success" => false, "message" => "Invalid file upload: " . $_FILES["images"]["error"]]);
     exit();
 }
 
@@ -53,12 +52,13 @@ if (!is_dir($uploadDir)) {
 }
 
 // Prepare filename
-$uniqueName = uniqid();
+$filename = basename($_FILES['images']['name']);
+$uniqueName = uniqid() . "_" . $filename;
 $targetFile = $uploadDir . $uniqueName;
 
 // Move file
 if (!move_uploaded_file($_FILES["images"]["tmp_name"], $targetFile)) {
-    echo json_encode(["success" => false, "message" => "Upload failed"]);
+    echo json_encode(["success" => false, "message" => "Upload failed: " . $_FILES["images"]["error"]]);
     exit();
 }
 

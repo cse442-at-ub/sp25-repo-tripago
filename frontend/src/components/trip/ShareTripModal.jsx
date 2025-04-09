@@ -18,6 +18,16 @@ const ShareTripModal = ({ onClose, trip }) => {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
 
+    const  options  = {
+
+      maxSizeMB: 1,
+      
+      maxWidthOrHeight: 800,
+      
+      useWebWorker:  true
+      
+    };
+
     // Create preview URLs for the images
     const newPreviewImages = files.map((file) => URL.createObjectURL(file));
     setPreviewImages([...previewImages, ...newPreviewImages]);
@@ -53,7 +63,9 @@ const ShareTripModal = ({ onClose, trip }) => {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php",
         formData,
-        {headers: {"Content-Type": "application/json"}},
+        {headers:
+          {"Content-Type": "multipart/form-data", "Content-Encoding": "gzip"},
+        },
       );
 
       const data = await response.data;

@@ -817,7 +817,7 @@ const Memories = ({ trip }) => {
     };
 
     fetchMemories();
-  }, []);
+  });
 
   // Style for image slideshow
   const divStyle = {
