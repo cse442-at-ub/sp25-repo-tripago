@@ -185,7 +185,35 @@
 
 }
 
+/* Points Section */
+.points-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
 
+.points-section h4 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+}
+
+.points-breakdown {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.points-breakdown p {
+  background-color: white;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin: 0;
+  font-size: 0.9em;
+  color: #555;
+}
 
 /* Friends List */
 .friends-list,

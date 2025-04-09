@@ -22,6 +22,15 @@ const UserProfile = () => {
   const [stats, setStats] = useState({
     totalTrips: 0,
     countriesVisited: 0,
+    points: {
+      total: 0,
+      breakdown: {
+        trips: 0,
+        trip_days: 0,
+        expenses: 0,
+        activities: 0
+      }
+    }
   });
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
@@ -58,21 +67,38 @@ const UserProfile = () => {
 
     const fetchStats = async () => {
       try {
-        const res = await fetch(
+        // Fetch trip stats
+        const tripStatsRes = await fetch(
           "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php",
           {
             credentials: "include",
           }
         );
-        const data = await res.json();
-        if (data.success) {
-          setStats({
-            totalTrips: data.totalTrips,
-            countriesVisited: data.countriesVisited,
-          });
-        } else {
-          console.error("Failed to fetch stats:", data.message);
-        }
+        const tripStatsData = await tripStatsRes.json();
+
+        // Fetch user points
+        const pointsRes = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserPoints.php`,
+          {
+            credentials: "include",
+          }
+        );
+        const pointsData = await pointsRes.json();
+
+        setStats(prevStats => ({
+          ...prevStats,
+          totalTrips: tripStatsData.success ? tripStatsData.totalTrips : 0,
+          countriesVisited: tripStatsData.success ? tripStatsData.countriesVisited : 0,
+          points: pointsData.success ? pointsData.points : {
+            total: 0,
+            breakdown: {
+              trips: 0,
+              trip_days: 0,
+              expenses: 0,
+              activities: 0
+            }
+          }
+        }));
       } catch (err) {
         console.error("Error fetching stats:", err);
       }
@@ -270,6 +296,15 @@ const UserProfile = () => {
           <h3>Trip Stats</h3>
           <p>Total Trips Taken: {stats.totalTrips}</p>
           <p>Countries Visited: {stats.countriesVisited}</p>
+          <div className="points-section">
+            <h4>Total Points: {stats.points.total}</h4>
+            <div className="points-breakdown">
+              <p>Trip Points: {stats.points.breakdown.trips}</p>
+              <p>Travel Day Points: {stats.points.breakdown.trip_days}</p>
+              <p>Expense Points: {stats.points.breakdown.expenses}</p>
+              <p>Activity Points: {stats.points.breakdown.activities}</p>
+            </div>
+          </div>
         </div>
 
         {/* Friends List */}
