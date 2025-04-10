@@ -70,10 +70,11 @@ const SettingsLanguageAndRegion = () => {
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
+      
       </div>
 
       {/* Right Panel */}
+      
       <div className="settings-right">
         <h2>Language & Region Settings</h2>
 

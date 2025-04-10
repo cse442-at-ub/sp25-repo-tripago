@@ -13,6 +13,7 @@ const TravelerProfile = () => {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
+    username: "",
     profilePic: UserAvatar,
   });
   const [stats, setStats] = useState({ totalTrips: 0, countriesVisited: 0 });
@@ -45,6 +46,7 @@ const TravelerProfile = () => {
           setUser({
             firstName: data.user.first_name,
             lastName: data.user.last_name,
+            username: data.user.username,
             profilePic: data.user.user_image_url || UserAvatar,
           });
           setStats({
@@ -156,6 +158,7 @@ const TravelerProfile = () => {
             <h1>
               {encode(user.firstName)} {encode(user.lastName)}
             </h1>
+            <p className="username-text">@{user.username}</p>
           </div>
         </div>
 

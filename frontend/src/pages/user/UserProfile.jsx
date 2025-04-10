@@ -12,6 +12,7 @@ const UserProfile = () => {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
+    username: "", 
     email: "",
     profilePic: UserAvatar,
   });
@@ -41,6 +42,7 @@ const UserProfile = () => {
           setUser({
             firstName: data.user.first_name,
             lastName: data.user.last_name,
+            username: data.user.username,
             email: data.user.email,
             profilePic: data.user.user_image_url || UserAvatar,
           });
@@ -212,11 +214,12 @@ const UserProfile = () => {
             <h1>
               {encode(user.firstName)} {encode(user.lastName)}
             </h1>
+            <p className="username-text">@{user.username}</p>
             <button
               className="edit-name-btn"
               onClick={() => navigate("/settings/profile-details")}
             >
-              <FaEdit /> Edit Name
+              <FaEdit /> Edit Details
             </button>
           </div>
         </div>
