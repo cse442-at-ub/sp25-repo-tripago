@@ -7,6 +7,8 @@ import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
+import TripCollaborators from "../../components/trip/TripCollaborators.jsx";
+import DiscussionBar from "../../components/trip/DiscussionBar.jsx";
 
 const Profile = () => {
   const [user] = useState({
@@ -439,6 +441,10 @@ const Profile = () => {
             />
 
             <TripDetails trip={trip} setShowModal={setShowModal} />
+
+            <TripCollaborators tripId={trip.id} />
+
+            <DiscussionBar tripId={trip.id} />
 
           </div>
         </div>

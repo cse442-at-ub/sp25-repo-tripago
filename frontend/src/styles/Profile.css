@@ -58,6 +58,66 @@
 }
 
 
+.trip-collaborators {
+  margin-top: 1rem;
+}
+
+.add-collab-btn {
+  background-color: #a78bfa;
+  color: white;
+  padding: 0.4rem 0.75rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.collab-input-container {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.discussion-bar {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-top-left-radius: 12px;
+  border: 1px solid #ccc;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.discussion-bar.collapsed {
+  transform: translateY(85%);
+}
+
+.discussion-header {
+  background: #a78bfa;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-top-left-radius: 12px;
+}
+
+.discussion-body {
+  padding: 1rem;
+}
+
+.discussion-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.discussion-input input {
+  flex-grow: 1;
+  padding: 0.5rem;
+}
+
+
 
 @media (max-width: 1007px) { 
   .dashboard-container {
