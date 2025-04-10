@@ -8,6 +8,7 @@ const TripHeader = ({
   firstName,
   lastName,
   picture = airplaneIllustration,
+  tripID
 }) => {
   const isCustomPicture = picture !== airplaneIllustration;
 
@@ -21,7 +22,7 @@ const TripHeader = ({
         />
       </div>
       <div className="collab-button-wrapper">
-          <TripCollaborators />
+          <TripCollaborators  tripId={tripID}/>
         </div>
     </div>
   );

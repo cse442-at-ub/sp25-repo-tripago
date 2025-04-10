@@ -9,19 +9,23 @@ if (!$tripId) {
   exit();
 }
 
+// DB connection
 $mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
+
 if ($mysqli->connect_errno) {
   echo json_encode(["success" => false, "message" => "DB connection failed"]);
   exit();
 }
 
+// Fetch discussion comments with username + profile image
 $stmt = $mysqli->prepare("
-  SELECT td.comment, td.timestamp, u.username
+  SELECT td.message, td.timestamp, u.username, u.user_image_url
   FROM trip_discussion td
-  JOIN users u ON td.user_id = u.id
+  JOIN users u ON td.user_email = u.email
   WHERE td.trip_id = ?
   ORDER BY td.timestamp ASC
 ");
+
 $stmt->bind_param("i", $tripId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -30,7 +34,8 @@ $comments = [];
 while ($row = $result->fetch_assoc()) {
   $comments[] = [
     "username" => $row["username"],
-    "comment" => $row["comment"],
+    "image" => $row["user_image_url"],
+    "comment" => $row["message"],
     "timestamp" => $row["timestamp"]
   ];
 }

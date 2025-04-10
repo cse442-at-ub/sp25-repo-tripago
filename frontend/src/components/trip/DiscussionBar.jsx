@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaComments } from "react-icons/fa";
-import '../../styles/trip/DiscussionBar.css'
+import "../../styles/trip/DiscussionBar.css";
 
 const DiscussionBar = ({ tripId }) => {
   const [open, setOpen] = useState(false);
@@ -44,7 +44,7 @@ const DiscussionBar = ({ tripId }) => {
       const data = await res.json();
       if (data.success) {
         setMessage("");
-        fetchComments(); // Refresh after sending
+        fetchComments();
       } else {
         alert(data.message || "Failed to send comment.");
       }
@@ -58,18 +58,27 @@ const DiscussionBar = ({ tripId }) => {
       <div className="discussion-header" onClick={() => setOpen(!open)}>
         <FaComments /> {open ? "Discussion" : ""}
       </div>
-      {open && (
+      <div className={`discussion-body-wrapper ${open ? "open" : ""}`}>
         <div className="discussion-body">
           <div className="discussion-members">
-  <p><strong>Planning with:</strong> Alice, John</p>
-</div>
+            <p>
+              <strong>Planning with:</strong> Alice, John
+            </p>
+          </div>
           <div className="messages-placeholder">
             {comments.length === 0 ? (
               <p>No messages yet. Start the conversation!</p>
             ) : (
               comments.map((c, i) => (
                 <div key={i} className="comment">
-                  <strong>{c.username}:</strong> {c.comment}
+                  <img
+                    src={c.image}
+                    alt={`${c.username}'s avatar`}
+                    className="comment-avatar"
+                  />
+                  <div>
+                    <strong>{c.username}</strong>: {c.comment}
+                  </div>
                 </div>
               ))
             )}
@@ -82,10 +91,12 @@ const DiscussionBar = ({ tripId }) => {
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
             />
-            <button onClick={handleSend}>Send</button>
+            <button className="collab-add-btn" onClick={handleSend}>
+              Send
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

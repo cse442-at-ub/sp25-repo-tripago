@@ -8,9 +8,11 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $tripId = $data['tripId'] ?? null;
 $username = $data['username'] ?? null;
+$firstName = $data['firstName'] ?? null;
+$lastName = $data['lastName'] ?? null;
 
-if (!$tripId || !$username) {
-    echo json_encode(["success" => false, "message" => "Missing trip ID or username"]);
+if (!$tripId || !$username || !$firstName || !$lastName) {
+    echo json_encode(["success" => false, "message" => "Missing required information"]);
     exit();
 }
 
@@ -47,9 +49,9 @@ if ($res->num_rows > 0) {
     exit();
 }
 
-// Insert new collaborator
-$stmt = $mysqli->prepare("INSERT INTO trip_collaborators (trip_id, user_email) VALUES (?, ?)");
-$stmt->bind_param("is", $tripId, $userEmail);
+// Insert new collaborator with inviter info
+$stmt = $mysqli->prepare("INSERT INTO trip_collaborators (trip_id, user_email, invited_by_firstname, invited_by_lastname) VALUES (?, ?, ?, ?)");
+$stmt->bind_param("isss", $tripId, $userEmail, $firstName, $lastName);
 
 if ($stmt->execute()) {
     echo json_encode(["success" => true, "message" => "Collaborator added successfully"]);

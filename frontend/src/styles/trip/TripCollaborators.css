@@ -85,10 +85,11 @@ font-size: 12px;
   position: absolute;
   top: 60px;
   right: 10px;
+  font-size: 0.7em;
 }
 
 .collaborator-btn svg {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
 }
 
 .collaborator-btn:hover {
@@ -139,7 +140,7 @@ font-size: 12px;
 }
 
 .collab-add-btn {
-  background-color: var(--secondary-color);
+  background-color: var(--white);
   color: var(--secondary-text);
   border: none;
   padding: 8px 12px;

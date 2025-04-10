@@ -7,7 +7,6 @@ import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
-import TripCollaborators from "../../components/trip/TripCollaborators.jsx";
 import DiscussionBar from "../../components/trip/DiscussionBar.jsx";
 
 const Profile = () => {
@@ -438,11 +437,10 @@ const Profile = () => {
               firstName={user.firstName}
               lastName={user.lastName}
               picture={trip?.picture}
+              tripID={trip?.id}
             />
 
             <TripDetails trip={trip} setShowModal={setShowModal} />
-
-            {/* {trip.id && <TripCollaborators tripId={trip.id} />} */}
 
             {trip.id && <DiscussionBar tripId={trip.id} />}
           </div>
