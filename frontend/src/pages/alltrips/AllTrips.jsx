@@ -263,7 +263,7 @@ const AllTrips = () => {
                   <img
                     src={
                       trip.image_url ||
-                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
+                      "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png"
                     }
                     alt={encode(trip.destination)}
                     className="at-trip-image"
@@ -345,7 +345,7 @@ const AllTrips = () => {
                   <img
                     src={
                       trip.image_url ||
-                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
+                      "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png"
                     }
                     alt={encode(trip.destination)}
                     className="at-trip-image"

@@ -805,9 +805,9 @@ const Memories = () => {
     // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
     const fetchMemories = async () => {
       setMemories([
-        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
+        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png"]},
         {id: 53, caption: "hello", images: []},
-        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
+        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
       ]);
     };
 

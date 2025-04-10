@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaComments } from "react-icons/fa";
+import '../../styles/trip/DiscussionBar.css'
 
 const DiscussionBar = ({ tripId }) => {
   const [open, setOpen] = useState(false);
@@ -9,7 +10,7 @@ const DiscussionBar = ({ tripId }) => {
   const fetchComments = async () => {
     try {
       const res = await fetch(
-        `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getComments.php?tripId=${tripId}`
+        `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getComments.php?tripId=${tripId}`
       );
       const data = await res.json();
       if (data.success) {
@@ -33,7 +34,7 @@ const DiscussionBar = ({ tripId }) => {
 
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/addComment.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/addComment.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -59,6 +60,9 @@ const DiscussionBar = ({ tripId }) => {
       </div>
       {open && (
         <div className="discussion-body">
+          <div className="discussion-members">
+  <p><strong>Planning with:</strong> Alice, John</p>
+</div>
           <div className="messages-placeholder">
             {comments.length === 0 ? (
               <p>No messages yet. Start the conversation!</p>

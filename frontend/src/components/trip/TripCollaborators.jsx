@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaUserPlus } from "react-icons/fa";
+import '../../styles/trip/TripCollaborators.css'
 
 const TripCollaborators = ({ tripId }) => {
   const [showInput, setShowInput] = useState(false);
@@ -9,7 +10,7 @@ const TripCollaborators = ({ tripId }) => {
     if (!username.trim()) return;
 
     try {
-      const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/addCollaborator.php", {
+      const res = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/addCollaborator.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tripId, username }),
@@ -30,7 +31,7 @@ const TripCollaborators = ({ tripId }) => {
   return (
     <div className="collaborator-wrapper">
       <button className="collaborator-btn" onClick={() => setShowInput(prev => !prev)}>
-        <FaUserPlus /> Plan with others
+        <FaUserPlus /> Manage Invites
       </button>
 
       {showInput && (

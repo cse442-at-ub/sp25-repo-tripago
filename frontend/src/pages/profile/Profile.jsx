@@ -173,7 +173,7 @@ const Profile = () => {
                   end_date: null,
                   image_url:
                     image ||
-                    "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
+                    "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png",
                   hotel_name: null,
                   hotel_price: null,
                 }),
@@ -254,7 +254,7 @@ const Profile = () => {
 
           const image =
             data.trip.image_url ||
-            "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
+            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png";
           const budget = data.trip.budget || { amount: 0, expenses: [] };
 
           console.log("Budget recieved is: ", budget);
@@ -442,8 +442,8 @@ const Profile = () => {
 
             <TripDetails trip={trip} setShowModal={setShowModal} />
 
-            {trip.id && <TripCollaborators tripId={trip.id} />}
-            
+            {/* {trip.id && <TripCollaborators tripId={trip.id} />} */}
+
             {trip.id && <DiscussionBar tripId={trip.id} />}
           </div>
         </div>

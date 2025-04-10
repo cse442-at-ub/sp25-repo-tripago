@@ -1,9 +1,9 @@
-.collaborator-wrapper {
+/* .collaborator-wrapperr {
   position: relative;
   display: inline-block;
 }
 
-.collaborator-btn {
+.collaborator-btnn {
   background-color: var(--primary-color);
   color: white;
   border: none;
@@ -15,11 +15,17 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
+  position: absolute;
+top: 60px;
+right: 10px;
+border-radius: 500px;
+font-size: 12px;
 }
 
-.collaborator-popup {
+.collaborator-popupp {
   position: absolute;
-  top: 110%; /* appears below button */
+  top: 110%; 
   right: 0;
   width: 280px;
   background: white;
@@ -56,4 +62,102 @@
   font-weight: 500;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(95, 215, 165, 0.3);
+} */
+
+.collaborator-wrapper {
+  position: relative;
+  display: inline-block;
+  z-index: 999;
+}
+
+.collaborator-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+  box-shadow: 0 4px 8px rgba(178, 138, 249, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  top: 60px;
+  right: 10px;
+}
+
+.collaborator-btn svg {
+  font-size: 1.2rem;
+}
+
+.collaborator-btn:hover {
+  background-color: white;
+  color: var(--primary-color);
+}
+
+/* Popup */
+.collaborator-popup {
+  position: absolute;
+  top: 130px;
+  right: 0;
+  width: 300px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+}
+
+/* 🔽 Tail pointing up */
+.collaborator-popup::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
+
+.collab-info {
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  margin-bottom: 10px;
+}
+
+.collab-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.collab-input-group input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.collab-add-btn {
+  background-color: var(--secondary-color);
+  color: var(--secondary-text);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 8px #5fd7a54d;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.collab-add-btn:hover {
+  color: var(--primary-color);
+  background-color: var(--lightest-grey);
+}
+
+.collaborator-popup {
+  transition: all 0.2s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
 }
