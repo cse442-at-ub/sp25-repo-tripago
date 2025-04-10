@@ -61,7 +61,7 @@ const [isMobile, setIsMobile] = useState(false);
       const fetchImage = async () => {
         try {
           const query = `${cityName} travel`;
-          const searchURL = `/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(query)}`;
+          const searchURL = `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${encodeURIComponent(query)}`;
           const res = await fetch(searchURL);
           const data = await res.json();
           const photo = data.photos?.[0]?.src?.large || null;

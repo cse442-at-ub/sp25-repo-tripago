@@ -48,7 +48,7 @@ const Community = () => {
     const fetchFriends = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php",
           {
             credentials: "include",
           }
@@ -74,7 +74,7 @@ const Community = () => {
 
     axios
       .get(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getCommunityTrips.php"
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getCommunityTrips.php"
       )
       .then((res) => {
         setTrips(res.data);
@@ -122,7 +122,7 @@ const Community = () => {
     setSearchError(""); // reset any previous error
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/sendFriendRequest.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/sendFriendRequest.php",
         { searchTerm: searchTerm },
         {
           headers: {
@@ -160,7 +160,7 @@ const Community = () => {
     try {
       console.log("hello!");
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/getSentRequests.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getSentRequests.php",
         { test: "empty" },
         {
           headers: {
@@ -216,7 +216,7 @@ const Community = () => {
   const getIncomingRequests = async (e) => {
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/getIncFriends.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getIncFriends.php",
         { test: "empty" },
         {
           headers: {

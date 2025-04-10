@@ -34,7 +34,7 @@ const UserProfile = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/getUserInfo.php",
           {
             credentials: "include",
           }
@@ -72,7 +72,7 @@ const UserProfile = () => {
     const fetchStats = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripStats.php",
           {
             credentials: "include",
           }
@@ -95,7 +95,7 @@ const UserProfile = () => {
       console.log("Getting friends");
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php",
           {
             credentials: "include",
           }
@@ -116,7 +116,7 @@ const UserProfile = () => {
     const fetchBucketList = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php",
           {
             method: "POST",
             headers: {
@@ -148,7 +148,7 @@ const UserProfile = () => {
 
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/uploadUserImage.php",
         {
           method: "POST",
           body: formData,
@@ -176,7 +176,7 @@ const UserProfile = () => {
 
     try {
       const response = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/community/addToBucketList.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addToBucketList.php",
         {
           method: "POST",
           headers: {

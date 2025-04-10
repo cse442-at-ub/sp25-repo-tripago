@@ -20,7 +20,7 @@ const HotelCard = ({ hotel }) => {
 
   const handleSelectDeal = async () => {
     try {
-      const response = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripHotel.php', {
+      const response = await fetch('/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/updateTripHotel.php', {
         method: 'POST',
         credentials: 'include',
         headers: {

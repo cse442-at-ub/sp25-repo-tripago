@@ -34,7 +34,7 @@ const AllTrips = () => {
     const fetchTrips = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getAllTrips.php",
           {
             credentials: "include",
           }
@@ -106,7 +106,7 @@ const AllTrips = () => {
 
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/postToLog.php",
         updatedTrip,
         {
           headers: { "Content-Type": "application/json" },
@@ -133,7 +133,7 @@ const AllTrips = () => {
 
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/postToLog.php",
         updatedTrip,
         {
           headers: { "Content-Type": "application/json" },

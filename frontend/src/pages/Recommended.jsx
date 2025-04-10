@@ -25,7 +25,7 @@ const VerifyLocation = () => {
       try {
         
         //const response = await fetch("http://localhost/tripago/getRecommendations.php?category=Recommendations");
-        const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommendations.php?category=Recommendations");
+        const response = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getRecommendations.php?category=Recommendations");
         
         if (!response.ok) {
           throw new Error("Failed to fetch recommendations");
@@ -39,7 +39,7 @@ const VerifyLocation = () => {
           destinationsList.map(async (destination) => {
             try {
               //const imgResponse = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
-              const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${destination.name}`);
+              const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${destination.name}`);
         
               if (!imgResponse.ok) {
                 throw new Error("Failed to fetch image");
@@ -89,8 +89,8 @@ const VerifyLocation = () => {
   
     try {
       const url = isFavorited
-        ? "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/removeFavorite.php"
-        : "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/addFavorite.php";
+        ? "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/removeFavorite.php"
+        : "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/addFavorite.php";
   
       const response = await fetch(url, {
         method: "POST",
