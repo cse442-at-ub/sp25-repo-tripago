@@ -19,7 +19,7 @@
 	//require $_SERVER['DOCUMENT_ROOT'] . '../../npula/frontend/vendor/autoload.php';
 	require "vendor/autoload.php";
 
-	$con = mysqli_connect("localhost","root","","tripago");
+	$con = mysqli_connect("localhost","npula","50540565","cse442_2025_spring_team_aj_db");
 		if (mysqli_connect_errno()){
 			die(json_encode(["status" => "error", "message" => "Database connection failed"]));
 			//echo "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -39,57 +39,21 @@
 		   //$error .="<p>Invalid email address please type a valid email address!</p>";
 		   echo json_encode(["status" => "error", "message" => "Enter a valid email"]);
 		   exit;
-		}else{
-			// THIS WAS CLEANED ON LINES 35-37
-		   $sel_query = "SELECT email FROM users WHERE email='$email' LIMIT 1";
-		   $results = mysqli_query($con,$sel_query);
-		   $row = mysqli_num_rows($results);
-		   if ($row==0){
-			   echo json_encode(["status" => "error", "message" => "Email not found"]);
-			   exit;
-		   }
 		}
-		$expFormat = mktime(
-		date("H"), date("i"), date("s"), date("m") ,date("d")+1, date("Y")
-		);
-		$expDate = date("Y-m-d H:i:s",$expFormat);
-		$token = bin2hex(random_bytes(16));
-		$token_hash = hash("sha256", $token);
-	   
-		$key = $token;
-	
-		// Insert token (key) into table
-		// All these variables were either made by us in the backend or were cleaned previously
-		//$sel_query = "UPDATE users SET reset_token='$key', reset_token_expires= '$expDate' WHERE email='$email'";
-		//if (!$results = mysqli_query($con, $sel_query)) {
-		//	echo json_encode(["status" => "error", "message" => "Unable to update user: $email"]);
-		//	exit;
-		//} 
-		//echo json_encode(["status" => "success", "message" => "updated user: $email, $key"]);
-		//exit;
-		//$row = mysqli_num_rows($results);
-		//if ($row==0){
-		//	echo json_encode(["status" => "error", "message" => "Unable to update user"]);
-		//	exit;
-		//}
-		//"INSERT INTO `users` (`email`, `key`, `expDate`) VALUES ('".$email."', '".$key."', '".$expDate."');");
 		
-		// data passed in from the modal box.
-		//$location = $data["location"];
 		$quote = $data->quote;
 		$trip = $data->trip;
-		$userName = "Test";//$data->userName;
+		$userName = $data->userName;
 		$imageUrl = $data->tripImage;
 		
-		$output ='<p>A User sent you their trip details.</p>';
-		$output.='<p>-------------------------------------------------------------</p>';
-		$output.='<img src='.$imageUrl.'>';
-		$output.='<p>Quote from users trip from '.$trip.': '.$quote;
-		$output.='<p>-------------------------------------------------------------</p>';
-		$body = $output; 
+		$output ='<p>A User shared their recent trip to '.$trip.' with you!</p>';
+		$output.='<img src='.$imageUrl.'>';		
+		$output.='<p>Quote from user: </p>';
+        	$output.='<p>'.$quote.'</p>';
+        	$output.='<p>If you enjoy services such as this you can sign up <a href="https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/frontend/#/signup">here</a><p>';
+		$output.='<p>If you already have an account you can login <a href="https://cattle.cse.buffalo.edu/CSE442/2025-Spring/cse-442aj/frontend/#/login">here</a><p>';
+        	$body = $output; 
 		$subject = 'Message from '.$userName;
-		$emailSentNotification = "If the email doesnt show up in your inbox please check the junk/spam folder.";
-
 		$email_to = $email;
 		$fromserver = "[npulaaa@gmail.com]"; // enter email in brackets
 		//require("PHPMailer/PHPMailerAutoload.php");
