@@ -48,7 +48,7 @@ const Community = () => {
     const fetchFriends = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php",
           {
             credentials: "include",
           }
@@ -74,7 +74,7 @@ const Community = () => {
 
     axios
       .get(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getCommunityTrips.php"
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getCommunityTrips.php"
       )
       .then((res) => {
         setTrips(res.data);
@@ -102,13 +102,27 @@ const Community = () => {
 
   const [sentRequests, setSentRequests] = useState([]); // Initialize as empty array
 
+  const [searchError, setSearchError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage(""); // Hide modal after 2 seconds
+      }, 1000);
+
+      return () => clearTimeout(timer); // Cleanup on unmount or if message changes
+    }
+  }, [successMessage]);
+
   const handleSend = async (e) => {
     e.preventDefault();
     console.log("Search term:", searchTerm);
     setSearchTerm("");
+    setSearchError(""); // reset any previous error
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/sendFriendRequest.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/sendFriendRequest.php",
         { searchTerm: searchTerm },
         {
           headers: {
@@ -119,9 +133,11 @@ const Community = () => {
       const result = response.data;
       console.log("Send reponse: ", response.data);
       if (result.success) {
-        alert(result.message);
+        setSuccessMessage(result.message);
+        setSearchError("");
+        setSearchTerm("");
       } else {
-        alert(result.message);
+        setSearchError(result.message);
       }
     } catch (error) {
       console.log("Error during search: ");
@@ -144,7 +160,7 @@ const Community = () => {
     try {
       console.log("hello!");
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/getSentRequests.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getSentRequests.php",
         { test: "empty" },
         {
           headers: {
@@ -200,7 +216,7 @@ const Community = () => {
   const getIncomingRequests = async (e) => {
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/getIncFriends.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getIncFriends.php",
         { test: "empty" },
         {
           headers: {
@@ -255,18 +271,39 @@ const Community = () => {
         <div className="community-top">
           <div className="find-friends">
             <label className="find-friends-label">Find Friends</label>
+
             <div className="find-friends-inputs">
               <input
                 type="text"
-                placeholder="Search by email"
+                placeholder="Search by username"
                 className="search-input"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ border: searchError ? "0.9px solid red" : undefined }}
               />
               <button style={{ marginLeft: "10px" }} onClick={handleSend}>
                 Send
               </button>
+              {successMessage && (
+                <div className="modal-overlay">
+                  <div className="modal-content send-req-modal-content">
+                    {successMessage}
+                  </div>
+                </div>
+              )}
             </div>
+            {searchError && (
+              <p
+                style={{
+                  color: "red",
+                  marginTop: "2px",
+                  marginBottom: "2px",
+                  fontSize: "0.9em",
+                }}
+              >
+                {searchError}
+              </p>
+            )}
           </div>
           {/* Requests Section */}
           <div className="requests-section">
@@ -296,73 +333,77 @@ const Community = () => {
           {/* Main Section: List of Trips */}
           <div className="trip-list">
             <h3>Discover Friends</h3>
-            {trips.filter((trip) => trip.email !== user?.email).map((trip) => (
-              <div key={trip.id} className="trip-card">
-                {/* Left Side: Text & Buttons */}
+            {trips
+              .filter((trip) => trip.email !== user?.email)
+              .map((trip) => (
+                <div key={trip.id} className="trip-card">
+                  {/* Left Side: Text & Buttons */}
 
-                <div className="trip-info">
-                  <div className="trip-header">
-                    {console.log("default", UserAvatar)}
+                  <div className="trip-info">
+                    <div className="trip-header">
+                      {console.log("default", UserAvatar)}
 
-                    <img
-                      src={
-                        trip.userImageUrl && trip.userImageUrl.trim() !== ""
-                          ? trip.userImageUrl
-                          : UserAvatar
-                      }
-                      onError={(e) => {
-                        console.warn("Image failed to load for", trip.user);
-                        e.target.onerror = null;
-                        e.target.src = UserAvatar;
-                      }}
-                      alt="User avatar"
-                      className="profile-image"
-                    />
-
-                    <h2>
-                      <span
-                        className="bold clickable-name"
-                        onClick={() =>
-                          navigate(
-                            `/traveler-profile/${encodeURIComponent(
-                              trip.email
-                            )}`
-                          )
+                      <img
+                        src={
+                          trip.userImageUrl && trip.userImageUrl.trim() !== ""
+                            ? trip.userImageUrl
+                            : UserAvatar
                         }
-                      >
-                        {encode(trip.user)}'s
-                      </span>{" "}
-                      trip to{" "}
-                      <span className="highlight">{encode(trip.location)}</span>
-                      .
-                    </h2>
+                        onError={(e) => {
+                          console.warn("Image failed to load for", trip.user);
+                          e.target.onerror = null;
+                          e.target.src = UserAvatar;
+                        }}
+                        alt="User avatar"
+                        className="profile-image"
+                      />
+
+                      <h2>
+                        <span
+                          className="bold clickable-name"
+                          onClick={() =>
+                            navigate(
+                              `/traveler-profile/${encodeURIComponent(
+                                trip.email
+                              )}`
+                            )
+                          }
+                        >
+                          {encode(trip.user)}'s
+                        </span>{" "}
+                        trip to{" "}
+                        <span className="highlight">
+                          {encode(trip.location)}
+                        </span>
+                        .
+                      </h2>
+                    </div>
+
+                    {trip.comment && (
+                      <p className="trip-comment">"{encode(trip.comment)}"</p>
+                    )}
+                    {/* Hide "Send Request" button if already friends */}
+                    {!friendsList.includes(trip.email) && (
+                      <button className="send-request-btn">Send Request</button>
+                    )}
+                    <button
+                      className="view-more-btn"
+                      onClick={() => handleViewMore(trip)}
+                    >
+                      View More
+                    </button>
                   </div>
 
-                  {trip.comment && (
-                    <p className="trip-comment">"{encode(trip.comment)}"</p>
-                  )}
-                  {/* Hide "Send Request" button if already friends */}
-                  {!friendsList.includes(trip.email) && (
-                    <button className="send-request-btn">Send Request</button>
-                  )}
-                  <button
-                    className="view-more-btn"
-                    onClick={() => handleViewMore(trip)}
-                  >
-                    View More
-                  </button>
+                  {/* Right Side: Image */}
+                  <div className="community-image">
+                    <img
+                      src={trip.imageUrl}
+                      alt={encode(trip.location)}
+                      className="trip-image"
+                    />
+                  </div>
                 </div>
-
-                {/* Right Side: Image */}
-                <div className="community-image">
-                  <img
-                    src={trip.imageUrl}
-                    alt={encode(trip.location)}
-                    className="trip-image"
-                  />
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 

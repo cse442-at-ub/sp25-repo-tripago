@@ -28,7 +28,7 @@ const NewDestination = () => {
 
     try {
       const res = await fetch(
-        `/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/searchCities.php?keyword=${encodeURIComponent(
+        `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/searchCities.php?keyword=${encodeURIComponent(
           value
         )}`
       );
@@ -146,7 +146,7 @@ const NewDestination = () => {
 
     try {
       const response = await fetch(
-        `/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
+        `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
           category
         )}`
       );
