@@ -38,8 +38,9 @@ const ShareTripModal = ({ onClose }) => {
       e.preventDefault();
 
       const tripName = JSON.parse(localStorage.getItem("selectedTrip"))?.name;
+      const tripImage = JSON.parse(localStorage.getItem("selectedTrip"))?.imageUrl;
       const userName = user?.name;
-      console.log("User sending message: " + userName);
+      console.log("User sending message: " + tripImage);
       // Convert images to base64 (if they're File objects)
       const base64Images = await Promise.all(images.map(async (file) => {
         const reader = new FileReader();
@@ -59,7 +60,7 @@ const ShareTripModal = ({ onClose }) => {
         // Send emails to everyone in the updated list
         for (const email of emailList) {
           try {
-            //const response = await fetch('http://localhost/tripago/send_trip.php', {
+           // const response = await fetch('http://localhost/tripago/send_trip.php', {
             const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/send_trip.php", {
               method: 'POST',
               headers: {
@@ -70,6 +71,7 @@ const ShareTripModal = ({ onClose }) => {
                 quote: quote,
                 trip: tripName,
                 userName: userName,
+                tripImage: tripImage,
                 photos: base64Images
               })
             });

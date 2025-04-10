@@ -78,11 +78,12 @@
 		//$location = $data["location"];
 		$quote = $data->quote;
 		$trip = $data->trip;
-		$userName = $data->userName;
+		$userName = "Test";//$data->userName;
+		$imageUrl = $data->tripImage;
 		
-		$output='<p>To user,</p>';
-		$output.='<p>A User sent you their trip details.</p>';
+		$output ='<p>A User sent you their trip details.</p>';
 		$output.='<p>-------------------------------------------------------------</p>';
+		$output.='<img src='.$imageUrl.'>';
 		$output.='<p>Quote from users trip from '.$trip.': '.$quote;
 		$output.='<p>-------------------------------------------------------------</p>';
 		$body = $output; 
