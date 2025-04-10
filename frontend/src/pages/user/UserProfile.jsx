@@ -32,7 +32,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/getUserInfo.php", {
+        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php", {
           credentials: "include",
         });
         const data = await res.json();
@@ -62,7 +62,7 @@ const UserProfile = () => {
 
     const fetchStats = async () => {
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripStats.php", {
+        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php", {
           credentials: "include",
         });
         const data = await res.json();
@@ -82,7 +82,7 @@ const UserProfile = () => {
     const fetchFriends = async () => {
       console.log("Getting friends")
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php", {
+        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php", {
           credentials: "include",
         });
         const data = await res.json();
@@ -100,7 +100,7 @@ const UserProfile = () => {
 
     const fetchBucketList = async () => {
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php", {
+        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -129,7 +129,7 @@ const UserProfile = () => {
     formData.append("image", file);
 
     try {
-      const res = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/uploadUserImage.php", {
+      const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php", {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -154,7 +154,7 @@ const UserProfile = () => {
     if (!newDestination.trim()) return;
 
     try {
-      const response = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addToBucketList.php", {
+      const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/community/addToBucketList.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

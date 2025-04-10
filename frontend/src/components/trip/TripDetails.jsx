@@ -45,7 +45,7 @@ const Itinerary = ({ trip, setShowModal }) => {
       console.log("Before post");
 
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getAllActivities.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",
         { start_date: startDate, city_name: trip.name },
         {
           headers: {
@@ -114,7 +114,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/generateActivity.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",
         { location: trip.name },
         {
           headers: {
@@ -185,7 +185,7 @@ but can expand it in the future, if need (or want) be!
       to the same location on the same day, because why would they?
       */
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/addActivity.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",
         {
           day: day,
           name: name,
@@ -525,7 +525,7 @@ const Budgeting = ({ trip }) => {
 
     try {
       await fetch(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/saveBudgetExpense.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -545,7 +545,7 @@ const Budgeting = ({ trip }) => {
 
     try {
       await fetch(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/saveBudgetExpense.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -566,7 +566,7 @@ const Budgeting = ({ trip }) => {
     const loadExpenses = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(
+          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(
             trip.name
           )}`
         );
@@ -805,9 +805,9 @@ const Memories = () => {
     // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
     const fetchMemories = async () => {
       setMemories([
-        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png"]},
+        {id: 23, caption: "hi", images: ["/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"]},
         {id: 53, caption: "hello", images: []},
-        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
+        {id: 12, caption: "I am a memory", images: ["", "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s"]}
       ]);
     };
 
