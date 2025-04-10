@@ -12,7 +12,7 @@ const UserProfile = () => {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
-    username: "", 
+    username: "",
     email: "",
     profilePic: UserAvatar,
   });
@@ -27,14 +27,18 @@ const UserProfile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [tripInvites, setTripInvites] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php", {
-          credentials: "include",
-        });
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php",
+          {
+            credentials: "include",
+          }
+        );
         const data = await res.json();
         console.log("User data received:", data);
 
@@ -58,13 +62,21 @@ const UserProfile = () => {
   }, []);
 
   useEffect(() => {
+    setTripInvites([
+    ]);
+  }, []);
+
+  useEffect(() => {
     if (!user.email) return;
 
     const fetchStats = async () => {
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php", {
-          credentials: "include",
-        });
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php",
+          {
+            credentials: "include",
+          }
+        );
         const data = await res.json();
         if (data.success) {
           setStats({
@@ -80,13 +92,16 @@ const UserProfile = () => {
     };
 
     const fetchFriends = async () => {
-      console.log("Getting friends")
+      console.log("Getting friends");
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php", {
-          credentials: "include",
-        });
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+          {
+            credentials: "include",
+          }
+        );
         const data = await res.json();
-        console.log("Response from getting friends is: ", data)
+        console.log("Response from getting friends is: ", data);
 
         if (data.success) {
           setFriends(data.friends);
@@ -100,13 +115,16 @@ const UserProfile = () => {
 
     const fetchBucketList = async () => {
       try {
-        const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: user.email }),
-        });
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: user.email }),
+          }
+        );
         const data = await res.json();
         if (data.success) {
           setBucketList(data.bucketList);
@@ -129,11 +147,14 @@ const UserProfile = () => {
     formData.append("image", file);
 
     try {
-      const res = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+      const res = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php",
+        {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        }
+      );
 
       const data = await res.json();
 
@@ -154,16 +175,19 @@ const UserProfile = () => {
     if (!newDestination.trim()) return;
 
     try {
-      const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/community/addToBucketList.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user.email,
-          destination: newDestination.trim(),
-        }),
-      });
+      const response = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/community/addToBucketList.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user.email,
+            destination: newDestination.trim(),
+          }),
+        }
+      );
 
       const result = await response.json();
 
@@ -236,15 +260,35 @@ const UserProfile = () => {
           </div>
         </div>
 
+        <div className="trip-invites user-profile-section">
+          <h3>Trip Invites</h3>
+          {tripInvites.length === 0 ? (
+            <p>You have no invites yet.</p>
+          ) : (
+            <ul>
+              {tripInvites.map((invite, index) => (
+                <li key={index}>
+                  {invite.senderName} invited you to plan a trip to{" "}
+                  {invite.destination}.
+                  <button
+                    className="join-trip-btn"
+                    onClick={() => navigate(`/group-trip/${invite.tripId}`)}
+                  >
+                    Plan group trip
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <div className="bucket-list user-profile-section">
           <h3>Travel Bucket List</h3>
           <ul>
             {bucketList.length === 0 ? (
               <p>No destinations added yet.</p>
             ) : (
-              bucketList.map((place, index) => (
-                <li key={index}>{place}</li>
-              ))
+              bucketList.map((place, index) => <li key={index}>{place}</li>)
             )}
           </ul>
           <div className="add-destination">
@@ -272,13 +316,14 @@ const UserProfile = () => {
             {friends.length === 0 ? (
               <p>You have no friends yet.</p>
             ) : (
-            
               friends.map((friend, index) => (
                 <li
                   key={index}
                   className="clickable-name"
                   onClick={() =>
-                    navigate(`/traveler-profile/${encodeURIComponent(friend.email)}`)
+                    navigate(
+                      `/traveler-profile/${encodeURIComponent(friend.email)}`
+                    )
                   }
                   style={{ cursor: "pointer", textDecoration: "none" }}
                 >

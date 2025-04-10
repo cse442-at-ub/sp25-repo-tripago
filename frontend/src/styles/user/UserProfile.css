@@ -3,14 +3,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 50px 0px;
+  padding: 50px 0px 650px;
   background-color: var(--background-color);
   max-width: 1200px;
   width: 50%;
   margin: 0 auto;
   min-height: 100vh;
   padding-bottom: 550px;
-  margin-top: 730px;
+  margin-top: 770px;
   margin-left: 400px;
   background-size: cover;
 }
@@ -174,7 +174,7 @@
 }
 
 /* Trip Stats */
-.trip-stats {
+.trip-stats, .trip-invites {
   background: var(--white);
   padding: 20px;
   border-radius: 10px;
