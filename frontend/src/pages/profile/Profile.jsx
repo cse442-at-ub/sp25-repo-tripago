@@ -442,10 +442,9 @@ const Profile = () => {
 
             <TripDetails trip={trip} setShowModal={setShowModal} />
 
-            <TripCollaborators tripId={trip.id} />
-
-            <DiscussionBar tripId={trip.id} />
-
+            {trip.id && <TripCollaborators tripId={trip.id} />}
+            
+            {trip.id && <DiscussionBar tripId={trip.id} />}
           </div>
         </div>
       </div>

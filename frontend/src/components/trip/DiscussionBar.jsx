@@ -1,15 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaComments } from "react-icons/fa";
 
 const DiscussionBar = ({ tripId }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [comments, setComments] = useState([]);
 
-  const handleSend = () => {
-    if (message.trim()) {
-      // You'll implement backend chat later
-      console.log("Sending message:", message);
-      setMessage("");
+  const fetchComments = async () => {
+    try {
+      const res = await fetch(
+        `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getComments.php?tripId=${tripId}`
+      );
+      const data = await res.json();
+      if (data.success) {
+        setComments(data.comments);
+      } else {
+        console.warn("Failed to fetch comments:", data.message);
+      }
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchComments();
+    }
+  }, [open]);
+
+  const handleSend = async () => {
+    if (!message.trim()) return;
+
+    try {
+      const res = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/addComment.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tripId, message }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setMessage("");
+        fetchComments(); // Refresh after sending
+      } else {
+        alert(data.message || "Failed to send comment.");
+      }
+    } catch (err) {
+      console.error("Send comment error:", err);
     }
   };
 
@@ -21,8 +60,15 @@ const DiscussionBar = ({ tripId }) => {
       {open && (
         <div className="discussion-body">
           <div className="messages-placeholder">
-            {/* You'll eventually render messages here */}
-            <p>No messages yet. Start the conversation!</p>
+            {comments.length === 0 ? (
+              <p>No messages yet. Start the conversation!</p>
+            ) : (
+              comments.map((c, i) => (
+                <div key={i} className="comment">
+                  <strong>{c.username}:</strong> {c.comment}
+                </div>
+              ))
+            )}
           </div>
           <div className="discussion-input">
             <input

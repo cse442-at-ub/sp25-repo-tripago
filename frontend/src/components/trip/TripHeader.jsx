@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { FaEdit } from "react-icons/fa";
 import airplaneIllustration from "../../assets/airplane.svg";
 import "../../styles/trip/TripHeader.css";
+import TripCollaborators from "./TripCollaborators";
 
 const TripHeader = ({
   firstName,
@@ -19,6 +20,9 @@ const TripHeader = ({
           className={`header-image ${isCustomPicture && "custom-picture"}`}
         />
       </div>
+      <div className="collab-button-wrapper">
+          <TripCollaborators />
+        </div>
     </div>
   );
 };

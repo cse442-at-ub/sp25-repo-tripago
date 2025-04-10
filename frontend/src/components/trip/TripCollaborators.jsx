@@ -28,23 +28,28 @@ const TripCollaborators = ({ tripId }) => {
   };
 
   return (
-    <div className="trip-collaborators">
-      <button
-        className="add-collab-btn"
-        onClick={() => setShowInput((prev) => !prev)}
-      >
+    <div className="collaborator-wrapper">
+      <button className="collaborator-btn" onClick={() => setShowInput(prev => !prev)}>
         <FaUserPlus /> Plan with others
       </button>
 
       {showInput && (
-        <div className="collab-input-container">
-          <input
-            type="text"
-            placeholder="Enter username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <button onClick={handleAddCollaborator}>Add</button>
+        <div className="collaborator-popup">
+          <p className="collab-info">
+            Share this trip with a friend by entering their username. They’ll be
+            able to edit trip details with you!
+          </p>
+          <div className="collab-input-group">
+            <input
+              type="text"
+              placeholder="Enter username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <button className="collab-add-btn" onClick={handleAddCollaborator}>
+              Add
+            </button>
+          </div>
         </div>
       )}
     </div>
