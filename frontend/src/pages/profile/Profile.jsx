@@ -89,6 +89,7 @@ const Profile = () => {
           );
       
           const data = await res.json();
+          console.log("After get trip by id data is: ", data)
           if (data.success) {
             const tripData = {
               id: data.trip.id,

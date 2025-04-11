@@ -232,6 +232,7 @@ const UserProfile = () => {
   };
 
   const handleAcceptInvite = async (tripId) => {
+    console.log("Accepting invite and tripId and email is", tripId, user.email)
     try {
       const res = await fetch(
         "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/acceptInvite.php",
@@ -243,6 +244,7 @@ const UserProfile = () => {
       );
 
       const data = await res.json();
+      console.log("After accepting invite and data is", data)
       if (data.success) {
         setTripInvites((prev) =>
           prev.filter((invite) => invite.trip_id !== tripId)
@@ -343,13 +345,13 @@ const UserProfile = () => {
                   <div style={{ marginTop: "6px" }}>
                     <button
                       className="join-trip-btn"
-                      onClick={() => handleAcceptInvite(invite.trip_id)}
+                      onClick={() => handleAcceptInvite(invite.tripId)}
                     >
                       Accept and view
                     </button>
                     <button
                       className="ignore-invite-btn"
-                      onClick={() => handleIgnoreInvite(invite.trip_id)}
+                      onClick={() => handleIgnoreInvite(invite.tripId)}
                     >
                       Ignore
                     </button>
