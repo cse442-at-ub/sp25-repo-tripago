@@ -6,6 +6,7 @@ const DiscussionBar = ({ tripId }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [comments, setComments] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
 
   const fetchComments = async () => {
     try {
@@ -22,6 +23,24 @@ const DiscussionBar = ({ tripId }) => {
       console.error("Error fetching comments:", err);
     }
   };
+
+  useEffect(() => {
+    const fetchCollaborators = async () => {
+      try {
+        const res = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getCollaborators.php?tripId=${tripId}`
+        );
+        const data = await res.json();
+        if (data.success) {
+          setCollaborators(data.collaborators);
+        }
+      } catch (err) {
+        console.error("Error fetching collaborators:", err);
+      }
+    };
+
+    fetchCollaborators();
+  }, [tripId]);
 
   useEffect(() => {
     if (open) {
@@ -62,7 +81,12 @@ const DiscussionBar = ({ tripId }) => {
         <div className="discussion-body">
           <div className="discussion-members">
             <p>
-              <strong>Planning with:</strong> Alice, John
+              <strong>Planning with:</strong>{" "}
+              {collaborators.length > 0
+                ? collaborators
+                    .map((c) => `${c.firstName} ${c.lastName}`)
+                    .join(", ")
+                : "Just you for now"}
             </p>
           </div>
           <div className="messages-placeholder">

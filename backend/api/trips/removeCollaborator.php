@@ -8,9 +8,10 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $tripId = $data['tripId'] ?? null;
 $username = $data['username'] ?? null;
+$email = $data['email'] ?? null;
 
-if (!$tripId || !$username) {
-    echo json_encode(["success" => false, "message" => "Missing trip ID or username"]);
+if (!$tripId || (!$username && !$email)) {
+    echo json_encode(["success" => false, "message" => "Missing trip ID or user identifier"]);
     exit();
 }
 
@@ -22,23 +23,25 @@ if ($mysqli->connect_errno) {
     exit();
 }
 
-// Get user email from username
-$stmt = $mysqli->prepare("SELECT email FROM users WHERE username = ?");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$res = $stmt->get_result();
-$user = $res->fetch_assoc();
+// Resolve email if only username is provided
+if (!$email) {
+    $stmt = $mysqli->prepare("SELECT email FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $user = $res->fetch_assoc();
 
-if (!$user) {
-    echo json_encode(["success" => false, "message" => "Username not found"]);
-    exit();
+    if (!$user) {
+        echo json_encode(["success" => false, "message" => "Username not found"]);
+        exit();
+    }
+
+    $email = $user['email'];
 }
 
-$userEmail = $user['email'];
-
-// Delete the collaborator
+// Delete the collaborator row (invite or accepted)
 $stmt = $mysqli->prepare("DELETE FROM trip_collaborators WHERE trip_id = ? AND user_email = ?");
-$stmt->bind_param("is", $tripId, $userEmail);
+$stmt->bind_param("is", $tripId, $email);
 
 if ($stmt->execute()) {
     echo json_encode(["success" => true, "message" => "Collaborator removed successfully"]);

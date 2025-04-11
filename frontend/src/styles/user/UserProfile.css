@@ -102,7 +102,7 @@
   margin-bottom: 2rem;
 }
 
-.bucket-list h3 {
+.bucket-list h3, .trip-invites h3 {
   font-size: 1.3rem;
   color: var(--black);
 }
@@ -460,6 +460,43 @@
   margin: 2rem auto; /* Adds vertical spacing */
   width: 100%;
 }
+
+.trip-invites ul li {
+  color: var(--dark-grey);
+}
+
+.trip-invites ul li span {
+  color: var(--primary-color);
+}
+
+.trip-invites ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.join-trip-btn {
+  margin-right: 2px;
+
+}
+
+.ignore-invite-btn {
+  background-color: white;
+  border: none;
+  box-shadow: none;
+  color: var(--secondary-text);
+  transition: all 0.4s ease-in-out;
+}
+
+.ignore-invite-btn:hover {
+  background-color: white;
+  border: none;
+  box-shadow: none;
+  color: var(--primary-color);
+  transition: all 0.4s ease-in-out;
+}
+
+
 
 /* Responsiveness */
 @media screen and (max-width: 868px) {

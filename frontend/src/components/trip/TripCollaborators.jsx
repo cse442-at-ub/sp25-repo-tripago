@@ -99,7 +99,7 @@ const TripCollaborators = ({ tripId, firstName, lastName }) => {
               className={error ? "input-error" : ""}
             />
             <button className="collab-add-btn" onClick={handleAddCollaborator}>
-              Add
+              Send Invite
             </button>
           </div>
           {error && <p className="error-message">{error}</p>}
