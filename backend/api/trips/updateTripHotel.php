@@ -3,45 +3,66 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json");
 
-$token = $_COOKIE['authCookie'];
-
-$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_error != 0){
-    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-    exit();
+// Connect to DB
+$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
+if ($mysqli->connect_errno) {
+  echo json_encode(["success" => false, "message" => "Database connection failed"]);
+  exit();
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
-$stmt->bind_param("s",$token);
+// Auth
+$token = $_COOKIE['authCookie'] ?? null;
+if (!$token) {
+  echo json_encode(["success" => false, "message" => "No auth token provided"]);
+  exit();
+}
+
+// Get email from token
+$stmt = $mysqli->prepare("SELECT email FROM users WHERE token=?");
+$stmt->bind_param("s", $token);
 $stmt->execute();
+$userResult = $stmt->get_result()->fetch_assoc();
 
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
-
-$email = $result["email"];
+$email = $userResult["email"] ?? null;
 if (!$email) {
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
 }
 
+// Parse JSON input
 $data = json_decode(file_get_contents("php://input"), true);
-if (!$data) {
-  echo json_encode(["success" => false, "message" => "Invalid input"]);
+if (!$data || !isset($data["trip_id"], $data["hotel_name"], $data["hotel_price"])) {
+  echo json_encode(["success" => false, "message" => "Missing required data"]);
   exit();
 }
 
-$city = $data["city_name"];
+$tripId = intval($data["trip_id"]);
 $hotelName = $data["hotel_name"];
 $hotelPrice = $data["hotel_price"];
 
-// Update hotel information for a specific trip (identified by email + city)
-$stmt = $mysqli->prepare("UPDATE trips SET hotel_name=?, hotel_price=? WHERE email=? AND city_name=?");
-$stmt->bind_param("sdss", $hotelName, $hotelPrice, $email, $city);
-$stmt->execute();
+// Validate user has access to this trip (either as owner or collaborator)
+$accessStmt = $mysqli->prepare("
+  SELECT t.id FROM trips t
+  LEFT JOIN trip_collaborators c ON t.id = c.trip_id
+  WHERE t.id = ? AND (t.email = ? OR c.user_email = ?)
+");
+$accessStmt->bind_param("iss", $tripId, $email, $email);
+$accessStmt->execute();
+$accessResult = $accessStmt->get_result()->fetch_assoc();
 
-if ($stmt->affected_rows > 0) {
+if (!$accessResult) {
+  echo json_encode(["success" => false, "message" => "Unauthorized to modify this trip"]);
+  exit();
+}
+
+// Perform update
+$updateStmt = $mysqli->prepare("UPDATE trips SET hotel_name=?, hotel_price=? WHERE id=?");
+$updateStmt->bind_param("sdi", $hotelName, $hotelPrice, $tripId);
+$success = $updateStmt->execute();
+
+if ($success) {
   echo json_encode(["success" => true, "message" => "Trip hotel updated!"]);
 } else {
-  echo json_encode(["success" => false, "message" => "Trip not found or unchanged."]);
+  echo json_encode(["success" => false, "message" => "Update failed"]);
 }
-?> 
+?>

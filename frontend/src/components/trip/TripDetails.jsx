@@ -20,6 +20,9 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   const [placeholderText, setPlaceholderText] = useState({}); // State to store the placeholder text for each day
   const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
   const tripID = trip?.id;
+
+  console.log("In Itinerary, our trip is, " , trip)
+  console.log("In Itinerary, our tripId is, " , tripID)
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
   const diffTime = Math.abs(endDate - startDate);
@@ -58,7 +61,6 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
 
       const data = response.data.activities;
 
-      console.log("After post");
 
       //should have a list which contains "activities"
 
@@ -315,7 +317,7 @@ but can expand it in the future, if need (or want) be!
                 {dayActivities.map((activity, index) => (
                   <div key={index} className="activity-item">
                     <div className="activity-header">
-                      <h3>{encode(activity.name)}</h3>
+                      <h3>{activity.name}</h3>
                     </div>
                     {activity.time && (
                       <p className="activity-time">
@@ -324,7 +326,7 @@ but can expand it in the future, if need (or want) be!
                     )}
                     {activity.description && (
                       <p className="activity-description">
-                        {encode(activity.description)}
+                        {activity.description}
                       </p>
                     )}
                   </div>
@@ -421,12 +423,15 @@ but can expand it in the future, if need (or want) be!
                   <p className="hotel-price">Price: ${trip.hotel.price}</p>
                   <button
                     className="find-hotel-btn"
+                   
                     onClick={() =>
                       navigate("/loading-screen", {
+
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
                           redirectTo: "/browse-hotels",
+                          tripId: tripID,
                           hotels: {
                             location: trip.name,
                             checkIn: trip.startDate,
@@ -455,6 +460,7 @@ but can expand it in the future, if need (or want) be!
                           headerText:
                             "Hang on! We're finding the best hotels for you",
                           redirectTo: "/browse-hotels",
+                          tripId: tripID,
                           hotels: {
                             location: trip.name,
                             checkIn: trip.startDate,
@@ -462,7 +468,6 @@ but can expand it in the future, if need (or want) be!
                             adults: 2, // safe default
                             rooms: 1, // safe default
                           },
-                          tripId: trip.id,
                           fromInvite: isInvitee || false,
                         },
                       })

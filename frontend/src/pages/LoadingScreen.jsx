@@ -40,6 +40,8 @@ const LoadingScreen = () => {
           );
           console.log("hotels from amadeus", results);
 
+          console.log("In LoadingScreen, before nav to hotels page, tripId and fromInvite: ",location.state?.tripId,  location.state?.fromInvite)
+
           // Step 3: Navigate to hotels page with results
           navigate(redirectTo, {
             state: {
@@ -53,7 +55,13 @@ const LoadingScreen = () => {
           });
         } catch (error) {
           console.error("Error fetching hotels:", error);
-          navigate("/browse-hotels", { state: { error: error.message } });
+          navigate("/browse-hotels", {
+            state: {
+              error: error.message,
+              tripId: location.state?.tripId,
+              fromInvite: location.state?.fromInvite,
+            },
+          });
         }
         // If we are not going to the hotels page, we just navigate to the page after timeout
       } else {

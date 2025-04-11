@@ -433,6 +433,7 @@ const Profile = () => {
                       setShowModal(false);
 
                       const endpoint = "updateTripDates.php";
+                      console.log("1Updated trip is: ", updatedTrip)
 
                       fetch(
                         `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/${endpoint}`,
