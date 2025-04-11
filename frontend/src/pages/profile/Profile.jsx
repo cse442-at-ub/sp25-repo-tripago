@@ -22,6 +22,7 @@ const Profile = () => {
   // let incomingDestination = location.state || null;
   const incomingDestination = location.state || {};
   const isFromLogin = incomingDestination.fromLogin === true;
+
   console.log("at very top, incomingDest is", incomingDestination);
 
   const [trip, setTrip] = useState({
@@ -43,6 +44,9 @@ const Profile = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    const incomingTripId = incomingDestination.tripId;
+    const isFromInvite = incomingDestination.fromInvite;
+
     const fetchTripImage = async (cityName) => {
       const cacheKey = `tripImage-${cityName}`;
       const cached = localStorage.getItem(cacheKey);
@@ -71,6 +75,58 @@ const Profile = () => {
       console.log("Rendering Profile.ksx and stored is : ", stored);
 
       let tripData = null;
+
+      if (incomingTripId) {
+        console.log("Loading trip from invite:", incomingTripId);
+        try {
+          const res = await fetch(
+            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripById.php",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ trip_id: incomingTripId }),
+            }
+          );
+      
+          const data = await res.json();
+          if (data.success) {
+            const tripData = {
+              id: data.trip.id,
+              name: encode(data.trip.city_name),
+              countryCode: encode(data.trip.country_name),
+              startDate: data.trip.start_date,
+              endDate: data.trip.end_date,
+              hotel: {
+                name: data.trip.hotel?.name,
+                price: data.trip.hotel?.price,
+              },
+            };
+      
+            const image =
+              data.trip.image_url ||
+              "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png";
+            const budget = data.trip.budget || { amount: 0, expenses: [] };
+      
+            setTrip({
+              ...tripData,
+              picture: image,
+              days: [],
+              budget,
+            });
+      
+            setStartDate(tripData.startDate || null);
+            setEndDate(tripData.endDate || null);
+            return;
+          } else {
+            console.warn("Trip not found by ID.");
+            return;
+          }
+        } catch (err) {
+          console.error("Failed to fetch trip by ID:", err);
+          return;
+        }
+      }
+      
 
       if (stored) {
         console.log("In stored block:");

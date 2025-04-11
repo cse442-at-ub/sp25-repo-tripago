@@ -866,6 +866,7 @@ const TripDetails = ({ trip, setShowModal }) => {
   const navigate = useNavigate();
 
   console.log("Trip is:", trip);
+  const tripId = trip?.id;
 
   const [currentTab, setCurrentTab] = useState("itinerary");
 

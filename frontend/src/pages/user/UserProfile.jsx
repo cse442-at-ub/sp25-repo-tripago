@@ -247,6 +247,12 @@ const UserProfile = () => {
         setTripInvites((prev) =>
           prev.filter((invite) => invite.trip_id !== tripId)
         );
+        navigate("/profile", {
+          state: {
+            tripId: tripId,
+            fromInvite: true,
+          },
+        });
       } else {
         console.error("Accept failed:", data.message);
       }
