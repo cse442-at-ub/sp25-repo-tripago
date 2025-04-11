@@ -8,13 +8,11 @@ import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
 import DiscussionBar from "../../components/trip/DiscussionBar.jsx";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext.jsx";
 
 const Profile = () => {
-  const [user] = useState({
-    firstName: "Jane",
-    lastName: "Doe",
-    username: "Jane",
-  });
+  const { user } = useContext(UserContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -433,12 +431,14 @@ const Profile = () => {
               </div>
             )}
 
-            <TripHeader
-              firstName={user.firstName}
-              lastName={user.lastName}
-              picture={trip?.picture}
-              tripID={trip?.id}
-            />
+            {trip.id && (
+              <TripHeader
+                firstName={user?.firstName}
+                lastName={user?.lastName}
+                picture={trip?.picture}
+                tripID={trip.id}
+              />
+            )}
 
             <TripDetails trip={trip} setShowModal={setShowModal} />
 

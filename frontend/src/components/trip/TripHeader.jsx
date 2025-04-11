@@ -11,6 +11,7 @@ const TripHeader = ({
   tripID
 }) => {
   const isCustomPicture = picture !== airplaneIllustration;
+  console.log("In header, tripID is: ", tripID)
 
   return (
     <div className="header-content">
@@ -22,7 +23,7 @@ const TripHeader = ({
         />
       </div>
       <div className="collab-button-wrapper">
-          <TripCollaborators  tripId={tripID}/>
+          <TripCollaborators  tripId={tripID} firstName={firstName} lastName={lastName}/>
         </div>
     </div>
   );

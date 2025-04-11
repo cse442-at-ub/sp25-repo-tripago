@@ -162,3 +162,14 @@ font-size: 12px;
   opacity: 1;
   transform: translateY(0);
 }
+
+.input-error {
+  border: 1px solid #ed4937 !important;
+  background-color: #fff6f6;
+}
+
+.error-message {
+  margin-top: 6px;
+  color: #ed4937;
+  font-size: 0.85rem;
+}
