@@ -144,8 +144,8 @@ const TripCollaborators = ({ tripId, firstName, lastName, isInvitee }) => {
             <h3>You’re a Collaborator</h3>
             
             <p className="collab-info">
-              You’ve been invited to co-plan this trip! You can help edit the
-              itinerary, hotel details, and budget with <span>{firstName}</span>. 
+              You’ve been <span>invited to co-plan</span> this trip! You can help edit the
+              itinerary, hotel details, and budget. 
             </p>
             <p className="collab-info">Click the <span>discussion bar below</span> to discuss your trip plans. </p>
         </div>

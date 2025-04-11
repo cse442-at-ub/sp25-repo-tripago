@@ -10,7 +10,9 @@ const Navbar = () => {
   const location = useLocation();
 
   const isBrowseHotelsPage = location.pathname === "/browse-hotels";
-
+  const tripId = location.state?.tripId;
+  const fromInvite = location.state?.fromInvite;
+  
   return (
     <nav className="navbar">
       {isBrowseHotelsPage ? (
@@ -19,7 +21,14 @@ const Navbar = () => {
             src={backArrow}
             alt="Back"
             className="back-arrow"
-            onClick={() => navigate("/profile")} // Navigate to profile
+            onClick={() =>
+              navigate("/profile", {
+                state: {
+                  tripId,
+                  fromInvite,
+                },
+              })
+            } // Navigate to profile
             style={{ cursor: "pointer" }}
           />
           <img src={fav} alt="Tripago Favicon" className="tripago-fav" />
@@ -33,7 +42,10 @@ const Navbar = () => {
         </div>
       )}
 
-      {location.pathname === "/" || location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/forgot-password" ? (
+      {location.pathname === "/" ||
+      location.pathname === "/login" ||
+      location.pathname === "/signup" ||
+      location.pathname === "/forgot-password" ? (
         <ul className="nav-links">
           <li>
             <button className="navbar-links" onClick={() => navigate("/login")}>

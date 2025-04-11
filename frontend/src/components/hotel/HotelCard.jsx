@@ -48,7 +48,12 @@ const HotelCard = ({ hotel }) => {
         }
         
         // Navigate back and trigger a reload
-        navigate("/profile");
+        navigate("/profile", {
+          state: {
+            tripId,
+            fromInvite,
+          },
+        });
       } else {
         console.error('Failed to book hotel:', data.message);
       }

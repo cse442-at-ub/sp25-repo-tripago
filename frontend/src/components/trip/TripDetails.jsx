@@ -11,7 +11,7 @@ import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 
-const Itinerary = ({ trip, setShowModal }) => {
+const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
   //Need to get saved activities from DB, (or at least check!)
   //its called "autofillMessages", but should handle manual ones too!
@@ -19,7 +19,7 @@ const Itinerary = ({ trip, setShowModal }) => {
   const [location, setLocation] = useState({}); // State to store location input for each day
   const [placeholderText, setPlaceholderText] = useState({}); // State to store the placeholder text for each day
   const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
-
+  const tripID = trip?.id;
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
   const diffTime = Math.abs(endDate - startDate);
@@ -46,7 +46,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getAllActivities.php",
-        { start_date: startDate, city_name: trip.name },
+        { trip_id: tripID, start_date: startDate, city_name: trip.name },
         {
           headers: {
             "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const Itinerary = ({ trip, setShowModal }) => {
     try {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/generateActivity.php",
-        { location: trip.name },
+        { location: trip.name, trip_id: tripID },
         {
           headers: {
             "Content-Type": "application/json",
@@ -187,6 +187,7 @@ but can expand it in the future, if need (or want) be!
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/addActivity.php",
         {
+          trip_id: tripID,
           day: day,
           name: name,
           price: price,
@@ -461,6 +462,8 @@ but can expand it in the future, if need (or want) be!
                             adults: 2, // safe default
                             rooms: 1, // safe default
                           },
+                          tripId: trip.id,
+                          fromInvite: isInvitee || false,
                         },
                       })
                     }
@@ -490,11 +493,12 @@ but can expand it in the future, if need (or want) be!
   );
 };
 
-const Budgeting = ({ trip }) => {
+const Budgeting = ({ trip, isInvitee }) => {
   const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
   const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const tripID = trip?.id;
 
   useEffect(() => {
     console.log(
@@ -530,6 +534,7 @@ const Budgeting = ({ trip }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            trip_id: tripID,
             city_name: trip.name,
             budget_amount: newBudget, // triggers the update block
           }),
@@ -550,6 +555,7 @@ const Budgeting = ({ trip }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            trip_id: tripID,
             city_name: trip.name,
             category: newExpense.category,
             amount: newExpense.amount,
@@ -566,10 +572,9 @@ const Budgeting = ({ trip }) => {
     const loadExpenses = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(
-            trip.name
-          )}`
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripExpenses.php?trip_id=${trip.id}`
         );
+
         const data = await res.json();
         if (data.success) {
           setExpenses(data.expenses || []);
@@ -581,10 +586,10 @@ const Budgeting = ({ trip }) => {
       }
     };
 
-    if (trip.name) {
+    if (trip?.id) {
       loadExpenses();
     }
-  }, [trip.name]);
+  }, [trip]);
 
   return (
     <div className="budgeting-container">
@@ -948,9 +953,15 @@ const TripDetails = ({ trip, setShowModal, isInvitee }) => {
 
           <div className="tab-content">
             {currentTab === "itinerary" && (
-              <Itinerary trip={trip} setShowModal={setShowModal} />
+              <Itinerary
+                trip={trip}
+                setShowModal={setShowModal}
+                isInvitee={isInvitee}
+              />
             )}
-            {currentTab === "budgeting" && <Budgeting trip={trip} />}
+            {currentTab === "budgeting" && (
+              <Budgeting trip={trip} isInvitee={isInvitee} />
+            )}
             {currentTab === "memories" && <Memories />}
           </div>
         </div>

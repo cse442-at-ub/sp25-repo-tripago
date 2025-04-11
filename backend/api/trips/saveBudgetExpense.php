@@ -3,53 +3,64 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json");
 
-$token = $_COOKIE['authCookie'];
+$token = $_COOKIE['authCookie'] ?? '';
 
-$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
 
 if ($mysqli->connect_errno) {
   echo json_encode(["success" => false, "message" => "Database connection failed"]);
   exit();
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
-$stmt->bind_param("s",$token);
+// Authenticate user
+$stmt = $mysqli->prepare("SELECT email FROM users WHERE token=?");
+$stmt->bind_param("s", $token);
 $stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
 
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
-
-$email = $result["email"];
-
+$email = $user["email"] ?? null;
 if (!$email) {
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
 }
-$data = json_decode(file_get_contents("php://input"), true);
 
-if (!$email || !$data || !isset($data["city_name"])) {
+// Get data from frontend
+$data = json_decode(file_get_contents("php://input"), true);
+$city = $data["city_name"] ?? null;
+
+if (!$data || !$city) {
   echo json_encode(["success" => false, "message" => "Invalid input"]);
   exit();
 }
 
-$city = $data["city_name"];
-
-// Get trip ID
+// Try finding trip as OWNER
 $tripStmt = $mysqli->prepare("SELECT id FROM trips WHERE email=? AND city_name=?");
 $tripStmt->bind_param("ss", $email, $city);
 $tripStmt->execute();
-$tripResult = $tripStmt->get_result();
-$trip = $tripResult->fetch_assoc();
+$tripResult = $tripStmt->get_result()->fetch_assoc();
 
-if (!$trip) {
+$tripId = $tripResult["id"] ?? null;
+
+// If not found as owner, check COLLABORATOR
+if (!$tripId) {
+  $collabStmt = $mysqli->prepare("
+    SELECT t.id FROM trips t
+    JOIN trip_collaborators c ON t.id = c.trip_id
+    WHERE c.user_email = ? AND t.city_name = ?
+  ");
+  $collabStmt->bind_param("ss", $email, $city);
+  $collabStmt->execute();
+  $collabResult = $collabStmt->get_result()->fetch_assoc();
+  $tripId = $collabResult["id"] ?? null;
+}
+
+if (!$tripId) {
   echo json_encode(["success" => false, "message" => "Trip not found"]);
   exit();
 }
 
-$tripId = $trip["id"];
-
+// Save EXPENSE
 if (isset($data["category"]) && isset($data["amount"])) {
-  // Save new EXPENSE
   $category = $data["category"];
   $amount = floatval($data["amount"]);
 
@@ -58,8 +69,9 @@ if (isset($data["category"]) && isset($data["amount"])) {
   $insertStmt->execute();
 
   echo json_encode(["success" => true, "message" => "Expense saved"]);
-} else if (isset($data["budget_amount"])) {
-  // Save new BUDGET
+}
+// Save BUDGET
+else if (isset($data["budget_amount"])) {
   $budgetAmount = floatval($data["budget_amount"]);
 
   $updateStmt = $mysqli->prepare("UPDATE trips SET budget_amount = ? WHERE id = ?");
@@ -67,7 +79,8 @@ if (isset($data["category"]) && isset($data["amount"])) {
   $updateStmt->execute();
 
   echo json_encode(["success" => true, "message" => "Budget amount updated"]);
-} else {
+}
+else {
   echo json_encode(["success" => false, "message" => "Missing expense or budget data"]);
 }
 ?>
