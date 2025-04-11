@@ -37,7 +37,7 @@ color: var(--primary-color);
   max-height: 200px;
   overflow-y: auto;
   margin-bottom: 10px;
-  background-color: #E6F0FA; /* soft blue */
+  background-color: rgba(224, 224, 224, 0.42);
   padding: 10px;
   border-radius: 8px;
 }
@@ -46,6 +46,22 @@ color: var(--primary-color);
 .comment {
   margin-bottom: 8px;
   font-size: 0.9rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+  border: none;
+}
+
+/* Message bubble */
+.comment-bubble {
+  background-color: #e6e7fa; /* soft purple */
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 0.9rem;
+  max-width: 75%;
+  word-wrap: break-word;
 }
 
 /* Input area */
@@ -60,17 +76,6 @@ color: var(--primary-color);
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 0.9rem;
-}
-
-.discussion-input button {
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(95, 215, 165, 0.3);
 }
 
 .discussion-members {
@@ -114,4 +119,5 @@ color: var(--primary-color);
   margin-right: 8px;
   object-fit: cover;
   vertical-align: middle;
+  margin-top: 5px;
 }

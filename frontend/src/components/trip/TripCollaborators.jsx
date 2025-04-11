@@ -2,20 +2,18 @@ import React, { useState } from "react";
 import { FaUserPlus } from "react-icons/fa";
 import "../../styles/trip/TripCollaborators.css";
 
-const TripCollaborators = ({ tripId, firstName, lastName }) => {
+const TripCollaborators = ({ tripId, firstName, lastName, isInvitee }) => {
   const [showInput, setShowInput] = useState(false);
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [invitedUsers, setInvitedUsers] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showRemoved, setShowRemoved] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false); // NEW
 
   const handleAddCollaborator = async () => {
     setError("");
     if (!username.trim()) return;
-
-    console.log("2 Username sent in is: ", username);
-    console.log("2 tripID is: ", tripId);
 
     try {
       const res = await fetch(
@@ -29,17 +27,10 @@ const TripCollaborators = ({ tripId, firstName, lastName }) => {
 
       const data = await res.json();
       if (data.success) {
-        console.log("username added is", username)
         setInvitedUsers((prev) => [...prev, { username }]);
-        console.log("invitedUsers is", invitedUsers)
-
-        setError("");
         setUsername("");
-
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 1300);
-
-        
       } else {
         setError(data.message || "Failed to add collaborator.");
       }
@@ -77,14 +68,23 @@ const TripCollaborators = ({ tripId, firstName, lastName }) => {
 
   return (
     <div className="collaborator-wrapper">
-      <button
-        className="collaborator-btn"
-        onClick={() => setShowInput((prev) => !prev)}
-      >
-        <FaUserPlus /> Manage Invites
-      </button>
+      {isInvitee ? (
+        <button
+          className="collaborator-btn"
+          onClick={() => setShowInfoModal(!showInfoModal)}
+        >
+          Collaborator
+        </button>
+      ) : (
+        <button
+          className="collaborator-btn"
+          onClick={() => setShowInput((prev) => !prev)}
+        >
+          <FaUserPlus /> Manage Invites
+        </button>
+      )}
 
-      {showInput && (
+      {!isInvitee && showInput && (
         <div className="collaborator-popup">
           <p className="collab-info">
             Share this trip with a friend by entering their username. They’ll be
@@ -103,26 +103,24 @@ const TripCollaborators = ({ tripId, firstName, lastName }) => {
             </button>
           </div>
           {error && <p className="error-message">{error}</p>}
-         
-         {invitedUsers.length > 0 && (
-        <div className="invited-list">
-          {invitedUsers.map((u, i) => (
-            <div key={i} className="invited-user">
-              You invited {u.username}.
-              <button
-                className="invited-remove-btn"
-                onClick={() => handleRemoveInvite(u.username)}
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-        </div>
-      )}
 
-    
+          {invitedUsers.length > 0 && (
+            <div className="invited-list">
+              {invitedUsers.map((u, i) => (
+                <div key={i} className="invited-user">
+                  You invited {u.username}.
+                  <button
+                    className="invited-remove-btn"
+                    onClick={() => handleRemoveInvite(u.username)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {showSuccess && (
         <div className="modal-overlay">
@@ -139,8 +137,22 @@ const TripCollaborators = ({ tripId, firstName, lastName }) => {
           </div>
         </div>
       )}
+
+      {/* Info modal for invitees */}
+      {showInfoModal && (
+        <div className="collaborator-popup collab-popup-invitee">
+            <h3>You’re a Collaborator</h3>
+            
+            <p className="collab-info">
+              You’ve been invited to co-plan this trip! You can help edit the
+              itinerary, hotel details, and budget with <span>{firstName}</span>. 
+            </p>
+            <p className="collab-info">Click the <span>discussion bar below</span> to discuss your trip plans. </p>
+        </div>
+      )}
     </div>
   );
 };
 
 export default TripCollaborators;
+

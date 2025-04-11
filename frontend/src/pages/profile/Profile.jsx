@@ -22,6 +22,7 @@ const Profile = () => {
   // let incomingDestination = location.state || null;
   const incomingDestination = location.state || {};
   const isFromLogin = incomingDestination.fromLogin === true;
+  const isInvitee = incomingDestination.fromInvite === true;
 
   console.log("at very top, incomingDest is", incomingDestination);
 
@@ -45,7 +46,8 @@ const Profile = () => {
 
   useEffect(() => {
     const incomingTripId = incomingDestination.tripId;
-    const isFromInvite = incomingDestination.fromInvite;
+    
+
 
     const fetchTripImage = async (cityName) => {
       const cacheKey = `tripImage-${cityName}`;
@@ -342,12 +344,7 @@ const Profile = () => {
 
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
-      console.log(
-        "Window width:",
-        window.innerWidth,
-        "| isMobile:",
-        isNowMobile
-      );
+      
       setIsMobile(isNowMobile);
     };
 
@@ -494,12 +491,13 @@ const Profile = () => {
                 lastName={user?.lastName}
                 picture={trip?.picture}
                 tripID={trip.id}
+                isInvitee={isInvitee}
               />
             )}
 
-            <TripDetails trip={trip} setShowModal={setShowModal} />
+            <TripDetails trip={trip} setShowModal={setShowModal} isInvitee={isInvitee}  />
 
-            {trip.id && <DiscussionBar tripId={trip.id} />}
+            {trip.id && <DiscussionBar tripId={trip.id} isInvitee={isInvitee}  />}
           </div>
         </div>
       </div>

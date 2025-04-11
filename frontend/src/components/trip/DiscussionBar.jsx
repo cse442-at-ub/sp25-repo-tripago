@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaComments } from "react-icons/fa";
 import "../../styles/trip/DiscussionBar.css";
 
-const DiscussionBar = ({ tripId }) => {
+const DiscussionBar = ({ tripId, isInvitee }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [comments, setComments] = useState([]);
@@ -81,12 +81,25 @@ const DiscussionBar = ({ tripId }) => {
         <div className="discussion-body">
           <div className="discussion-members">
             <p>
-              <strong>Planning with:</strong>{" "}
-              {collaborators.length > 0
-                ? collaborators
-                    .map((c) => `${c.firstName} ${c.lastName}`)
-                    .join(", ")
-                : "Just you for now"}
+              {isInvitee ? (
+                <>
+                  <strong>Trip collaborators:</strong>{" "}
+                  {collaborators.length > 0
+                    ? collaborators
+                        .map((c) => `${c.firstName} ${c.lastName}`)
+                        .join(", ")
+                    : "No collaborators listed yet."}
+                </>
+              ) : (
+                <>
+                  <strong>Planning with:</strong>{" "}
+                  {collaborators.length > 0
+                    ? collaborators
+                        .map((c) => `${c.firstName} ${c.lastName}`)
+                        .join(", ")
+                    : "Just you for now"}
+                </>
+              )}
             </p>
           </div>
           <div className="messages-placeholder">
@@ -100,7 +113,7 @@ const DiscussionBar = ({ tripId }) => {
                     alt={`${c.username}'s avatar`}
                     className="comment-avatar"
                   />
-                  <div>
+                  <div className="comment-bubble">
                     <strong>{c.username}</strong>: {c.comment}
                   </div>
                 </div>
