@@ -81,7 +81,7 @@
   .profile-page .sidebar.open {
     display: block;
     position: absolute;
-    top: 50px; 
+    top: 30px; 
     left: 0;
     background-color: #fff;
     z-index: 1;

@@ -5,8 +5,7 @@
   margin-left: 0; /* Centers the container */
   min-height: 100vh;
   background: var(--white);
-  margin-top: 130px;
-  padding: 800px;
+  padding: 80px 800px 20px 800px;
 }
 
 .settings-left {
@@ -55,7 +54,6 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
   min-height: 100vh;
   width: 70%;
-
 }
 
 /* Inputs */
@@ -74,7 +72,6 @@
   background-color: var(--secondary-color);
   color: white;
 }
-
 
 .settings-left .return-home-btn:hover {
   background-color: white;
@@ -149,7 +146,7 @@
 }
 
 .terms-of-service__container h3 {
-    color: var(--dark-grey);
+  color: var(--dark-grey);
 }
 
 .gear-menu {
@@ -160,7 +157,97 @@
   color: var(--black);
 }
 
+@media screen and (max-width: 980px) {
+  .settings-left.open {
+    display: flex;
+    z-index: 1000;
+    position: fixed;
+    left: 0;
+  }
 
+  .settings-right {
+    width: 100%;
+    padding: 50px;
+    /* height: auto; */
+    margin-top: 50px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .settings-right input,
+  .settings-right textarea,
+  .settings-right select {
+    width: 100%; /* Full width */
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .settings-right button {
+    width: 250px;
+    font-size: 16px;
+    height: 3.5em;
+    /* padding: 20px; */
+  }
+
+  .settings-right input,
+  .settings-right textarea,
+  .settings-right select {
+    width: 200px;
+  }
+
+  .activity-section {
+    margin-bottom: 15px;
+    padding: 5px;
+    width: 70%;
+    margin-left: 45px;
+  }
+
+  .display-mode__container {
+    margin-left: 45px;
+  }
+
+  .terms-of-service__container {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    min-width: 120%;
+    background: var(--white);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .terms-of-service__container p {
+    width: 80%;
+    text-align: center;
+  }
+
+  .terms-btn {
+    margin-bottom: 100px;
+  }
+
+  .gear-menu {
+    position: absolute;
+    display: block;
+    top: 15px;
+    right: 100px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1100;
+    box-shadow: none;
+    color: var(--dark-grey);
+  }
+
+  .gear-menu:hover {
+    color: var(--primary-color);
+    box-shadow: none;
+    border: none;
+  }
+}
 
 @media screen and (max-width: 430px) {
   /* Make settings container full-width on mobile */
@@ -168,7 +255,6 @@
     flex-direction: column;
     width: 100%;
     padding: 20px; /* Reduce excessive padding */
-    margin-top: 100px;
   }
 
   /* Hide left sidebar and add a hamburger menu */
@@ -240,7 +326,6 @@
   .settings-right textarea,
   .settings-right select {
     width: 200px;
-   
   }
 
   .activity-section {
@@ -253,9 +338,8 @@
   .display-mode__container {
     margin-left: 45px;
   }
-  
-  .terms-of-service__container 
-  {
+
+  .terms-of-service__container {
     padding-top: 0px;
     padding-bottom: 0px;
     min-width: 120%;
@@ -264,7 +348,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    
   }
 
   .terms-of-service__container p {
@@ -275,5 +358,4 @@
   .terms-btn {
     margin-bottom: 100px;
   }
-
 }

@@ -5,10 +5,9 @@
   background-color: var(--white);
   height: auto;
   min-height: 100vh;
-  margin-top: 100px;
-  margin-left: 0px;
-  padding: 400px;
-  padding-left: 800px;
+  margin-top: 0px;
+  margin-left: 0;
+  padding: 50px 100px 50px 300px;
 }
 
 .community-container::after {
