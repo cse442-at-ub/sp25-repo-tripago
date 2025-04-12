@@ -21,7 +21,7 @@ const SettingsProfileDetails = () => {
   // Get the current email
   useEffect(() => {
     const callCurrentEmail = async () => {
-      await axios.get("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getemail.php")
+      await axios.get("/CSE442/2025-Spring/cse-442aj/backend/api/getemail.php")
       .then(res => setFormData({
         "displayName": "",
         "email": res.data
@@ -53,7 +53,7 @@ const SettingsProfileDetails = () => {
     console.log("Profile Details Form Data:", formData);
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/settingsprofiledetails.php", formData, {
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/settingsprofiledetails.php", formData, {
         headers:{
           'Content-Type': 'application/json'
         }

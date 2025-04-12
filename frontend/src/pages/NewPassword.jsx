@@ -30,7 +30,7 @@ const NewPassword = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/new_password_2.php", {
+      const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/new_password_2.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

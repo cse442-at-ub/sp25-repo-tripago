@@ -19,7 +19,7 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
 
     try {
       //send request to approve request with first and last name
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/approveFrndReqst.php",formData,{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/approveFrndReqst.php",formData,{
         headers:{
           'Content-Type':'application/json'
         }
@@ -69,7 +69,7 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
 
     try {
       //send request to approve request with first and last name
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/deleteFrndReqst.php",formData,{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/deleteFrndReqst.php",formData,{
         headers:{
           'Content-Type':'application/json'
         }
