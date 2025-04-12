@@ -30,6 +30,8 @@ const UserProfile = () => {
   const [tripInvites, setTripInvites] = useState([]);
   const navigate = useNavigate();
 
+ 
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -173,6 +175,17 @@ const UserProfile = () => {
     fetchFriends();
     
   }, [user.email]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth <= 480;
+      setIsMobile(isNowMobile);
+    };
+  
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
