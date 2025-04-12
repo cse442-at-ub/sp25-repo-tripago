@@ -74,7 +74,7 @@ const Settings = () => {
         {isMobile ? (
           <p>Tap the gear icon in the top right, then select a category to view and update your preferences.</p>
         ) : (
-          <p>Select a category from the left to view and update your preferences.</p>
+          <p>Select a category to view and update your preferences.</p>
         )}
       </div>
 

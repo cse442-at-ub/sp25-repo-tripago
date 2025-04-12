@@ -144,7 +144,7 @@ const TravelerProfile = () => {
         />
       )}
       <Sidebar isOpen={!isMobile || isSidebarOpen} />
-      <div className="profile-container">
+      <div className="profile-container public_profile-container">
         <button className="back-btn" onClick={() => navigate("/community")}>
           ← Back to Community
         </button>

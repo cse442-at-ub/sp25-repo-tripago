@@ -97,17 +97,17 @@ p {
 }
 
 .tab-itinerary {
-  margin-top: 400px;
+  margin-top: 0px;
   padding-bottom: 50px;
 }
 
 .tab-budgeting {
-  margin-top: 250px;
+  margin-top: 0px;
   padding-bottom: 50px;
 }
 
 .tab-memories {
-  margin-top: 950px;
+  margin-top: 0px;
   padding-bottom: 50px;
 }
 
@@ -409,7 +409,7 @@ p {
   gap: 50px;
   margin-top: 50px;
   margin-bottom: 15%;
-  z-index: 0;
+  /* z-index: 0; */
   position: relative;
   width: 520px;
   min-height: 300px;

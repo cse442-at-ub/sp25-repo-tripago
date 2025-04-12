@@ -7,7 +7,7 @@ const Home = () => {
 
   return (
     <div className="home__wrapper">
-      <div className="content">
+      <div className="home-content">
         <p className="title-text">
           The smarter way to <span className="title-text-accent">go.</span>
         </p>
