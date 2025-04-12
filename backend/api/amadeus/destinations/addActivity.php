@@ -41,14 +41,15 @@ if ($mysqli->connect_errno) {
 }
 
 // Get user email from token
-$stmt = $mysqli->prepare("SELECT email FROM users WHERE token = ?");
+$stmt = $mysqli->prepare("SELECT email, username FROM users WHERE token = ?");
 $stmt->bind_param("s", $token);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $email = $user["email"] ?? null;
+$username = $user["username"] ?? null;
 
-if (!$email) {
-    debug_log("ERROR: Not logged in.");
+if (!$email || !$username) {
+    debug_log("ERROR: Not logged in or missing username.");
     echo json_encode(["success" => false, "message" => "Not logged in"]);
     exit();
 }
@@ -85,6 +86,13 @@ $success = $insertStmt->execute();
 
 if ($success) {
     debug_log("SUCCESS: Activity added for trip $trip_id by $email");
+
+    // Insert action message into trip_discussion
+    $actionMessage = "@$username added an activity";
+    $logStmt = $mysqli->prepare("INSERT INTO trip_discussion (trip_id, user_email, username, message, is_action) VALUES (?, ?, ?, ?, 1)");
+    $logStmt->bind_param("isss", $trip_id, $email, $username, $actionMessage);
+    $logStmt->execute();
+
     echo json_encode(["success" => true, "message" => "Activity added!"]);
 } else {
     debug_log("ERROR: Insert failed - " . $insertStmt->error);

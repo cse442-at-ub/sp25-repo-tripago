@@ -17,14 +17,16 @@ if (!$token) {
   exit();
 }
 
-// Get email from token
-$stmt = $mysqli->prepare("SELECT email FROM users WHERE token=?");
+// Get email and username from token
+$stmt = $mysqli->prepare("SELECT email, username FROM users WHERE token=?");
 $stmt->bind_param("s", $token);
 $stmt->execute();
 $userResult = $stmt->get_result()->fetch_assoc();
 
 $email = $userResult["email"] ?? null;
-if (!$email) {
+$username = $userResult["username"] ?? null;
+
+if (!$email || !$username) {
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
 }
@@ -61,8 +63,17 @@ $updateStmt->bind_param("sdi", $hotelName, $hotelPrice, $tripId);
 $success = $updateStmt->execute();
 
 if ($success) {
+  // Add action message to trip_discussion
+  $actionMessage = "@$username updated the hotel";
+  $logStmt = $mysqli->prepare("
+    INSERT INTO trip_discussion (trip_id, user_email, username, message, is_action)
+    VALUES (?, ?, ?, ?, 1)
+  ");
+  $logStmt->bind_param("isss", $tripId, $email, $username, $actionMessage);
+  $logStmt->execute();
+
   echo json_encode(["success" => true, "message" => "Trip hotel updated!"]);
 } else {
   echo json_encode(["success" => false, "message" => "Update failed"]);
-}
+}  
 ?>

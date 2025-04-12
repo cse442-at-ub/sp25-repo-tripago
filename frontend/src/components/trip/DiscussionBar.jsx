@@ -9,13 +9,17 @@ const DiscussionBar = ({ tripId, isInvitee }) => {
   const [collaborators, setCollaborators] = useState([]);
 
   const fetchComments = async () => {
+    console.log("Fetching comments");
     try {
       const res = await fetch(
         `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getComments.php?tripId=${tripId}`
       );
       const data = await res.json();
+      console.log("Comments fetched: data is: ", data);
+
       if (data.success) {
         setComments(data.comments);
+        console.log("Comments fetched: ", data);
       } else {
         console.warn("Failed to fetch comments:", data.message);
       }
@@ -107,19 +111,32 @@ const DiscussionBar = ({ tripId, isInvitee }) => {
               <p>No messages yet. Start the conversation!</p>
             ) : (
               comments.map((c, i) => (
-                <div key={i} className="comment">
-                  <img
-                    src={c.image}
-                    alt={`${c.username}'s avatar`}
-                    className="comment-avatar"
-                  />
+                <div
+                  key={i}
+                  className={`comment ${c.is_action ? "action-comment" : ""}`}
+                >
+                  {!c.is_action && (
+                    <img
+                      src={c.image}
+                      alt={`${c.username}'s avatar`}
+                      className="comment-avatar"
+                    />
+                  )}
+
                   <div className="comment-bubble">
-                    <strong>{c.username}</strong>: {c.comment}
+                    {c.is_action ? (
+                      <>{c.comment}</>
+                    ) : (
+                      <>
+                        <strong>{c.username}</strong>: {c.comment}
+                      </>
+                    )}
                   </div>
                 </div>
               ))
             )}
           </div>
+
           <div className="discussion-input">
             <input
               type="text"

@@ -7,7 +7,7 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   overflow: hidden;
   transition: all 0.3s ease;
   z-index: 999;
@@ -16,7 +16,7 @@
 /* Header (clickable) */
 .discussion-header {
   background-color: var(--medium-grey);
-color: var(--primary-color);
+  color: var(--primary-color);
   padding: 12px 16px;
   font-weight: 600;
   display: flex;
@@ -94,7 +94,7 @@ color: var(--primary-color);
 }
 
 .discussion-body-wrapper.open {
-  max-height: 500px; 
+  max-height: 500px;
   opacity: 1;
   transform: scaleY(1);
 }
@@ -120,4 +120,35 @@ color: var(--primary-color);
   object-fit: cover;
   vertical-align: middle;
   margin-top: 5px;
+}
+
+.comment.action-comment {
+  justify-content: center;
+  text-align: center;
+  font-style: italic;
+  color: #555;
+  margin-top: 10px;
+}
+
+.comment.action-comment .comment-bubble {
+  background-color: rgba(246, 246, 246, 0.95);
+  padding: 8px 14px;
+  border-left: 5px solid var(--secondary-text);
+  font-style: italic;
+  color: var(--secondary-text);
+  font-weight: 450;
+  border-bottom: 4px solid var(--secondary-text);
+}
+
+/* Hide avatar for actions */
+.comment.action-comment .comment-avatar {
+  display: none;
+}
+
+
+@media (max-width: 480px) { 
+
+  .discussion-bar, .discussion-header {
+    width: 280px;
+  }
 }

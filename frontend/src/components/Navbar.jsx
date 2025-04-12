@@ -10,6 +10,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const isBrowseHotelsPage = location.pathname === "/browse-hotels";
+  const isProfilePage = location.pathname === "/profile";
   const tripId = location.state?.tripId;
   const fromInvite = location.state?.fromInvite;
   
@@ -35,7 +36,7 @@ const Navbar = () => {
           <h1 className="hotels-header">Search for Hotels</h1>
         </div>
       ) : (
-        <div className="logo">
+        <div className={`logo ${isProfilePage ? "center-logo-profile" : ""}`}>
           <button className="logo-btn" onClick={() => navigate("/")}>
             <img src={logo} alt="Tripago Logo" />
           </button>

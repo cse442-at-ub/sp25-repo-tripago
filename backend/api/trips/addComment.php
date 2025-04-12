@@ -20,8 +20,8 @@ if ($mysqli->connect_errno) {
     exit();
 }
 
-// Get user from token
-$stmt = $mysqli->prepare("SELECT email FROM users WHERE token = ?");
+// Get user email and username from token
+$stmt = $mysqli->prepare("SELECT email, username FROM users WHERE token = ?");
 $stmt->bind_param("s", $token);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -33,10 +33,11 @@ if (!$user) {
 }
 
 $userEmail = $user["email"];
+$username = $user["username"];
 
-// Insert comment
-$stmt = $mysqli->prepare("INSERT INTO trip_discussion (trip_id, user_email, message) VALUES (?, ?, ?)");
-$stmt->bind_param("iss", $tripId, $userEmail, $message);
+// Insert comment (is_action = 0)
+$stmt = $mysqli->prepare("INSERT INTO trip_discussion (trip_id, user_email, username, message, is_action) VALUES (?, ?, ?, ?, 0)");
+$stmt->bind_param("isss", $tripId, $userEmail, $username, $message);
 
 if ($stmt->execute()) {
     echo json_encode(["success" => true, "message" => "Comment added."]);

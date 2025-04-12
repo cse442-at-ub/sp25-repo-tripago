@@ -8,11 +8,6 @@
   max-width: 1200px;
   width: 50%;
   margin: 770px auto 0 400px;
-  /* margin: 0 auto; */
-  /* min-height: 100vh; */
-  /* padding-bottom: 550px;
-  margin-top: 770px;
-  margin-left: 400px; */
   background-size: cover;
 }
 
@@ -167,10 +162,11 @@
   margin-left: 8px;
   margin-top: 10px;
   height: 100%;
+  transition: all 0.5s ease-in-out;
 }
 
 .add-new-dest-btn:hover {
-  background: var(--white);
+  background: grey;
   color: var(--primary-color);
 }
 
@@ -464,6 +460,7 @@
 
 .trip-invites ul li {
   color: var(--dark-grey);
+  border: 1px solid var(--medium-grey);
 }
 
 .trip-invites ul li span {
@@ -557,6 +554,7 @@
   .profile-container {
     margin-left: 100px;
     padding-right: 40px;
+    padding-left: 0;
   }
 
   .all-trips-container {

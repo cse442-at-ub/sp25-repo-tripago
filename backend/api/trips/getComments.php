@@ -17,9 +17,9 @@ if ($mysqli->connect_errno) {
   exit();
 }
 
-// Fetch discussion comments with username + profile image
+// Fetch discussion comments with username + profile image + is_action
 $stmt = $mysqli->prepare("
-  SELECT td.message, td.timestamp, u.username, u.user_image_url
+  SELECT td.message, td.timestamp, td.is_action, u.username, u.user_image_url
   FROM trip_discussion td
   JOIN users u ON td.user_email = u.email
   WHERE td.trip_id = ?
@@ -36,7 +36,8 @@ while ($row = $result->fetch_assoc()) {
     "username" => $row["username"],
     "image" => $row["user_image_url"],
     "comment" => $row["message"],
-    "timestamp" => $row["timestamp"]
+    "timestamp" => $row["timestamp"],
+    "is_action" => (bool)$row["is_action"]
   ];
 }
 

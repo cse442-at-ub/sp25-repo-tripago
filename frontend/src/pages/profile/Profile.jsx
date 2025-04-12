@@ -16,13 +16,14 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 680);
   const [isMobile, setIsMobile] = useState(false);
 
   // let incomingDestination = location.state || null;
   const incomingDestination = location.state || {};
   const isFromLogin = incomingDestination.fromLogin === true;
   const isInvitee = incomingDestination.fromInvite === true;
+  const [currentTab, setCurrentTab] = useState("itinerary");
 
   console.log("at very top, incomingDest is", incomingDestination);
 
@@ -46,8 +47,6 @@ const Profile = () => {
 
   useEffect(() => {
     const incomingTripId = incomingDestination.tripId;
-    
-
 
     const fetchTripImage = async (cityName) => {
       const cacheKey = `tripImage-${cityName}`;
@@ -89,9 +88,9 @@ const Profile = () => {
               body: JSON.stringify({ trip_id: incomingTripId }),
             }
           );
-      
+
           const data = await res.json();
-          console.log("After get trip by id data is: ", data)
+          console.log("After get trip by id data is: ", data);
           if (data.success) {
             const tripData = {
               id: data.trip.id,
@@ -104,19 +103,19 @@ const Profile = () => {
                 price: data.trip.hotel?.price,
               },
             };
-      
+
             const image =
               data.trip.image_url ||
               "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png";
             const budget = data.trip.budget || { amount: 0, expenses: [] };
-      
+
             setTrip({
               ...tripData,
               picture: image,
               days: [],
               budget,
             });
-      
+
             setStartDate(tripData.startDate || null);
             setEndDate(tripData.endDate || null);
             return;
@@ -129,7 +128,6 @@ const Profile = () => {
           return;
         }
       }
-      
 
       if (stored) {
         console.log("In stored block:");
@@ -343,8 +341,8 @@ const Profile = () => {
     loadTrip();
 
     const handleResize = () => {
-      const isNowMobile = window.innerWidth <= 480;
-      
+      const isNowMobile = window.innerWidth <= 680;
+
       setIsMobile(isNowMobile);
     };
 
@@ -357,7 +355,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <>
+    <div className="profile-page">
       {/* Hamburger toggle for mobile */}
       {isMobile && (
         <MobileSidebarToggle
@@ -371,7 +369,7 @@ const Profile = () => {
 
       <div className="dashboard-container">
         <div className="dashboard-content">
-          <div className="profile-content">
+          <div className={`profile-content tab-${currentTab}`}>
             {showModal && (
               <div className="modal-example">
                 <div className="modal travel-dates-modal">
@@ -433,7 +431,7 @@ const Profile = () => {
                       setShowModal(false);
 
                       const endpoint = "updateTripDates.php";
-                      console.log("1Updated trip is: ", updatedTrip)
+                      console.log("1Updated trip is: ", updatedTrip);
 
                       fetch(
                         `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/${endpoint}`,
@@ -496,13 +494,21 @@ const Profile = () => {
               />
             )}
 
-            <TripDetails trip={trip} setShowModal={setShowModal} isInvitee={isInvitee}  />
+            <TripDetails
+              trip={trip}
+              setShowModal={setShowModal}
+              isInvitee={isInvitee}
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
+            />
 
-            {trip.id && <DiscussionBar tripId={trip.id} isInvitee={isInvitee}  />}
+            {trip.id && (
+              <DiscussionBar tripId={trip.id} isInvitee={isInvitee} />
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

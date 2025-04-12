@@ -50,6 +50,8 @@ const UserProfile = () => {
             email: data.user.email,
             profilePic: data.user.user_image_url || UserAvatar,
           });
+          console.log("Fetching bucket list from userInfo w email: ", data.user.email)
+          fetchBucketList(data.user.email)
         } else {
           console.warn("Could not fetch user info:", data.message);
         }
@@ -58,7 +60,31 @@ const UserProfile = () => {
       }
     };
 
+    const fetchBucketList = async (email) => {
+      console.log("Fetching bucket list, email is: ", email)
+      try {
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          }
+        );
+        const data = await res.json();
+        console.log("Bucket list data: ", data)
+        if (data.success) {
+          setBucketList(data.bucketList);
+        }
+      } catch (err) {
+        console.error("Failed to fetch bucket list:", err);
+      }
+    };
+
     fetchUserInfo();
+
   }, []);
 
   useEffect(() => {
@@ -141,30 +167,11 @@ const UserProfile = () => {
       }
     };
 
-    const fetchBucketList = async () => {
-      try {
-        const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: user.email }),
-          }
-        );
-        const data = await res.json();
-        if (data.success) {
-          setBucketList(data.bucketList);
-        }
-      } catch (err) {
-        console.error("Failed to fetch bucket list:", err);
-      }
-    };
+   
 
     fetchStats();
     fetchFriends();
-    fetchBucketList();
+    
   }, [user.email]);
 
   const handleImageChange = async (event) => {
@@ -344,10 +351,10 @@ const UserProfile = () => {
                   invited you to plan a trip.
                   <div style={{ marginTop: "6px" }}>
                     <button
-                      className="join-trip-btn"
+                      className="add-new-dest-btn"
                       onClick={() => handleAcceptInvite(invite.tripId)}
                     >
-                      Accept and view
+                     Go plan
                     </button>
                     <button
                       className="ignore-invite-btn"

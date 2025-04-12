@@ -13,13 +13,15 @@ if ($mysqli->connect_errno) {
 }
 
 // Authenticate user
-$stmt = $mysqli->prepare("SELECT email FROM users WHERE token=?");
+$stmt = $mysqli->prepare("SELECT email, username FROM users WHERE token=?");
 $stmt->bind_param("s", $token);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 
 $email = $user["email"] ?? null;
-if (!$email) {
+$username = $user["username"] ?? null;
+
+if (!$email || !$username) {
   echo json_encode(["success" => false, "message" => "Not logged in"]);
   exit();
 }
@@ -41,7 +43,7 @@ $tripResult = $tripStmt->get_result()->fetch_assoc();
 
 $tripId = $tripResult["id"] ?? null;
 
-// If not found as owner, check COLLABORATOR
+// If not found as COLLABORATOR
 if (!$tripId) {
   $collabStmt = $mysqli->prepare("
     SELECT t.id FROM trips t
@@ -68,6 +70,12 @@ if (isset($data["category"]) && isset($data["amount"])) {
   $insertStmt->bind_param("isd", $tripId, $category, $amount);
   $insertStmt->execute();
 
+  // Log action
+  $actionMessage = "@$username added an expense";
+  $logStmt = $mysqli->prepare("INSERT INTO trip_discussion (trip_id, user_email, username, message, is_action) VALUES (?, ?, ?, ?, 1)");
+  $logStmt->bind_param("isss", $tripId, $email, $username, $actionMessage);
+  $logStmt->execute();
+
   echo json_encode(["success" => true, "message" => "Expense saved"]);
 }
 // Save BUDGET
@@ -77,6 +85,12 @@ else if (isset($data["budget_amount"])) {
   $updateStmt = $mysqli->prepare("UPDATE trips SET budget_amount = ? WHERE id = ?");
   $updateStmt->bind_param("di", $budgetAmount, $tripId);
   $updateStmt->execute();
+
+  // Log action
+  $actionMessage = "@$username updated the budgeting";
+  $logStmt = $mysqli->prepare("INSERT INTO trip_discussion (trip_id, user_email, username, message, is_action) VALUES (?, ?, ?, ?, 1)");
+  $logStmt->bind_param("isss", $tripId, $email, $username, $actionMessage);
+  $logStmt->execute();
 
   echo json_encode(["success" => true, "message" => "Budget amount updated"]);
 }

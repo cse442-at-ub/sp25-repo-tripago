@@ -388,7 +388,7 @@ but can expand it in the future, if need (or want) be!
   };
 
   return (
-    <div className="itinerary-container">
+    <div className="itinerary-container tab-pane-container">
       {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
           <div>
@@ -597,7 +597,7 @@ const Budgeting = ({ trip, isInvitee }) => {
   }, [trip]);
 
   return (
-    <div className="budgeting-container">
+    <div className="budgeting-container tab-pane-container">
       <div className="budget-info">
         <div className="budget-header">
           <h2>Budgeting</h2>
@@ -856,7 +856,7 @@ const Memories = () => {
   };
 
   return (
-    <div className="memories-container">
+    <div className="memories-container tab-pane-container">
       <ShareTripButton />
       {memories.length === 0 ? (
         <p className="no-memories-message">
@@ -891,13 +891,13 @@ const Memories = () => {
   );
 };
 
-const TripDetails = ({ trip, setShowModal, isInvitee }) => {
+const TripDetails = ({ trip, setShowModal, isInvitee, currentTab, setCurrentTab }) => {
   const navigate = useNavigate();
 
   console.log("Trip is:", trip);
   const tripId = trip?.id;
 
-  const [currentTab, setCurrentTab] = useState("itinerary");
+  // const [currentTab, setCurrentTab] = useState("itinerary");
 
   return (
     <div className="trip-details">
