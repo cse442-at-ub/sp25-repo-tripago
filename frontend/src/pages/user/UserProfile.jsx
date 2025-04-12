@@ -30,6 +30,8 @@ const UserProfile = () => {
   const [tripInvites, setTripInvites] = useState([]);
   const navigate = useNavigate();
 
+ 
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -50,6 +52,8 @@ const UserProfile = () => {
             email: data.user.email,
             profilePic: data.user.user_image_url || UserAvatar,
           });
+          console.log("Fetching bucket list from userInfo w email: ", data.user.email)
+          fetchBucketList(data.user.email)
         } else {
           console.warn("Could not fetch user info:", data.message);
         }
@@ -58,13 +62,65 @@ const UserProfile = () => {
       }
     };
 
+    const fetchBucketList = async (email) => {
+      console.log("Fetching bucket list, email is: ", email)
+      try {
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          }
+        );
+        const data = await res.json();
+        console.log("Bucket list data: ", data)
+        if (data.success) {
+          setBucketList(data.bucketList);
+        }
+      } catch (err) {
+        console.error("Failed to fetch bucket list:", err);
+      }
+    };
+
     fetchUserInfo();
+
   }, []);
 
   useEffect(() => {
-    setTripInvites([
-    ]);
-  }, []);
+    if (!user.email) return;
+
+    const fetchTripInvites = async () => {
+      console.log("Getting invites")
+      try {
+        const res = await fetch(
+          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripInvites.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: user.email }),
+          }
+        );
+
+        const data = await res.json();
+      console.log("Getting invites resp: ", data)
+
+        if (data.success) {
+          setTripInvites(data.invites);
+      console.log("Data success and tripInv are: ", data.invites)
+
+        } else {
+          console.warn("No invites found");
+        }
+      } catch (err) {
+        console.error("Error fetching invites:", err);
+      }
+    };
+
+    fetchTripInvites();
+  }, [user.email]);
 
   useEffect(() => {
     if (!user.email) return;
@@ -113,31 +169,23 @@ const UserProfile = () => {
       }
     };
 
-    const fetchBucketList = async () => {
-      try {
-        const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: user.email }),
-          }
-        );
-        const data = await res.json();
-        if (data.success) {
-          setBucketList(data.bucketList);
-        }
-      } catch (err) {
-        console.error("Failed to fetch bucket list:", err);
-      }
-    };
+   
 
     fetchStats();
     fetchFriends();
-    fetchBucketList();
+    
   }, [user.email]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth <= 480;
+      setIsMobile(isNowMobile);
+    };
+  
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -203,6 +251,62 @@ const UserProfile = () => {
     }
   };
 
+  const handleAcceptInvite = async (tripId) => {
+    console.log("Accepting invite and tripId and email is", tripId, user.email)
+    try {
+      const res = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/acceptInvite.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tripId, email: user.email }),
+        }
+      );
+
+      const data = await res.json();
+      console.log("After accepting invite and data is", data)
+      if (data.success) {
+        setTripInvites((prev) =>
+          prev.filter((invite) => invite.trip_id !== tripId)
+        );
+        navigate("/profile", {
+          state: {
+            tripId: tripId,
+            fromInvite: true,
+          },
+        });
+      } else {
+        console.error("Accept failed:", data.message);
+      }
+    } catch (err) {
+      console.error("Error accepting invite:", err);
+    }
+  };
+
+  const handleIgnoreInvite = async (tripId) => {
+    try {
+      const res = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/removeCollaborator.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tripId, email: user.email }),
+        }
+      );
+
+      const data = await res.json();
+      if (data.success) {
+        setTripInvites((prev) =>
+          prev.filter((invite) => invite.trip_id !== tripId)
+        );
+      } else {
+        console.error("Ignore failed:", data.message);
+      }
+    } catch (err) {
+      console.error("Error ignoring invite:", err);
+    }
+  };
+
   return (
     <>
       {isMobile && (
@@ -248,34 +352,30 @@ const UserProfile = () => {
           </div>
         </div>
 
-        <div className="view-all-trips user-profile-section">
-          <div className="view-all-trips-section">
-            <h3>Trips</h3>
-            <button
-              className="view-all-trips-btn"
-              onClick={() => navigate("/all-trips")}
-            >
-              View Your Trips →
-            </button>
-          </div>
-        </div>
-
         <div className="trip-invites user-profile-section">
           <h3>Trip Invites</h3>
           {tripInvites.length === 0 ? (
-            <p>You have no invites yet.</p>
+            <p>When someone invites you to plan a trip with them, you'll see the request here.</p>
           ) : (
             <ul>
               {tripInvites.map((invite, index) => (
                 <li key={index}>
-                  {invite.senderName} invited you to plan a trip to{" "}
-                  {invite.destination}.
-                  <button
-                    className="join-trip-btn"
-                    onClick={() => navigate(`/group-trip/${invite.tripId}`)}
-                  >
-                    Plan group trip
-                  </button>
+                  <span>@{invite.senderName}{" "}</span>
+                  invited you to plan a trip.
+                  <div style={{ marginTop: "6px" }}>
+                    <button
+                      className="add-new-dest-btn"
+                      onClick={() => handleAcceptInvite(invite.tripId)}
+                    >
+                     Go plan
+                    </button>
+                    <button
+                      className="ignore-invite-btn"
+                      onClick={() => handleIgnoreInvite(invite.tripId)}
+                    >
+                      Ignore
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>

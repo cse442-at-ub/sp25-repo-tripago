@@ -20,6 +20,7 @@ const AllTrips = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState(""); // Sorting option
   const [trips, setTrips] = useState([]);
+  const [collabTrips, setCollabTrips] = useState([]);
   const [logged, setLogged] = useState([]);
   const [notLogged, setNotLogged] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
@@ -29,9 +30,10 @@ const AllTrips = () => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    console.log("Fetching trips...");
 
     const fetchTrips = async () => {
+    console.log("Fetching trips...");
+
       try {
         const res = await fetch(
           "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
@@ -49,6 +51,8 @@ const AllTrips = () => {
         if (data.success) {
           console.log("Trips received:", data.trips);
           setTrips(data.trips);
+          console.log("Collab trips received:", data.collaborating);
+          setCollabTrips(data.collaborating || []);
 
           setLogged(data.trips.filter((trip) => trip.logged == true));
           setNotLogged(data.trips.filter((trip) => trip.logged != true));
@@ -64,12 +68,7 @@ const AllTrips = () => {
 
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
-      console.log(
-        "Window width:",
-        window.innerWidth,
-        "| isMobile:",
-        isNowMobile
-      );
+      
       setIsMobile(isNowMobile);
     };
 
@@ -219,7 +218,7 @@ const AllTrips = () => {
                     onClick={() => {
                       const selected = {
                         name: trip.destination,
-                        countryCode: "", // optional
+                        countryCode: "", 
                         startDate: trip.start_date,
                         endDate: trip.end_date,
                         imageUrl: trip.image_url || "",
@@ -238,7 +237,7 @@ const AllTrips = () => {
                       navigate("/profile");
                     }}
                   >
-                    View
+                    Edit
                   </button>
 
                   {/* Trip Info */}
@@ -260,6 +259,68 @@ const AllTrips = () => {
                   </div>
 
                   {/* Trip Image */}
+                  <img
+                    src={
+                      trip.image_url ||
+                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
+                    }
+                    alt={encode(trip.destination)}
+                    className="at-trip-image"
+                  />
+                </div>
+              ))
+            )}
+          </div>
+
+          <h4 className="alltrips-h4">Group Trips</h4>
+          <div className={`trips-container all-trips-trips-container`}>
+            {collabTrips.length === 0 ? (
+              <p className="no-trips-message">
+                You’re not collaborating on any trips yet.
+              </p>
+            ) : (
+              collabTrips.map((trip) => (
+                <div key={trip.id} className="at-trip-card">
+                  {/* No Share button */}
+                  <button
+                    className="view-button"
+                    onClick={() => {
+                      const selected = {
+                        name: trip.destination,
+                        countryCode: "",
+                        startDate: trip.start_date,
+                        endDate: trip.end_date,
+                        imageUrl: trip.image_url || "",
+                        hotel: {
+                          name: trip.hotel_name,
+                          price: trip.hotel_price,
+                        },
+                      };
+                      console.log("Viewing group trip:", selected);
+                      navigate("/profile", {
+                        state: { tripId: trip.id, fromInvite: true },
+                      });
+                    }}
+                  >
+                    Edit as collaborator
+                  </button>
+
+                  {/* Trip Info */}
+                  <div className="trip-info">
+                    <h4 className="trip-destination">
+                      {encode(trip.destination)}
+                    </h4>
+                    <p className="trip-dates">{trip.dates}</p>
+                    <div className="trip-bottom-row">
+                      <div className="trip-icons">
+                        <img src={plane} alt="Plane" className="icon" />
+                        <img src={house} alt="House" className="icon" />
+                        <img src={car} alt="Car" className="icon" />
+                      </div>
+                      <p className="trip-price">${trip.price}</p>
+                    </div>
+                  </div>
+
                   <img
                     src={
                       trip.image_url ||

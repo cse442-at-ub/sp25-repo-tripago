@@ -27,12 +27,7 @@ const Community = () => {
   useEffect(() => {
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
-      console.log(
-        "Window width:",
-        window.innerWidth,
-        "| isMobile:",
-        isNowMobile
-      );
+      
       setIsMobile(isNowMobile);
     };
 

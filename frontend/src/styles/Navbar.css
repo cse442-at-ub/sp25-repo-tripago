@@ -1,8 +1,7 @@
 .logo img {
-  height: 55px; 
+  height: 55px;
   width: auto;
   margin-left: 1.5rem;
-
 }
 
 .logo-btn {
@@ -31,7 +30,7 @@
   color: var(--dark-grey);
   text-decoration: none;
   font-size: 18px;
-  transition: color 0.5s ease-in-out
+  transition: color 0.5s ease-in-out;
 }
 
 .navbar-links {
@@ -83,7 +82,16 @@
   margin-bottom: 13px;
 }
 
-/* MEDIA QUERIES FOR IPHONE 12PRO DIMENSIONS 390px x 844px  */
+@media (max-width: 679px) {
+  .center-logo-profile {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-left: 0; /* overrides the default */
+  }
+}
+
+/* MEDIA QUERIES   */
 
 @media (max-width: 480px) {
   /* Center the logo */
@@ -96,12 +104,11 @@
 
   .logo img {
     margin-top: 8px;
-    height: 60px; 
+    height: 60px;
   }
 
   /* Hide the nav links and show the menu icon */
   .nav-links {
     display: none;
   }
-
 }

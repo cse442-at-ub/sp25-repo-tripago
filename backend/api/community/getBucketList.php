@@ -2,7 +2,8 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-$email = $_GET['email'] ?? null;
+$input = json_decode(file_get_contents("php://input"), true);
+$email = $input['email'] ?? null;
 
 if (!$email) {
   echo json_encode(["success" => false, "message" => "Missing email"]);
