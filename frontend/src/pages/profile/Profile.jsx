@@ -371,7 +371,7 @@ const Profile = () => {
         <div className="dashboard-content">
           <div className={`profile-content tab-${currentTab}`}>
             {showModal && (
-              <div className="modal-example">
+              <div className="modal-overlay">
                 <div className="modal travel-dates-modal">
                   <h3>
                     <span>When</span> are you planning to travel?
