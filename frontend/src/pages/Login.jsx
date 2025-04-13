@@ -42,6 +42,7 @@ const Login = () => {
           firstName: result.first_name,
           lastName: result.last_name,
           username: result.first_name,
+          email: formData.email
         });
 
         console.log("In login, user is: ", result)
