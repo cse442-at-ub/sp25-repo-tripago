@@ -48,8 +48,11 @@ const fetchDestinations = async () => {
       
       setFavorites(favoritesLookup);
   
-      const cityCodes = favoritesData.locations; // assuming this is an array of city codes
-  
+      let cityCodes = [{location: "New York City", cityCode: "NYC"}]
+      if (favoritesData.locations.length != 0) {
+        cityCodes = favoritesData.locations; // assuming this is an array of city codes
+      }
+    
       const allRecommendations = [];
   
       for (const code of cityCodes) {
