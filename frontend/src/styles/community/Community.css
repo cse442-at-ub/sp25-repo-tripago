@@ -5,10 +5,20 @@
   background-color: var(--white);
   height: auto;
   min-height: 100vh;
-  margin-top: 100px;
-  margin-left: 0px;
-  padding: 400px;
-  padding-left: 800px;
+  margin-top: 0px;
+  margin-left: 0;
+  padding: 50px 100px 50px 300px;
+}
+
+.community-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--white); 
+  z-index: -1;
 }
 
 .community-top {
@@ -26,12 +36,51 @@
   margin-bottom: 20px;
 }
 
+.trip-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.profile-image {
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.clickable-name, .friends-list li .clickable-name {
+  cursor: pointer;
+  color: var(--dark-grey);
+  text-decoration: none;
+  transition: all 0.5s ease-in-out;
+}
+
+.clickable-name:hover, .friends-list li .clickable-name:hover {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+
 .search-input {
   width: 300px;
   padding: 10px;
   border: 0.9px solid var(--medium-grey);
   border-radius: 8px;
   font-size: 16px;
+}
+
+.username-text {
+  margin: 0;
+  font-size: 12px;
+}
+
+.send-req-modal-content {
+  color: var(--primary-color);
+  font-weight: 600;
+  width: 300px
 }
 
 .find-friends {
@@ -143,6 +192,7 @@
   flex-direction: column;
   gap: 20px;
   flex: 1;
+  padding-bottom: 100px;
 }
 
 .trip-list h3 {
@@ -220,6 +270,7 @@
 
 .trip-info {
   flex: 1;
+  margin-bottom: 10px;
 }
 
 .community-image {
@@ -338,5 +389,8 @@
   .view-more-btn {
     margin-top: 10px;
     margin-bottom: 5px;
+  }
+  .trip-info {
+    margin-bottom: 10px;
   }
 }

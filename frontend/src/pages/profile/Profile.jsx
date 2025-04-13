@@ -7,22 +7,24 @@ import airplaneIllustration from "../../assets/airplane.svg";
 import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
+import DiscussionBar from "../../components/trip/DiscussionBar.jsx";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext.jsx";
 
 const Profile = () => {
-  const [user] = useState({
-    firstName: "Jane",
-    lastName: "Doe",
-    username: "Jane",
-  });
+  const { user } = useContext(UserContext);
 
   const navigate = useNavigate();
   const location = useLocation();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 680);
   const [isMobile, setIsMobile] = useState(false);
 
   // let incomingDestination = location.state || null;
   const incomingDestination = location.state || {};
   const isFromLogin = incomingDestination.fromLogin === true;
+  const isInvitee = incomingDestination.fromInvite === true;
+  const [currentTab, setCurrentTab] = useState("itinerary");
+
   console.log("at very top, incomingDest is", incomingDestination);
 
   const [trip, setTrip] = useState({
@@ -44,6 +46,8 @@ const Profile = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    const incomingTripId = incomingDestination.tripId;
+
     const fetchTripImage = async (cityName) => {
       const cacheKey = `tripImage-${cityName}`;
       const cached = localStorage.getItem(cacheKey);
@@ -72,6 +76,58 @@ const Profile = () => {
       console.log("Rendering Profile.ksx and stored is : ", stored);
 
       let tripData = null;
+
+      if (incomingTripId) {
+        console.log("Loading trip from invite:", incomingTripId);
+        try {
+          const res = await fetch(
+            "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripById.php",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ trip_id: incomingTripId }),
+            }
+          );
+
+          const data = await res.json();
+          console.log("After get trip by id data is: ", data);
+          if (data.success) {
+            const tripData = {
+              id: data.trip.id,
+              name: encode(data.trip.city_name),
+              countryCode: encode(data.trip.country_name),
+              startDate: data.trip.start_date,
+              endDate: data.trip.end_date,
+              hotel: {
+                name: data.trip.hotel?.name,
+                price: data.trip.hotel?.price,
+              },
+            };
+
+            const image =
+              data.trip.image_url ||
+              "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
+            const budget = data.trip.budget || { amount: 0, expenses: [] };
+
+            setTrip({
+              ...tripData,
+              picture: image,
+              days: [],
+              budget,
+            });
+
+            setStartDate(tripData.startDate || null);
+            setEndDate(tripData.endDate || null);
+            return;
+          } else {
+            console.warn("Trip not found by ID.");
+            return;
+          }
+        } catch (err) {
+          console.error("Failed to fetch trip by ID:", err);
+          return;
+        }
+      }
 
       if (stored) {
         console.log("In stored block:");
@@ -285,13 +341,8 @@ const Profile = () => {
     loadTrip();
 
     const handleResize = () => {
-      const isNowMobile = window.innerWidth <= 480;
-      console.log(
-        "Window width:",
-        window.innerWidth,
-        "| isMobile:",
-        isNowMobile
-      );
+      const isNowMobile = window.innerWidth <= 680;
+
       setIsMobile(isNowMobile);
     };
 
@@ -304,7 +355,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <>
+    <div className="profile-page">
       {/* Hamburger toggle for mobile */}
       {isMobile && (
         <MobileSidebarToggle
@@ -318,9 +369,9 @@ const Profile = () => {
 
       <div className="dashboard-container">
         <div className="dashboard-content">
-          <div className="profile-content">
+          <div className={`profile-content tab-${currentTab}`}>
             {showModal && (
-              <div className="modal-example">
+              <div className="modal-overlay">
                 <div className="modal travel-dates-modal">
                   <h3>
                     <span>When</span> are you planning to travel?
@@ -380,6 +431,7 @@ const Profile = () => {
                       setShowModal(false);
 
                       const endpoint = "updateTripDates.php";
+                      console.log("1Updated trip is: ", updatedTrip);
 
                       fetch(
                         `/CSE442/2025-Spring/cse-442aj/backend/api/trips/${endpoint}`,
@@ -432,18 +484,31 @@ const Profile = () => {
               </div>
             )}
 
-            <TripHeader
-              firstName={user.firstName}
-              lastName={user.lastName}
-              picture={trip?.picture}
+            {trip.id && (
+              <TripHeader
+                firstName={user?.firstName}
+                lastName={user?.lastName}
+                picture={trip?.picture}
+                tripID={trip.id}
+                isInvitee={isInvitee}
+              />
+            )}
+
+            <TripDetails
+              trip={trip}
+              setShowModal={setShowModal}
+              isInvitee={isInvitee}
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
             />
 
-            <TripDetails trip={trip} setShowModal={setShowModal} />
-
+            {trip.id && (
+              <DiscussionBar tripId={trip.id} isInvitee={isInvitee} />
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

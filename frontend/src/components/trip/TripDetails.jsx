@@ -7,11 +7,11 @@ import { FaEdit, FaTimes } from "react-icons/fa";
 import { encode } from "html-entities";
 import axios from "axios";
 import autofillIcon from "../../assets/autofill.png";
-import { Slide } from 'react-slideshow-image';
-import 'react-slideshow-image/dist/styles.css'
+import { Slide } from "react-slideshow-image";
+import "react-slideshow-image/dist/styles.css";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
 
-const Itinerary = ({ trip, setShowModal }) => {
+const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
   //Need to get saved activities from DB, (or at least check!)
   //its called "autofillMessages", but should handle manual ones too!
@@ -19,7 +19,10 @@ const Itinerary = ({ trip, setShowModal }) => {
   const [location, setLocation] = useState({}); // State to store location input for each day
   const [placeholderText, setPlaceholderText] = useState({}); // State to store the placeholder text for each day
   const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
+  const tripID = trip?.id;
 
+  console.log("In Itinerary, our trip is, " , trip)
+  console.log("In Itinerary, our tripId is, " , tripID)
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
   const diffTime = Math.abs(endDate - startDate);
@@ -46,7 +49,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",
-        {start_date:startDate},
+        { trip_id: tripID, start_date: startDate, city_name: trip.name },
         {
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +61,6 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const data = response.data.activities;
 
-      console.log("After post");
 
       //should have a list which contains "activities"
 
@@ -115,7 +117,7 @@ const Itinerary = ({ trip, setShowModal }) => {
     try {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",
-        { location: trip.name },
+        { location: trip.name, trip_id: tripID },
         {
           headers: {
             "Content-Type": "application/json",
@@ -123,7 +125,7 @@ const Itinerary = ({ trip, setShowModal }) => {
         }
       );
 
-      console.log("After generating an activity,:")
+      console.log("After generating an activity,:");
       const data = response.data;
 
       console.log(data);
@@ -186,7 +188,14 @@ but can expand it in the future, if need (or want) be!
       */
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",
-        {day:day,name:name,price:price,start:startDate},
+        {
+          trip_id: tripID,
+          day: day,
+          name: name,
+          price: price,
+          start: startDate,
+          city_name: trip.name,
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -196,6 +205,7 @@ but can expand it in the future, if need (or want) be!
 
       const data = response.data;
 
+      console.log("After addActivity: ");
       console.log(data);
 
       if (data.success) {
@@ -307,7 +317,7 @@ but can expand it in the future, if need (or want) be!
                 {dayActivities.map((activity, index) => (
                   <div key={index} className="activity-item">
                     <div className="activity-header">
-                      <h3>{encode(activity.name)}</h3>
+                      <h3>{activity.name}</h3>
                     </div>
                     {activity.time && (
                       <p className="activity-time">
@@ -316,7 +326,7 @@ but can expand it in the future, if need (or want) be!
                     )}
                     {activity.description && (
                       <p className="activity-description">
-                        {encode(activity.description)}
+                        {activity.description}
                       </p>
                     )}
                   </div>
@@ -378,7 +388,7 @@ but can expand it in the future, if need (or want) be!
   };
 
   return (
-    <div className="itinerary-container">
+    <div className="itinerary-container tab-pane-container">
       {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
           <div>
@@ -413,12 +423,15 @@ but can expand it in the future, if need (or want) be!
                   <p className="hotel-price">Price: ${trip.hotel.price}</p>
                   <button
                     className="find-hotel-btn"
+                   
                     onClick={() =>
                       navigate("/loading-screen", {
+
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
                           redirectTo: "/browse-hotels",
+                          tripId: tripID,
                           hotels: {
                             location: trip.name,
                             checkIn: trip.startDate,
@@ -447,6 +460,7 @@ but can expand it in the future, if need (or want) be!
                           headerText:
                             "Hang on! We're finding the best hotels for you",
                           redirectTo: "/browse-hotels",
+                          tripId: tripID,
                           hotels: {
                             location: trip.name,
                             checkIn: trip.startDate,
@@ -454,6 +468,7 @@ but can expand it in the future, if need (or want) be!
                             adults: 2, // safe default
                             rooms: 1, // safe default
                           },
+                          fromInvite: isInvitee || false,
                         },
                       })
                     }
@@ -483,11 +498,12 @@ but can expand it in the future, if need (or want) be!
   );
 };
 
-const Budgeting = ({ trip }) => {
+const Budgeting = ({ trip, isInvitee }) => {
   const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
   const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const tripID = trip?.id;
 
   useEffect(() => {
     console.log(
@@ -523,6 +539,7 @@ const Budgeting = ({ trip }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            trip_id: tripID,
             city_name: trip.name,
             budget_amount: newBudget, // triggers the update block
           }),
@@ -543,6 +560,7 @@ const Budgeting = ({ trip }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            trip_id: tripID,
             city_name: trip.name,
             category: newExpense.category,
             amount: newExpense.amount,
@@ -559,10 +577,9 @@ const Budgeting = ({ trip }) => {
     const loadExpenses = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(
-            trip.name
-          )}`
+          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?trip_id=${trip.id}`
         );
+
         const data = await res.json();
         if (data.success) {
           setExpenses(data.expenses || []);
@@ -574,13 +591,13 @@ const Budgeting = ({ trip }) => {
       }
     };
 
-    if (trip.name) {
+    if (trip?.id) {
       loadExpenses();
     }
-  }, [trip.name]);
+  }, [trip]);
 
   return (
-    <div className="budgeting-container">
+    <div className="budgeting-container tab-pane-container">
       <div className="budget-info">
         <div className="budget-header">
           <h2>Budgeting</h2>
@@ -828,11 +845,11 @@ const Memories = ({ trip }) => {
 
   // Style for image slideshow
   const divStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundSize: 'cover',
-    height: '400px',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundSize: "cover",
+    height: "400px",
   };
 
   // Properties of image slideshow
@@ -842,25 +859,32 @@ const Memories = ({ trip }) => {
     nextArrow: <a className="next">▶</a>,
     autoplay: false,
     canSwipe: true,
-    cssClass: "slide-container"
+    cssClass: "slide-container",
   };
-  
+
   return (
-    <div className="memories-container">
+    <div className="memories-container tab-pane-container">
       <ShareTripButton trip={trip} showShareModal={showShareModal} setShowShareModal={setShowShareModal} />
       {memories.length === 0 ? (
         <p className="no-memories-message">
-          Looks like this trip has no memories. Use the button above to post a memory to this trip. Memories can include pictures and comments about your trip.
+          Looks like this trip has no memories. Use the button above to post a
+          memory to this trip. Memories can include pictures and comments about
+          your trip.
         </p>
       ) : (
         memories.map((memory) => (
           <div key={memory.id} className="memory-card">
-
             <div className="slide-container">
-              <Slide { ...properties} arrows={memory.images.length > 1}>
+              <Slide {...properties} arrows={memory.images.length > 1}>
                 {memory.images.map((slideImage, index) => (
                   <div key={index}>
-                    <div className="memory-image" style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}/>
+                    <div
+                      className="memory-image"
+                      style={{
+                        ...divStyle,
+                        backgroundImage: `url(${slideImage})`,
+                      }}
+                    />
                   </div>
                 ))}
               </Slide>
@@ -872,14 +896,15 @@ const Memories = ({ trip }) => {
       )}
     </div>
   );
-}
+};
 
-const TripDetails = ({ trip, setShowModal }) => {
+const TripDetails = ({ trip, setShowModal, isInvitee, currentTab, setCurrentTab }) => {
   const navigate = useNavigate();
 
   console.log("Trip is:", trip);
+  const tripId = trip?.id;
 
-  const [currentTab, setCurrentTab] = useState("itinerary");
+  // const [currentTab, setCurrentTab] = useState("itinerary");
 
   return (
     <div className="trip-details">
@@ -889,8 +914,17 @@ const TripDetails = ({ trip, setShowModal }) => {
           <div className="title-container divider">
             <div className="trip-title-wrapper">
               <h2>
-                Your trip to{" "}
-                <span className="title-accent">{encode(trip.name)}</span>
+                {isInvitee ? (
+                  <>
+                    Group trip to{" "}
+                    <span className="title-accent">{encode(trip.name)}</span>
+                  </>
+                ) : (
+                  <>
+                    Your trip to{" "}
+                    <span className="title-accent">{encode(trip.name)}</span>
+                  </>
+                )}
               </h2>
             </div>
             {/* <p>Select a different trip</p> */}
@@ -931,9 +965,15 @@ const TripDetails = ({ trip, setShowModal }) => {
 
           <div className="tab-content">
             {currentTab === "itinerary" && (
-              <Itinerary trip={trip} setShowModal={setShowModal} />
+              <Itinerary
+                trip={trip}
+                setShowModal={setShowModal}
+                isInvitee={isInvitee}
+              />
             )}
-            {currentTab === "budgeting" && <Budgeting trip={trip} />}
+            {currentTab === "budgeting" && (
+              <Budgeting trip={trip} isInvitee={isInvitee} />
+            )}
             {currentTab === "memories" && <Memories trip={trip} />}
           </div>
         </div>
