@@ -793,6 +793,8 @@ const Memories = ({ trip }) => {
 
   const [memories, setMemories] = useState([]);
 
+  const [showShareModal, setShowShareModal] = useState(false);
+
   useEffect(() => {
 
     const fetchMemories = async () => {
@@ -822,7 +824,7 @@ const Memories = ({ trip }) => {
     };
 
     fetchMemories();
-  });
+  }, [showShareModal]);
 
   // Style for image slideshow
   const divStyle = {
@@ -845,7 +847,7 @@ const Memories = ({ trip }) => {
   
   return (
     <div className="memories-container">
-      <ShareTripButton trip={trip} />
+      <ShareTripButton trip={trip} showShareModal={showShareModal} setShowShareModal={setShowShareModal} />
       {memories.length === 0 ? (
         <p className="no-memories-message">
           Looks like this trip has no memories. Use the button above to post a memory to this trip. Memories can include pictures and comments about your trip.
