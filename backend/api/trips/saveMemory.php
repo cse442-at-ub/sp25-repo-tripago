@@ -39,62 +39,38 @@ $stmt->execute();
 
 $memId = $stmt->insert_id;
 
-// Make sure the file works (THIS IS TEMP)
-if (!isset($_FILES['images']) || $_FILES['images']['error'] !== UPLOAD_ERR_OK) {
-    echo json_encode(["success" => false, "message" => "Invalid file upload: " . $_FILES["images"]["error"]]);
-    exit();
-}
-
 // Prepare image directory
 $uploadDir = __DIR__ . "/pictures/";
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
-// Prepare filename
-$filename = basename($_FILES['images']['name']);
-$uniqueName = uniqid() . "_" . $filename;
-$targetFile = $uploadDir . $uniqueName;
-
-// Move file
-if (!move_uploaded_file($_FILES["images"]["tmp_name"], $targetFile)) {
-    echo json_encode(["success" => false, "message" => "Upload failed: " . $_FILES["images"]["error"]]);
-    exit();
-}
-
-// Prepare DB
-// TODO MAKE SURE THIS SAYS BACKEND NOT OWENBACKEND !!!!
-$relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
-$stmt = $mysqli->prepare("INSERT INTO memory_images (trip_id, memory_id, image_url) VALUES (?, ?, ?)");
-$stmt->bind_param("iis", $tripId, $memId, $relativePath);
-$stmt->execute();
-
-/*
-// For image in images
-for ($i = 0; $i < count($data["images"]); $i++) {    
+foreach($_FILES["images"]["tmp_name"] as $i => $tmp) {
     
+    // Make sure the file works
+    if (!isset($_FILES["images"]) || $_FILES["images"]["error"][$i] !== UPLOAD_ERR_OK) {
+        echo json_encode(["success" => false, "message" => "Invalid file upload: " . $_FILES["images"]["error"]]);
+        exit();
+    }
+
     // Prepare filename
-    $uniqueName = uniqid();
+    $filename = basename($_FILES["images"]["name"][$i]);
+    $uniqueName = uniqid() . "_" . $filename;
     $targetFile = $uploadDir . $uniqueName;
     
     // Move file
-    if (!move_uploaded_file($data["images"][$i], $targetFile)) {
-        echo json_encode(["success" => false, "message" => "Upload failed"]);
+    if (!move_uploaded_file($_FILES["images"]["tmp_name"][$i], $targetFile)) {
+        echo json_encode(["success" => false, "message" => "Upload failed: " . $_FILES["images"]["error"][$i]]);
         exit();
     }
     
-    // This is basically just to interrupt the flow to see errors
-    echo json_encode(["success" => false, "message" => $targetFile . ""]);
-    exit();
-
     // Prepare DB
     // TODO MAKE SURE THIS SAYS BACKEND NOT OWENBACKEND !!!!
     $relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
-    $stmt = $mysqli->prepare("INSERT INTO memory_images (memory_id, image_url) VALUES (?, ?)");
-    $stmt->bind_param("is", $memId, $relativePath);
+    $stmt = $mysqli->prepare("INSERT INTO memory_images (trip_id, memory_id, image_url) VALUES (?, ?, ?)");
+    $stmt->bind_param("iis", $tripId, $memId, $relativePath);
     $stmt->execute();
 }
-*/
 
 echo json_encode(["success" => true, "message" => "Memory saved"]);
 

@@ -56,7 +56,9 @@ const ShareTripModal = ({ onClose, trip }) => {
     
     formData.set("tripId", trip.id);
     formData.set("caption", quote);
-    formData.append("images", images[0]); // TODO: make this handle multiple images
+    for (const img of images) {
+      formData.append("images[]", img);
+    }
 
     try {
 
