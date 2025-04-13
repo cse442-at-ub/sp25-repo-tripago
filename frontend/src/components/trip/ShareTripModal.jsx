@@ -20,30 +20,24 @@ const ShareTripModal = ({ onClose, trip }) => {
     const files = Array.from(e.target.files);
 
     const options  = {
-      maxSizeMB: 0.0000001,
-      maxWidthOrHeight: 520,
+      maxSizeMB: 2,
+      maxWidthOrHeight: 1920,
       useWebWorker: true,
     };
 
-    // Create preview URLs for the images
-    // const newPreviewImages = files.map((file) => URL.createObjectURL(imageCompression(file, options)));
-
+    // Compress the images
     const compressedImages = [];
     for (const file of files) {
       const compressedImage = await imageCompression(file, options);
-
-      console.log('compressedFile instanceof Blob', compressedImage instanceof Blob); // true
-      console.log(`compressedFile size ${compressedImage.size / 1024 / 1024} MB`); // smaller than maxSizeMB
-
       compressedImages.push(compressedImage)
     }
-
+    
+    // Create preview URLs for the images
     const newPreviewImages = compressedImages.map((file) => URL.createObjectURL(file))
-
     setPreviewImages([...previewImages, ...newPreviewImages]);
 
     // Store the actual files
-    setImages([...images, ...files]);
+    setImages([...images, ...compressedImages]);
   };
 
   const removeImage = (index) => {
