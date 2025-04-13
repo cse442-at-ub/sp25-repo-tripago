@@ -52,9 +52,25 @@ while ($row = $result->fetch_assoc()) {
     ];
 }
 
-// TODO: implement way to get pictures
+// Fetch images
+$stmt = $mysqli->prepare("SELECT * FROM memory_images WHERE trip_id=? ORDER BY image_index ASC");
+$stmt->bind_param("i", $tripId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$images = [];
+
+while ($row = $result->fetch_assoc()) {
+    $memory_id = $row["memory_id"];
+    $image_url = $row["image_url"];
+
+    $images[] = [
+        "memory_id" => $memory_id,
+        "image_url" => $image_url,
+    ];
+}
 
 // Return result
-echo json_encode(["success" => true, "memories" => $memories]);
+echo json_encode(["success" => true, "memories" => $memories, "images" => $images]);
 
 ?>

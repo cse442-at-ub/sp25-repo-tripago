@@ -65,8 +65,8 @@ if (!move_uploaded_file($_FILES["images"]["tmp_name"], $targetFile)) {
 // Prepare DB
 // TODO MAKE SURE THIS SAYS BACKEND NOT OWENBACKEND !!!!
 $relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
-$stmt = $mysqli->prepare("INSERT INTO memory_images (memory_id, image_url) VALUES (?, ?)");
-$stmt->bind_param("is", $memId, $relativePath);
+$stmt = $mysqli->prepare("INSERT INTO memory_images (trip_id, memory_id, image_url) VALUES (?, ?, ?)");
+$stmt->bind_param("iis", $tripId, $memId, $relativePath);
 $stmt->execute();
 
 /*
