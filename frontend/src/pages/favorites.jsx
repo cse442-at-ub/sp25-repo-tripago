@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import Paris from "../assets/paris.jpg";
 import { useNavigate } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
@@ -22,75 +22,58 @@ const VerifyLocation = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { user } = UserContext;
 
-const fetchDestinations = async () => {
+  const fetchDestinations = async () => {
     try {
-        //const favoritesResponse = await fetch("http://localhost/tripago/getFavorites.php", {
-        const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/getFavorites.php", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ /*email: "npula@buffalo.edu"*/ }),
-          });
-      const favoritesData = await favoritesResponse.json();
+      const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/getFavorites.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: user?.email }),
+      });
+  
+      let favoritesData = await favoritesResponse.json();
   
       if (!favoritesData.success) {
         throw new Error("Failed to fetch favorite city codes");
       }
+  
+      const favoriteDestinations = favoritesData.locations; // [{ location, cityCode }]
 
-      // Convert the list of favorites into a lookup object for quick access
-      console.log("favoritesData:", favoritesData);
-      const favoritesLookup = {};
-      favoritesData.locations.forEach((fav) => {
-        console.log(fav);
-        favoritesLookup[fav.location] = true;
-      });
-      
-      setFavorites(favoritesLookup);
-  
-      const cityCodes = favoritesData.locations; // assuming this is an array of city codes
-  
-      const allRecommendations = [];
-  
-      for (const code of cityCodes) {
-        //const recRes = await fetch(`http://localhost/tripago/recommendedFromFavorites.php?cityCode=${code}`);
-        const recRes = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/recommendedFromFavorites.php?cityCode=${code.cityCode}`);
-        if (!recRes.ok) continue;
-        const recData = await recRes.json();
-  
-        if (recData?.data) {
-          allRecommendations.push(...recData.data);
-        }
-      }
-  
-      // Fetch images for each recommendation
+      // Fetch images for each favorite location
       const destinationsWithImages = await Promise.all(
-        allRecommendations.map(async (destination) => {
+        favoriteDestinations.map(async ({ location, cityCode }) => {
           try {
-            
-            //const imgResponse = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
-            const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${destination.name}`);
+            const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${location}`);
             const imgData = await imgResponse.json();
-            return { ...destination, image_url: imgData.photos[0]?.src.large || Paris };
+            return {
+              name: location,
+              iataCode: cityCode,
+              image_url: imgData.photos[0]?.src.large || Paris,
+            };
           } catch {
-            return { ...destination, image_url: Paris };
+            return {
+              name: location,
+              iataCode: cityCode,
+              image_url: Paris,
+            };
           }
         })
       );
   
-      // Filter out duplicates by destination name
+      // Optionally remove duplicates by name (in case they exist)
       const uniqueDestinations = destinationsWithImages.filter(
         (item, index, self) =>
-          index === self.findIndex((d) => d.name === item.name)
+          index === self.findIndex((d) => d.name + d.countryCode === item.name + item.countryCode)
       );
-
+  
       setDestinations(uniqueDestinations);
-      //setDestinations(destinationsWithImages);
     } catch (err) {
-      console.error("Error fetching personalized recommendations:", err);
+      console.error("Error fetching favorite destinations:", err);
       setError("Something went wrong loading destinations.");
     }
   };
+  
 
   useEffect(() => {
     fetchDestinations();
@@ -121,28 +104,21 @@ const fetchDestinations = async () => {
     setFavorites((prev) => ({ ...prev, [destination.name]: !isFavorited }));
   
     try {
-
       const url = isFavorited
         ? "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/removeFavorite.php"
         : "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/addFavorite.php";
-
-      //const url = isFavorited
-      //  ? "http://localhost/tripago/removeFavorite.php"
-      //  : "http://localhost/tripago/addFavorite.php";
-      
-      
+  
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cityName: destination.name,
-          cityCode: destination.iataCode,
-          email: user?.email
+          name: destination.name,
+          countryCode: destination.countryCode,
         }),
       });
-
+  
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message || "Failed to update favorites");
@@ -257,10 +233,6 @@ const fetchDestinations = async () => {
                 <p style={{ margin: '0px', color: "gray", fontSize: "0.875rem" }}>{destination.country_name}</p>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "75%", padding: "0.5rem 1rem" }}>
-                <FaHeart 
-                  style={{ color: favorites[destination.name] ? "red" : "gray", cursor: "pointer" }}
-                  onClick={(e) => { e.stopPropagation(); toggleFavorite(destination); }}
-                />
                 <button
                   style={{
                     backgroundColor: "#10b981",

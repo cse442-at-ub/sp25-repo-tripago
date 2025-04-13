@@ -144,6 +144,19 @@ const NewDestination = () => {
   const handleCategoryClick = async (category) => {
     localStorage.removeItem("trip");
 
+    let redirectPath = "/profile/accept-reject"; // Default redirect
+
+    if (category === "Favorites") {
+      redirectPath = "/favorites";
+    
+      navigate("/loading-screen", {
+        state: {
+          headerText: "Scanning the map for your ideal getaway",
+          redirectTo: redirectPath
+        },
+      });
+    }
+
     try {
       const response = await fetch(
         `/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
@@ -159,11 +172,10 @@ const NewDestination = () => {
         const data = JSON.parse(text);
         if (!data || !data.data) throw new Error("No recommendations found");
 
-        let redirectPath = "/profile/accept-reject"; // Default redirect
-
         if (category === "Recommendations") {
           redirectPath = "/recommended";
         }
+
         console.log("redirect path: " + redirectPath);
         navigate("/loading-screen", {
           state: {
@@ -251,6 +263,7 @@ const NewDestination = () => {
           </p>
           <div className="recommendation-list">
             {[
+              "Favorites",
               "Relaxation",
               "Culture",
               "Adventure",

@@ -20,6 +20,7 @@ import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx"
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
 import Recommended from "./pages/Recommended.jsx";
+import Favorites from "./pages/Favorites.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
@@ -61,13 +62,30 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route 
+                path="/profile" 
+                element={
+                  //<ProtectedRoute>
+                    <Profile />
+                  //</ProtectedRoute>
+                }
+            />
+
+            <Route 
+                path="/favorites" 
+                element={
+                  //<ProtectedRoute>
+                    <Favorites />
+                  //</ProtectedRoute>
+                }
+            />      
+
             <Route
                 path="/profile/new-destination"
                 element={
-                  <ProtectedRoute>
+                  //<ProtectedRoute>
                     <NewDestination />
-                  </ProtectedRoute>
+                  //</ProtectedRoute>
                 }
               />
                <Route
@@ -90,9 +108,9 @@ const App = () => {
               <Route
                 path="/recommended"
                 element={
-                  <ProtectedRoute>
+                  //<ProtectedRoute>
                     <Recommended />
-                  </ProtectedRoute>
+                  //</ProtectedRoute>
                 }
               />
               <Route
