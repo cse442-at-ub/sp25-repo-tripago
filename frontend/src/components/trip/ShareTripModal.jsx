@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { FaImage, FaQuoteLeft, FaTrash } from "react-icons/fa";
 import "../../styles/trip/ShareTripModal.css";
 import axios from 'axios';
+import imageCompression from 'browser-image-compression';
 
 const ShareTripModal = ({ onClose, trip }) => {
   const [quote, setQuote] = useState("");
@@ -15,21 +16,30 @@ const ShareTripModal = ({ onClose, trip }) => {
     setQuote(e.target.value);
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
 
-    const  options  = {
-
-      maxSizeMB: 1,
-      
-      maxWidthOrHeight: 800,
-      
-      useWebWorker:  true
-      
+    const options  = {
+      maxSizeMB: 0.0000001,
+      maxWidthOrHeight: 520,
+      useWebWorker: true,
     };
 
     // Create preview URLs for the images
-    const newPreviewImages = files.map((file) => URL.createObjectURL(file));
+    // const newPreviewImages = files.map((file) => URL.createObjectURL(imageCompression(file, options)));
+
+    const compressedImages = [];
+    for (const file of files) {
+      const compressedImage = await imageCompression(file, options);
+
+      console.log('compressedFile instanceof Blob', compressedImage instanceof Blob); // true
+      console.log(`compressedFile size ${compressedImage.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+      compressedImages.push(compressedImage)
+    }
+
+    const newPreviewImages = compressedImages.map((file) => URL.createObjectURL(file))
+
     setPreviewImages([...previewImages, ...newPreviewImages]);
 
     // Store the actual files

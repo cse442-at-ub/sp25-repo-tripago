@@ -46,10 +46,10 @@ if (!is_dir($uploadDir)) {
 }
 
 foreach($_FILES["images"]["tmp_name"] as $i => $tmp) {
-    
+
     // Make sure the file works
     if (!isset($_FILES["images"]) || $_FILES["images"]["error"][$i] !== UPLOAD_ERR_OK) {
-        echo json_encode(["success" => false, "message" => "Invalid file upload: " . $_FILES["images"]["error"]]);
+        echo json_encode(["success" => false, "message" => "Invalid file upload: " . $_FILES["images"]["error"][$i]]);
         exit();
     }
 
