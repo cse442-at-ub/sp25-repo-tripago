@@ -64,7 +64,7 @@ const ShareTripModal = ({ onClose, trip }) => {
         "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php",
         formData,
         {headers:
-          {"Content-Type": "multipart/form-data", "Content-Encoding": "gzip"},
+          {"Content-Type": "multipart/form-data"},
         },
       );
 
