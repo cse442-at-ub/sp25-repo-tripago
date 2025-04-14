@@ -523,7 +523,10 @@ const Budgeting = ({ trip, isInvitee }) => {
     const amount = parseFloat(expense.amount);
     return sum + (isNaN(amount) ? 0 : amount);
   }, 0);
-  const isOverBudget = totalExpenses > budget;
+
+  const hotelPrice = typeof trip?.hotel?.price === 'number' ? trip.hotel.price : 0;
+
+  const isOverBudget = totalExpenses + hotelPrice > budget;
 
   const handleEditBudget = () => {
     setShowBudgetModal(true);
@@ -609,7 +612,7 @@ const Budgeting = ({ trip, isInvitee }) => {
         <div className="budget-overview">
           <div className="budget-amount">${budget.toFixed(2)}</div>
           <div className="budget-spent">
-            You spent ${Number(totalExpenses).toFixed(2)}
+            You spent ${Number(totalExpenses + hotelPrice).toFixed(2)}
             {isOverBudget && (
               <div className="budget-warning">
                 <span className="warning-icon">ⓘ</span>
