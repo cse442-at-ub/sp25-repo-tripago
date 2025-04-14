@@ -10,6 +10,7 @@ import autofillIcon from "../../assets/autofill.png";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
+import HelpTooltip from "../HelpTooltip.jsx";
 
 const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
@@ -21,8 +22,8 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
   const tripID = trip?.id;
 
-  console.log("In Itinerary, our trip is, " , trip)
-  console.log("In Itinerary, our tripId is, " , tripID)
+  console.log("In Itinerary, our trip is, ", trip);
+  console.log("In Itinerary, our tripId is, ", tripID);
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
   const diffTime = Math.abs(endDate - startDate);
@@ -60,7 +61,6 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
       console.log(response.data);
 
       const data = response.data.activities;
-
 
       //should have a list which contains "activities"
 
@@ -415,7 +415,17 @@ but can expand it in the future, if need (or want) be!
       ) : (
         <>
           <div className="hotel-details">
-            <h3>Hotel Details:</h3>
+            <div className="tooltip-container">
+            <HelpTooltip>
+                Let us find you a hotel. Tripago uses live search to suggest a
+                hotel that fits your trip. You can accept it or click{" "}
+                <span className="tooltip-purple">Change Hotel</span> to explore
+                more.
+              </HelpTooltip>
+              <h3>Hotel Details:</h3>
+             
+            </div>
+
             <div className="hotel-status">
               {trip.hotel.name ? (
                 <div className="booked-hotel-details">
@@ -423,10 +433,8 @@ but can expand it in the future, if need (or want) be!
                   <p className="hotel-price">Price: ${trip.hotel.price}</p>
                   <button
                     className="find-hotel-btn"
-                   
                     onClick={() =>
                       navigate("/loading-screen", {
-
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
@@ -524,7 +532,8 @@ const Budgeting = ({ trip, isInvitee }) => {
     return sum + (isNaN(amount) ? 0 : amount);
   }, 0);
 
-  const hotelPrice = typeof trip?.hotel?.price === 'number' ? trip.hotel.price : 0;
+  const hotelPrice =
+    typeof trip?.hotel?.price === "number" ? trip.hotel.price : 0;
 
   const isOverBudget = totalExpenses + hotelPrice > budget;
 
@@ -894,7 +903,13 @@ const Memories = () => {
   );
 };
 
-const TripDetails = ({ trip, setShowModal, isInvitee, currentTab, setCurrentTab }) => {
+const TripDetails = ({
+  trip,
+  setShowModal,
+  isInvitee,
+  currentTab,
+  setCurrentTab,
+}) => {
   const navigate = useNavigate();
 
   console.log("Trip is:", trip);
