@@ -95,7 +95,7 @@ p a {
   border-radius: 5px;
   font-size: 0.9rem;
   color: #333;
-  display: none;
+  display: block;
   width: 80%;
   height: 60%;
   opacity: .5;
@@ -108,9 +108,9 @@ p a {
   flex-direction: column;
 }
 
-.password-container:hover .password-tooltip {
+/* .password-container:hover .password-tooltip {
   display: block;
-}
+} */
 
 .create-account-button {
   margin-top: 5px;
