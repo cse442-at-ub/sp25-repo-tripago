@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TripTags.css';
 import { FaTimes } from "react-icons/fa";
+import { encode } from 'html-entities';
 
 const TripTags = ({ tripId, isInvitee }) => {
   const [tags, setTags] = useState([]);
@@ -106,19 +107,23 @@ const TripTags = ({ tripId, isInvitee }) => {
       </div>
 
       <div className="tags-container">
-        {tags.map((tag, index) => (
-          <span key={index} className="tag">
-            {tag}
-            {isEditing && !isInvitee && (
-              <button 
-                className="remove-tag"
-                onClick={() => handleRemoveTag(tag)}
-              >
-                <FaTimes />
-              </button>
-            )}
-          </span>
-        ))}
+        {tags.length === 0 ? (
+          <em className="no-tags">No tags yet</em>
+        ) : (
+          tags.map((tag, index) => (
+            <span key={index} className="tag">
+              {encode(tag)}
+              {isEditing && !isInvitee && (
+                <button 
+                  className="remove-tag"
+                  onClick={() => handleRemoveTag(tag)}
+                >
+                  <FaTimes />
+                </button>
+              )}
+            </span>
+          ))
+        )}
       </div>
 
       {isEditing && !isInvitee && (
