@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TripTags.css';
+import { FaTimes } from "react-icons/fa";
 
 const TripTags = ({ tripId, isInvitee }) => {
   const [tags, setTags] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchTags();
@@ -13,7 +15,7 @@ const TripTags = ({ tripId, isInvitee }) => {
 
   const fetchTags = async () => {
     try {
-      const res = await fetch(`/CSE442/2025-Spring/cse-442aj/sambackend/api/trips/getTripTags.php?trip_id=${tripId}`);
+      const res = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripTags.php?trip_id=${tripId}`);
       const data = await res.json();
       if (data.success) {
         setTags(data.tags);
@@ -26,11 +28,19 @@ const TripTags = ({ tripId, isInvitee }) => {
   const handleAddTag = async () => {
     if (!inputValue.trim()) return;
     
-    const newTag = inputValue.trim();
+    const newTag = inputValue.trim().toLowerCase();
+    
+    // Check for duplicates
+    if (tags.some(tag => tag.toLowerCase() === newTag)) {
+      setError('This tag already exists');
+      setTimeout(() => setError(''), 3000); // Clear error after 3 seconds
+      return;
+    }
+    
     const updatedTags = [...tags, newTag];
     
     try {
-      const res = await fetch('/CSE442/2025-Spring/cse-442aj/sambackend/api/trips/updateTripTags.php', {
+      const res = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripTags.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -43,9 +53,11 @@ const TripTags = ({ tripId, isInvitee }) => {
       if (data.success) {
         setTags(updatedTags);
         setInputValue('');
+        setError('');
       }
     } catch (err) {
       console.error('Failed to add tag:', err);
+      setError('Failed to add tag');
     }
   };
 
@@ -53,7 +65,7 @@ const TripTags = ({ tripId, isInvitee }) => {
     const updatedTags = tags.filter(tag => tag !== tagToRemove);
     
     try {
-      const res = await fetch('/CSE442/2025-Spring/cse-442aj/sambackend/api/trips/updateTripTags.php', {
+      const res = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripTags.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -82,7 +94,7 @@ const TripTags = ({ tripId, isInvitee }) => {
   return (
     <div className="trip-tags">
       <div className="tags-header">
-        <h3>Trip Tags</h3>
+        <h3>Tags</h3>
         {!isInvitee && (
           <button 
             className="edit-tags-btn"
@@ -102,7 +114,7 @@ const TripTags = ({ tripId, isInvitee }) => {
                 className="remove-tag"
                 onClick={() => handleRemoveTag(tag)}
               >
-                ×
+                <FaTimes />
               </button>
             )}
           </span>
@@ -110,17 +122,26 @@ const TripTags = ({ tripId, isInvitee }) => {
       </div>
 
       {isEditing && !isInvitee && (
-        <div className="add-tag">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Add a tag..."
-            maxLength={20}
-          />
-          <button onClick={handleAddTag}>Add</button>
-        </div>
+        <>
+          <div className="add-tag">
+            <div className="tag-input-wrapper">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  setError('');
+                }}
+                onKeyPress={handleKeyPress}
+                placeholder="Add a tag..."
+                maxLength={20}
+              />
+            </div>
+            <button onClick={handleAddTag}>+ Add</button>
+          </div>
+
+          {error && <div className="tag-error">{error}</div>}
+        </>
       )}
     </div>
   );
