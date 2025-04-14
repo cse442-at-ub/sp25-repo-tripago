@@ -10,6 +10,7 @@ import autofillIcon from "../../assets/autofill.png";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
+import HelpTooltip from "../HelpTooltip.jsx";
 
 const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
@@ -21,8 +22,8 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
   const tripID = trip?.id;
 
-  console.log("In Itinerary, our trip is, " , trip)
-  console.log("In Itinerary, our tripId is, " , tripID)
+  console.log("In Itinerary, our trip is, ", trip);
+  console.log("In Itinerary, our tripId is, ", tripID);
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
   const diffTime = Math.abs(endDate - startDate);
@@ -60,7 +61,6 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
       console.log(response.data);
 
       const data = response.data.activities;
-
 
       //should have a list which contains "activities"
 
@@ -400,7 +400,14 @@ but can expand it in the future, if need (or want) be!
 
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
-              <h3>Trip Dates:</h3>
+              <div className="tooltip-container">
+                <HelpTooltip>
+                  <span className="tooltip-purple">Add your trip dates</span> to
+                  begin setting your itinerary and hotel details. If you're not
+                  sure, don't worry. You can change this later on!
+                </HelpTooltip>
+                <h3>Trip Dates:</h3>
+              </div>
 
               <button
                 className="edit-budget-btn"
@@ -415,7 +422,14 @@ but can expand it in the future, if need (or want) be!
       ) : (
         <>
           <div className="hotel-details">
-            <h3>Hotel Details:</h3>
+            <div className="tooltip-container">
+              <HelpTooltip>
+                Let us find you a hotel. Tripago uses live search to suggest <span className="tooltip-purple">a
+                hotel that fits your trip.</span> You can always change it later on.
+              </HelpTooltip>
+              <h3>Hotel Details:</h3>
+            </div>
+
             <div className="hotel-status">
               {trip.hotel.name ? (
                 <div className="booked-hotel-details">
@@ -423,10 +437,8 @@ but can expand it in the future, if need (or want) be!
                   <p className="hotel-price">Price: ${trip.hotel.price}</p>
                   <button
                     className="find-hotel-btn"
-                   
                     onClick={() =>
                       navigate("/loading-screen", {
-
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
@@ -481,7 +493,13 @@ but can expand it in the future, if need (or want) be!
           </div>
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
-              <h3>Trip Dates:</h3>
+
+               <div className="tooltip-container">
+                <HelpTooltip>
+                  Build your perfect day. Add activities manually by entering a location, or click “Autofill my day” to <span className="tooltip-purple">get suggestions based on your destination.</span> You can mix and match — it’s your trip!
+                </HelpTooltip>
+                <h3>Trip Dates:</h3>
+              </div>
 
               <button
                 className="edit-budget-btn"
@@ -524,7 +542,8 @@ const Budgeting = ({ trip, isInvitee }) => {
     return sum + (isNaN(amount) ? 0 : amount);
   }, 0);
 
-  const hotelPrice = typeof trip?.hotel?.price === 'number' ? trip.hotel.price : 0;
+  const hotelPrice =
+    typeof trip?.hotel?.price === "number" ? trip.hotel.price : 0;
 
   const isOverBudget = totalExpenses + hotelPrice > budget;
 
@@ -603,7 +622,17 @@ const Budgeting = ({ trip, isInvitee }) => {
     <div className="budgeting-container tab-pane-container">
       <div className="budget-info">
         <div className="budget-header">
-          <h2>Budgeting</h2>
+          <div className="tooltip-container">
+            <HelpTooltip>
+              Keep track of your trip spending. Set a budget, then{" "}
+              <span className="tooltip-purple">
+                log your expenses as you go
+              </span>
+              . We'll show you how much you've spent so far — and let you know
+              if you’ve met your budget.
+            </HelpTooltip>
+            <h2>Budgeting</h2>
+          </div>
           <button className="edit-budget-btn" onClick={handleEditBudget}>
             <FaEdit /> Edit budget
           </button>
@@ -894,7 +923,13 @@ const Memories = () => {
   );
 };
 
-const TripDetails = ({ trip, setShowModal, isInvitee, currentTab, setCurrentTab }) => {
+const TripDetails = ({
+  trip,
+  setShowModal,
+  isInvitee,
+  currentTab,
+  setCurrentTab,
+}) => {
   const navigate = useNavigate();
 
   console.log("Trip is:", trip);
@@ -941,6 +976,7 @@ const TripDetails = ({ trip, setShowModal, isInvitee, currentTab, setCurrentTab 
             >
               Itinerary
             </p>
+
             <p
               className={`itin-budget-tab ${
                 currentTab === "budgeting" && "active"

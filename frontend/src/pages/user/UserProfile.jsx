@@ -7,6 +7,7 @@ import { FaEdit } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
+import HelpTooltip from "../../components/HelpTooltip.jsx";
 
 const UserProfile = () => {
   const [user, setUser] = useState({
@@ -435,7 +436,34 @@ const UserProfile = () => {
           <p>Total Trips Taken: {stats.totalTrips}</p>
           <p>Countries Visited: {stats.countriesVisited}</p>
           <div className="points-section">
-            <h4>Travel Points: {stats.points.total}</h4>
+          <div className="tooltip-container">
+              <HelpTooltip>
+                <h4>
+                  <span className="tooltip-purple">
+                    Earn points as you explore!
+                  </span>
+                </h4>
+                <ul
+                >
+                  <li>
+                    <strong>Trip Bonus:</strong> 100 points per trip
+                  </li>
+                  <li>
+                    <strong>Day Bonus:</strong> 25 points for each day of your
+                    trips
+                  </li>
+                  <li>
+                    <strong>Expense Bonus:</strong> 15 points per expense you
+                    add
+                  </li>
+                  <li>
+                    <strong>Activity Bonus:</strong> 10 points per activity you
+                    plan
+                  </li>
+                </ul>
+              </HelpTooltip>
+              <h4>Travel Points: {stats.points.total}</h4>
+            </div>
             <div className="points-breakdown">
               <p data-points={stats.points.breakdown.trips}>Trip Bonus</p>
               <p data-points={stats.points.breakdown.trip_days}>Day Bonus</p>
