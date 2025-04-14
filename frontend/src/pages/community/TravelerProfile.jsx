@@ -16,7 +16,19 @@ const TravelerProfile = () => {
     username: "",
     profilePic: UserAvatar,
   });
-  const [stats, setStats] = useState({ totalTrips: 0, countriesVisited: 0 });
+  const [stats, setStats] = useState({ 
+    totalTrips: 0, 
+    countriesVisited: 0,
+    points: {
+      total: 0,
+      breakdown: {
+        trips: 0,
+        trip_days: 0,
+        expenses: 0,
+        activities: 0
+      }
+    }
+  });
   const [friendsList, setFriendsList] = useState([]);
   const [friends, setFriends] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
@@ -49,11 +61,25 @@ const TravelerProfile = () => {
             username: data.user.username,
             profilePic: data.user.user_image_url || UserAvatar,
           });
-          setStats({
+          setStats(prevStats => ({
+            ...prevStats,
             totalTrips: data.totalTrips,
             countriesVisited: data.countriesVisited,
-          });
+          }));
           setFriends(data.friends);
+
+          // Fetch user points
+          const pointsRes = await fetch(
+            `/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserPoints.php?email=${email}`
+          );
+          const pointsData = await pointsRes.json();
+          
+          if (pointsData.success) {
+            setStats(prevStats => ({
+              ...prevStats,
+              points: pointsData.points
+            }));
+          }
         }
       } catch (err) {
         console.error("Failed to fetch traveler info:", err);
@@ -166,6 +192,15 @@ const TravelerProfile = () => {
           <h3>Trip Stats</h3>
           <p>Total Trips Taken: {stats.totalTrips}</p>
           <p>Countries Visited: {stats.countriesVisited}</p>
+          <div className="points-section">
+            <h4>Travel Points: {stats.points.total}</h4>
+            <div className="points-breakdown">
+              <p data-points={stats.points.breakdown.trips}>Trip Bonus</p>
+              <p data-points={stats.points.breakdown.trip_days}>Day Bonus</p>
+              <p data-points={stats.points.breakdown.expenses}>Expense Bonus</p>
+              <p data-points={stats.points.breakdown.activities}>Activity Bonus</p>
+            </div>
+          </div>
         </div>
 
         <div className="bucket-list user-profile-section">

@@ -219,7 +219,51 @@
 
 }
 
+/* Points Section */
+.points-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
 
+.points-section h4 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.points-breakdown {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.points-breakdown p {
+  background-color: white;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin: 0;
+  font-size: 0.9em;
+  color: #555;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60px;
+  position: relative;
+}
+
+.points-breakdown p::after {
+  content: attr(data-points);
+  display: block;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-top: 4px;
+  font-size: 1.1em;
+}
 
 /* Friends List */
 .friends-list,
@@ -577,5 +621,37 @@
   .add-destination button {
     font-size: 10px;
     margin-top: 14px;
+  }
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 480px) {
+  .points-section {
+    padding: 12px;
+    margin-top: 15px;
+  }
+
+  .points-section h4 {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+  }
+
+  .points-breakdown {
+    grid-template-columns: 1fr;  /* Stack points vertically on mobile */
+    gap: 8px;
+  }
+
+  .points-breakdown p {
+    padding: 10px 15px;
+    font-size: 0.85em;
+    min-height: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .points-breakdown p::after {
+    margin-top: 0;
+    margin-left: 10px;
   }
 }
