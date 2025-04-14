@@ -40,3 +40,20 @@
 .tooltip-purple {
   color: var(--primary-color) !important;
 }
+
+.tooltip-box ul {
+  list-style-type: disc;
+  list-style-position: inside; 
+  padding-left: 0;
+  margin: 8px 0;
+}
+
+.tooltip-box li {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 480px)  {
+  .tooltip-box {
+    width: 150px;
+  }
+}

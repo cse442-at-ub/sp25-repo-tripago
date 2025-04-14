@@ -603,9 +603,10 @@
 
 @media (max-width: 480px) {
   .profile-container {
-    margin-left: 100px;
-    padding-right: 40px;
-    padding-left: 0;
+    margin-left: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
   }
 
   .all-trips-container {
