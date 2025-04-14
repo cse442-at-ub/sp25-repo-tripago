@@ -7,6 +7,7 @@ import suitcase from "../../assets/tripagoSuitcase.png";
 import Sidebar from "../../components/Sidebar";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle";
 import { encode } from "html-entities";
+import HelpTooltip from "../../components/HelpTooltip";
 
 const NewDestination = () => {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ const NewDestination = () => {
   useEffect(() => {
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
-      
+
       setIsMobile(isNowMobile);
     };
 
@@ -194,9 +195,19 @@ const NewDestination = () => {
       <Sidebar isOpen={!isMobile || isSidebarOpen} />
 
       <div className="new-trip-container">
-        <h2 className="trip-header">
-          Tell us your dream destination, or let us pick one for you!
-        </h2>
+        <div className="tooltip-container">
+          <HelpTooltip>
+            {" "}
+            Need help starting your trip? You can type in a destination if you
+            already know where you want to go. Not sure yet? Just pick a vibe —{" "}
+            <span className="tooltip-purple">
+              we’ll suggest a place you might love.
+            </span>
+          </HelpTooltip>
+          <h2 className="trip-header">
+            Tell us your dream destination, or let us pick one for you!
+          </h2>
+        </div>
 
         <p className="recommendation-header">I have a destination in mind.</p>
         <div
@@ -233,7 +244,8 @@ const NewDestination = () => {
                     setShowSuggestions(false);
                   }}
                 >
-                  {encode(city.name)}, {encode(getCountryName(city.countryCode))}
+                  {encode(city.name)},{" "}
+                  {encode(getCountryName(city.countryCode))}
                 </li>
               ))}
             </ul>

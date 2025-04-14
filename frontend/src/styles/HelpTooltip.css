@@ -14,6 +14,13 @@
   gap: 4px;
 }
 
+.browse-trips_tooltip-container {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
 .tooltip-box {
   position: absolute;
   top: 30px;
@@ -27,6 +34,7 @@
   box-shadow: 0 8px 20px #0000001a;
   z-index: 999;
   color: var(--secondary-text);
+  line-height: 1.1;
 }
 
 .tooltip-purple {
