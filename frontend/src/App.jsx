@@ -30,13 +30,14 @@ import AcceptRejectDest from "./pages/profile/AcceptRejectDest.jsx";
 import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 import Community from "./pages/community/Community.jsx";
+import TravelerProfile from "./pages/community/TravelerProfile.jsx";
 
 const App = () => {
   return (
     <UserProvider>
-    <HashRouter>
-      <div className="app-container">
-        <Navbar />
+      <HashRouter>
+        <div className="app-container">
+          <Navbar />
 
           <main className="content">
             <Routes>
@@ -53,8 +54,8 @@ const App = () => {
                 element={<AcceptRejectDest />}
               />
 
-          {/* Protected Routes: Only logged in users can access these pages */}
-          <Route
+              {/* Protected Routes: Only logged in users can access these pages */}
+              <Route
                 path="/all-trips"
                 element={
                   <ProtectedRoute>
@@ -62,14 +63,6 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-            <Route 
-                path="/profile" 
-                element={
-                  //<ProtectedRoute>
-                    <Profile />
-                  //</ProtectedRoute>
-                }
-            />
 
             <Route 
                 path="/favorites" 
@@ -79,8 +72,21 @@ const App = () => {
                   //</ProtectedRoute>
                 }
             />      
+            
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/traveler-profile/:email"
+                element={<ProtectedRoute><TravelerProfile /></ProtectedRoute>}
+              />
 
-            <Route
+              <Route
                 path="/profile/new-destination"
                 element={
                   //<ProtectedRoute>
@@ -88,7 +94,7 @@ const App = () => {
                   //</ProtectedRoute>
                 }
               />
-               <Route
+              <Route
                 path="/user-profile"
                 element={
                   <ProtectedRoute>

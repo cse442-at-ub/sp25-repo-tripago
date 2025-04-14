@@ -185,14 +185,14 @@ const ShareTripModal = ({ onClose }) => {
       <div className="share-modal" ref={modalRef}>
         <div className="modal-header">
           <h3>
-            Share Your <span className="modal-highlight">Trip</span>
+            Share a <span className="modal-highlight">memory</span>
           </h3>
         </div>
 
         <div className="share-content">
           <div className="quote-section">
             <label htmlFor="trip-quote">
-              <FaQuoteLeft /> Memorable Quote
+              <FaQuoteLeft /> Caption
             </label>
             <textarea
               id="trip-quote"
@@ -304,21 +304,8 @@ const ShareTripModal = ({ onClose }) => {
         </div>
 
         <div className="modal-footer">
-          <div className="share-toggle">
-            <label className="toggle">
-              <input
-                type="checkbox"
-                checked={isShared}
-                onChange={(e) => setIsShared(e.target.checked)}
-              />
-              <span className="toggle-slider"></span>
-            </label>
-            <span className="toggle-label">
-              {isShared ? "Public" : "Private"}
-            </span>
-          </div>
           <button className="modal-button" onClick={(e) => { handleShare(e); handleEmailSubmit(e); }}>
-            Update Trip Memories
+            Post Trip Memory
           </button>
         </div>
       </div>

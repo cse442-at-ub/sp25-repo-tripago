@@ -1,10 +1,12 @@
 .share-modal {
-  width: 550px;
   background: var(--white);
+  padding: 20px;
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px #0003;
+  width: 300px;
   text-align: center;
+  width: 550px;
+  margin-bottom: 20px;
 }
 
 .share-content {
@@ -278,9 +280,8 @@ input:checked + .toggle-slider:before {
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
   .share-modal {
-    width: 90%;
-    max-width: 330px;
     padding: 20px;
+    width: 60%;
   }
 
   .modal-footer {

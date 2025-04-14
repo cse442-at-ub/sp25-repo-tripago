@@ -16,12 +16,7 @@ const Settings = () => {
       
       const handleResize = () => {
         const isNowMobile = window.innerWidth <= 480;
-        console.log(
-          "Window width:",
-          window.innerWidth,
-          "| isMobile:",
-          isNowMobile
-        );
+        
         setIsMobile(isNowMobile);
       };
   
@@ -70,7 +65,7 @@ const Settings = () => {
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
+       
       </div>
 
       {/* Right Content Area */}
@@ -79,7 +74,7 @@ const Settings = () => {
         {isMobile ? (
           <p>Tap the gear icon in the top right, then select a category to view and update your preferences.</p>
         ) : (
-          <p>Select a category from the left to view and update your preferences.</p>
+          <p>Select a category to view and update your preferences.</p>
         )}
       </div>
 

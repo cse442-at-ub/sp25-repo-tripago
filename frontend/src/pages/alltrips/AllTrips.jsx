@@ -11,21 +11,29 @@ import { FaEdit } from "react-icons/fa";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle";
 import Sidebar from "../../components/Sidebar";
 import { encode } from "html-entities";
-import axios from 'axios';
+import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext.jsx";
+import FriendsModal from "../../components/community/FriendsModal.jsx";
 
 const AllTrips = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState(""); // Sorting option
   const [trips, setTrips] = useState([]);
+  const [collabTrips, setCollabTrips] = useState([]);
   const [logged, setLogged] = useState([]);
   const [notLogged, setNotLogged] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
-    console.log("Fetching trips...");
 
     const fetchTrips = async () => {
+    console.log("Fetching trips...");
+
       try {
         const res = await fetch(
           "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getAllTrips.php",
@@ -43,9 +51,11 @@ const AllTrips = () => {
         if (data.success) {
           console.log("Trips received:", data.trips);
           setTrips(data.trips);
+          console.log("Collab trips received:", data.collaborating);
+          setCollabTrips(data.collaborating || []);
 
-          setLogged(data.trips.filter((trip) => trip.logged == true))
-          setNotLogged(data.trips.filter((trip) => trip.logged != true))
+          setLogged(data.trips.filter((trip) => trip.logged == true));
+          setNotLogged(data.trips.filter((trip) => trip.logged != true));
         } else {
           console.error("Backend error message:", data.message);
         }
@@ -58,12 +68,7 @@ const AllTrips = () => {
 
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
-      console.log(
-        "Window width:",
-        window.innerWidth,
-        "| isMobile:",
-        isNowMobile
-      );
+      
       setIsMobile(isNowMobile);
     };
 
@@ -82,51 +87,77 @@ const AllTrips = () => {
 
     let sortedTrips = [...trips];
     if (value === "date") {
-      sortedTrips.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+      sortedTrips.sort(
+        (a, b) => new Date(b.start_date) - new Date(a.start_date)
+      );
     } else if (value === "price") {
       sortedTrips.sort((a, b) => a.price - b.price);
     }
 
     setTrips(sortedTrips);
 
-    setLogged(sortedTrips.filter((trip) => trip.logged == true))
-    setNotLogged(sortedTrips.filter((trip) => trip.logged != true))
+    setLogged(sortedTrips.filter((trip) => trip.logged == true));
+    setNotLogged(sortedTrips.filter((trip) => trip.logged != true));
   };
 
   const postToLog = async (trip) => {
-    
-    trip.logged = true
-
-    setLogged(trips.filter((trip) => trip.logged == true))
-    setNotLogged(trips.filter((trip) => trip.logged != true))
+    const updatedTrip = { ...trip, logged: true };
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php", trip, {
-        headers: { "Content-Type": "application/json" },
-      });
-      const result = response.data
+      const response = await axios.post(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php",
+        updatedTrip,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const result = response.data;
       console.log("postToLog Form Response: ", result);
-    } catch(err) {
-      console.log("Error posting to log: ", err)
-    };
+
+      if (result.success) {
+        const newTrips = trips.map((t) =>
+          t.id === updatedTrip.id ? updatedTrip : t
+        );
+        setTrips(newTrips);
+        setLogged(newTrips.filter((t) => t.logged));
+        setNotLogged(newTrips.filter((t) => !t.logged));
+      }
+    } catch (err) {
+      console.log("Error posting to log: ", err);
+    }
   };
 
   const removeFromLog = async (trip) => {
-    
-    trip.logged = false
-
-    setLogged(trips.filter((trip) => trip.logged == true))
-    setNotLogged(trips.filter((trip) => trip.logged != true))
+    const updatedTrip = { ...trip, logged: false };
 
     try {
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php", trip, {
-        headers: { "Content-Type": "application/json" },
-      });
-      const result = response.data
+      const response = await axios.post(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/postToLog.php",
+        updatedTrip,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const result = response.data;
       console.log("postToLog Form Response: ", result);
-    } catch(err) {
-      console.log("Error posting to log: ", err)
-    };  }
+
+      if (result.success) {
+        const newTrips = trips.map((t) =>
+          t.id === updatedTrip.id ? updatedTrip : t
+        );
+        setTrips(newTrips);
+        setLogged(newTrips.filter((t) => t.logged));
+        setNotLogged(newTrips.filter((t) => !t.logged));
+      }
+    } catch (err) {
+      console.log("Error removing from log: ", err);
+    }
+  };
+
+  const handleViewMore = (trip) => {
+    setSelectedTrip(trip);
+    setShowModal(true);
+  };
 
   return (
     <>
@@ -164,9 +195,7 @@ const AllTrips = () => {
 
           <h4 className="alltrips-h4">Private Trips</h4>
           {/* cName changed from trips-container */}
-          <div
-            className={`trips-container all-trips-trips-container`}
-          >
+          <div className={`trips-container all-trips-trips-container`}>
             {notLogged.length === 0 ? (
               <p className="no-trips-message">
                 Looks like you have no trips yet. Click the button above to get
@@ -174,15 +203,13 @@ const AllTrips = () => {
               </p>
             ) : (
               notLogged.map((trip) => (
-                <div key={trip.id} 
-
-                className="at-trip-card">
-                   {/* Post to Travel Log Button */}
-                   <button
+                <div key={trip.id} className="at-trip-card">
+                  {/* Post to Community Button */}
+                  <button
                     className="log-button"
                     onClick={() => postToLog(trip)}
                   >
-                    Post to Travel Log
+                    Share to Community
                   </button>
 
                   {/* View Button */}
@@ -191,7 +218,7 @@ const AllTrips = () => {
                     onClick={() => {
                       const selected = {
                         name: trip.destination,
-                        countryCode: "", // optional
+                        countryCode: "", 
                         startDate: trip.start_date,
                         endDate: trip.end_date,
                         imageUrl: trip.image_url || "",
@@ -210,12 +237,14 @@ const AllTrips = () => {
                       navigate("/profile");
                     }}
                   >
-                    View
+                    Edit
                   </button>
 
                   {/* Trip Info */}
                   <div className="trip-info">
-                    <h4 className="trip-destination">{encode(trip.destination)}</h4>
+                    <h4 className="trip-destination">
+                      {encode(trip.destination)}
+                    </h4>
                     <p className="trip-dates">{encode(trip.dates)}</p>
 
                     {/* Bottom Row: Icons + Price */}
@@ -243,30 +272,90 @@ const AllTrips = () => {
             )}
           </div>
 
-          <h4 className="alltrips-h4">Travel Log</h4>
+          <h4 className="alltrips-h4">Group Trips</h4>
+          <div className={`trips-container all-trips-trips-container`}>
+            {collabTrips.length === 0 ? (
+              <p className="no-trips-message">
+                You’re not collaborating on any trips yet.
+              </p>
+            ) : (
+              collabTrips.map((trip) => (
+                <div key={trip.id} className="at-trip-card">
+                  {/* No Share button */}
+                  <button
+                    className="view-button"
+                    onClick={() => {
+                      const selected = {
+                        name: trip.destination,
+                        countryCode: "",
+                        startDate: trip.start_date,
+                        endDate: trip.end_date,
+                        imageUrl: trip.image_url || "",
+                        hotel: {
+                          name: trip.hotel_name,
+                          price: trip.hotel_price,
+                        },
+                      };
+                      console.log("Viewing group trip:", selected);
+                      navigate("/profile", {
+                        state: { tripId: trip.id, fromInvite: true },
+                      });
+                    }}
+                  >
+                    Edit as collaborator
+                  </button>
+
+                  {/* Trip Info */}
+                  <div className="trip-info">
+                    <h4 className="trip-destination">
+                      {encode(trip.destination)}
+                    </h4>
+                    <p className="trip-dates">{trip.dates}</p>
+                    <div className="trip-bottom-row">
+                      <div className="trip-icons">
+                        <img src={plane} alt="Plane" className="icon" />
+                        <img src={house} alt="House" className="icon" />
+                        <img src={car} alt="Car" className="icon" />
+                      </div>
+                      <p className="trip-price">${trip.price}</p>
+                    </div>
+                  </div>
+
+                  <img
+                    src={
+                      trip.image_url ||
+                      "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png"
+                    }
+                    alt={encode(trip.destination)}
+                    className="at-trip-image"
+                  />
+                </div>
+              ))
+            )}
+          </div>
+
+          <h4 className="alltrips-h4">Shared Trips</h4>
           {/* cName changed from trips-container */}
-          <div
-            className={`trips-container all-trips-trips-container`}
-          >
+          <div className={`trips-container all-trips-trips-container`}>
             {logged.length === 0 ? (
               <p className="no-trips-message">
-                Post trips to your Travel Log by clicking the button on the top left of each trip card.
+                Share a trip with the community by clicking the button on the
+                top left of each trip card.
               </p>
             ) : (
               logged.map((trip) => (
                 <div key={trip.id} className="at-trip-card">
-
                   {/* Remove from Travel Log Button */}
                   <button
                     className="log-button"
                     onClick={() => removeFromLog(trip)}
                   >
-                    Remove from Travel Log
+                    Unshare from Community
                   </button>
 
                   {/* View Button */}
                   <button
-                    className="view-button"
+                    className="view-button at-view"
                     onClick={() => {
                       const selected = {
                         name: trip.destination,
@@ -290,7 +379,9 @@ const AllTrips = () => {
 
                   {/* Trip Info */}
                   <div className="trip-info">
-                    <h4 className="trip-destination">{encode(trip.destination)}</h4>
+                    <h4 className="trip-destination">
+                      {encode(trip.destination)}
+                    </h4>
                     <p className="trip-dates">{trip.dates}</p>
 
                     {/* Bottom Row: Icons + Price */}
@@ -303,6 +394,13 @@ const AllTrips = () => {
                       <p className="trip-price">${trip.price}</p>
                     </div>
                   </div>
+
+                  <button
+                    className="view-more-btn at-view-more-btn"
+                    onClick={() => handleViewMore(trip)}
+                  >
+                    View Comments & Itinerary
+                  </button>
 
                   {/* Trip Image */}
                   <img
@@ -318,6 +416,18 @@ const AllTrips = () => {
             )}
           </div>
         </div>
+        <FriendsModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          user={`${user?.firstName} ${user?.lastName}`}
+          location={selectedTrip?.destination}
+          imageUrl={selectedTrip?.image_url}
+          comment={selectedTrip?.comment}
+          isFriend={true}
+          tripId={selectedTrip?.id}
+          userEmail={user?.email} // current user's email
+          currentUserEmail={user?.email}
+        />
       </div>
     </>
   );

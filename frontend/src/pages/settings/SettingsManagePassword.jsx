@@ -17,12 +17,7 @@ const SettingsManagePassword = () => {
       
       const handleResize = () => {
         const isNowMobile = window.innerWidth <= 480;
-        console.log(
-          "Window width:",
-          window.innerWidth,
-          "| isMobile:",
-          isNowMobile
-        );
+        
         setIsMobile(isNowMobile);
       };
   
@@ -71,7 +66,7 @@ const SettingsManagePassword = () => {
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
+      
       </div>
 
       {/* Right Panel */}
