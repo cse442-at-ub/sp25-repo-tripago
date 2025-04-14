@@ -56,15 +56,6 @@ $updateStmt->bind_param("si", $tags, $tripId);
 $success = $updateStmt->execute();
 
 if ($success) {
-  // Log the action
-//   $actionMessage = "@$username updated trip tags";
-//   $logStmt = $mysqli->prepare("
-//     INSERT INTO trip_discussion (trip_id, user_email, username, message, is_action)
-//     VALUES (?, ?, ?, ?, 1)
-//   ");
-//   $logStmt->bind_param("isss", $tripId, $email, $username, $actionMessage);
-//   $logStmt->execute();
-
   echo json_encode(["success" => true, "message" => "Tags updated successfully"]);
 } else {
   echo json_encode(["success" => false, "message" => "Failed to update tags"]);
