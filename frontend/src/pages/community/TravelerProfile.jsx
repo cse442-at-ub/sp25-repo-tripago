@@ -13,6 +13,7 @@ const TravelerProfile = () => {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
+    username: "",
     profilePic: UserAvatar,
   });
   const [stats, setStats] = useState({ 
@@ -57,6 +58,7 @@ const TravelerProfile = () => {
           setUser({
             firstName: data.user.first_name,
             lastName: data.user.last_name,
+            username: data.user.username,
             profilePic: data.user.user_image_url || UserAvatar,
           });
           setStats(prevStats => ({
@@ -168,7 +170,7 @@ const TravelerProfile = () => {
         />
       )}
       <Sidebar isOpen={!isMobile || isSidebarOpen} />
-      <div className="profile-container">
+      <div className="profile-container public_profile-container">
         <button className="back-btn" onClick={() => navigate("/community")}>
           ← Back to Community
         </button>
@@ -182,6 +184,7 @@ const TravelerProfile = () => {
             <h1>
               {encode(user.firstName)} {encode(user.lastName)}
             </h1>
+            <p className="username-text">@{user.username}</p>
           </div>
         </div>
 

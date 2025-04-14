@@ -3,6 +3,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json");
 
+file_put_contents(__DIR__ . "/debug.log", "SCRIPT STARTED\n", FILE_APPEND);
+
 // 1. Start log
 $debugLog = fopen(__DIR__ . "/debug.log", "a");
 fwrite($debugLog, "\n--- UPLOAD START ---\n");

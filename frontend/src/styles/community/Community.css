@@ -5,10 +5,9 @@
   background-color: var(--white);
   height: auto;
   min-height: 100vh;
-  margin-top: 100px;
-  margin-left: 0px;
-  padding: 400px;
-  padding-left: 800px;
+  margin-top: 0px;
+  margin-left: 0;
+  padding: 50px 100px 50px 300px;
 }
 
 .community-container::after {
@@ -71,6 +70,17 @@
   border: 0.9px solid var(--medium-grey);
   border-radius: 8px;
   font-size: 16px;
+}
+
+.username-text {
+  margin: 0;
+  font-size: 12px;
+}
+
+.send-req-modal-content {
+  color: var(--primary-color);
+  font-weight: 600;
+  width: 300px
 }
 
 .find-friends {

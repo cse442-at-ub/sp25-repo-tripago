@@ -5,31 +5,27 @@ header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
 $jsonData = file_get_contents("php://input");
+$data = json_decode($jsonData, true);
 
-//data will have 'dictionary' object from friend page
-$data = json_decode($jsonData,true);
-
-
-//fail if data is null
 if ($data == null){
-  echo json_encode(["success"=>false,"message"=>"Error with data recieved"]);
+  echo json_encode(["success" => false, "message" => "Error with data received"]);
   exit();
 }
 
 $token = $_COOKIE['authCookie'];
 
-$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
+$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
+
 if ($mysqli->connect_error != 0){
-    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-    exit();
+  echo json_encode(["success" => false, "message" => "Database connection failed " . $mysqli->connect_error]);
+  exit();
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
-$stmt->bind_param("s",$token);
+// Get sender's email using auth token
+$stmt = $mysqli->prepare("SELECT * FROM users WHERE token = ?");
+$stmt->bind_param("s", $token);
 $stmt->execute();
-
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
+$result = $stmt->get_result()->fetch_assoc();
 
 $sender = $result["email"];
 if (!$sender) {
@@ -37,41 +33,44 @@ if (!$sender) {
   exit();
 }
 
-$recipient = $data['searchTerm'];
+// Get recipient's username from frontend
+$username = $data['searchTerm'];
 
-$stmt = $mysqli->prepare("SELECT * FROM users WHERE email=? ");
-$stmt->bind_param("s",$recipient);
+// Look up their email based on the username
+$stmt = $mysqli->prepare("SELECT email FROM users WHERE username = ?");
+$stmt->bind_param("s", $username);
 $stmt->execute();
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
-//checks if recipient of request exists in user table
-if ($result == null){
-  echo json_encode(["success"=>false,"message"=>"User does not exist"]);
+$userResult = $stmt->get_result()->fetch_assoc();
+
+if (!$userResult) {
+  echo json_encode(["success" => false, "message" => "User not found"]);
   exit();
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM friends WHERE sender=? AND recipient=?");
-$stmt->bind_param("ss",$sender,$recipient);
-$stmt->execute();
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
-//fail if the query finds a request going to the recipient already 
-if ($result != NULL){
-    echo json_encode(["success"=>false,"message"=>"There is already an outgoing request to this user"]);
-    exit();
+$recipient = $userResult['email'];
+
+// Prevent sending a request to self
+if ($sender === $recipient) {
+  echo json_encode(["success" => false, "message" => "You can't send a request to yourself"]);
+  exit();
 }
 
-/*
-At this point, can send the request by making a new row in table
+// Check if friend request already exists
+$stmt = $mysqli->prepare("SELECT * FROM friends WHERE sender = ? AND recipient = ?");
+$stmt->bind_param("ss", $sender, $recipient);
+$stmt->execute();
+$existing = $stmt->get_result()->fetch_assoc();
 
-makes a new entry in the friends table, specifing who sent the request,
-and who recieved it. The request must be approved, so the associated approved value defaults to false
-*/
+if ($existing) {
+  echo json_encode(["success" => false, "message" => "There is already an outgoing request to this user"]);
+  exit();
+}
 
-$stmt = $mysqli->prepare("INSERT INTO friends (sender,recipient) VALUES (?,?)");
-$stmt->bind_param("ss",$sender,$recipient);
+// Insert new friend request
+$stmt = $mysqli->prepare("INSERT INTO friends (sender, recipient) VALUES (?, ?)");
+$stmt->bind_param("ss", $sender, $recipient);
 $stmt->execute();
 
-echo json_encode(["success"=>true,"message"=>"request sent!"]);
+echo json_encode(["success" => true, "message" => "Request sent!"]);
 
 ?>

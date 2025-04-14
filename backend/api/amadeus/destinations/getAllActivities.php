@@ -58,13 +58,31 @@ if (!$email) {
 }
 
 // Get the correct trip_id using both start_date and city_name
-$tripStmt = $mysqli->prepare("SELECT id FROM trips WHERE email = ? AND start_date = ? AND city_name = ?");
+// First, try to find trip as owner
+$tripStmt = $mysqli->prepare("
+  SELECT id FROM trips 
+  WHERE email = ? AND start_date = ? AND city_name = ?
+");
 $tripStmt->bind_param("sss", $email, $start, $city);
 $tripStmt->execute();
 $tripResult = $tripStmt->get_result()->fetch_assoc();
 
 $tripId = $tripResult['id'] ?? null;
-log_msg("Trip ID resolved for $email | $start | $city: " . ($tripId ?? "NULL"));
+
+// If not found as owner, try to find trip as collaborator
+if (!$tripId) {
+    log_msg("Not found as owner, trying collaborator check.");
+
+    $collabStmt = $mysqli->prepare("
+      SELECT t.id FROM trips t
+      JOIN trip_collaborators c ON t.id = c.trip_id
+      WHERE c.user_email = ? AND t.start_date = ? AND t.city_name = ?
+    ");
+    $collabStmt->bind_param("sss", $email, $start, $city);
+    $collabStmt->execute();
+    $collabResult = $collabStmt->get_result()->fetch_assoc();
+    $tripId = $collabResult['id'] ?? null;
+}
 
 if (!$tripId) {
     log_msg("ERROR: No trip found for given user, start_date, and city_name.");

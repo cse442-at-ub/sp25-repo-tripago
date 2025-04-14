@@ -21,9 +21,10 @@ const Sidebar = ({isOpen = true}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const isProfilePage = location.pathname === "/profile";
 
   return (
-    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+    <div className={`sidebar ${isOpen ? 'open' : ''} ${isProfilePage ? 'sidebar-profile' : ''} `}>
       <div className="sidebar-header">
         <p>
           Hello, <span className="username">{encode(username)}</span>.

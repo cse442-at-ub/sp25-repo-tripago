@@ -17,7 +17,7 @@ if ($mysqli->connect_errno) {
 }
 
 // Get basic info
-$stmt = $mysqli->prepare("SELECT first_name, last_name, user_image_url FROM users WHERE email = ?");
+$stmt = $mysqli->prepare("SELECT first_name, last_name, username, user_image_url FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $userRes = $stmt->get_result();
