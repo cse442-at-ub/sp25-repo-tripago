@@ -851,7 +851,7 @@ const Memories = ({ trip }) => {
           headers: { "Content-Type": "application/json" },
         });
         const result = response.data;
-        // console.log("getMemories form response: ", result);
+        console.log("getMemories form response: ", result);
 
         const mem = []
         for (const memory of result.memories) {
