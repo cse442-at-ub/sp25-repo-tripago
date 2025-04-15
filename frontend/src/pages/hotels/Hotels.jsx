@@ -21,10 +21,10 @@ const Hotels = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const initialSearchDone = useRef(false);
-  const [tripId, setTripId] = useState(location.state?.tripId || null);
-  const [fromInvite, setFromInvite] = useState(
-    location.state?.fromInvite || false
-  );
+
+  const tripId = searchParams.get("tripId");
+  const fromInvite = searchParams.get("fromInvite") === "true";
+
   console.log("In Hotels.jsx, tripId is", tripId);
   console.log("In Hotels.jsx, fromInvite is", fromInvite);
 
@@ -200,6 +200,25 @@ const Hotels = () => {
 
       setHotels(hotelsList);
       setHotelOffers(offersMap);
+
+      //Update the trip dates to match check in/out:
+      console.log("location being sent is: " + selectedLocation.name);
+      fetch(
+        `/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripDates.php`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            city_name: selectedLocation.name,
+            start_date: checkInDate || null,
+            end_date: checkOutDate || null,
+          }),
+        }
+      )
+
+
     } catch (err) {
       setError(err.message);
       console.error("Error searching hotels:", err);
@@ -479,6 +498,7 @@ const Hotels = () => {
       <button
         className={`free-breakfast-button ${freeBreakfastOnly ? "active" : ""}`}
         onClick={() => {
+          console.log("LOCATION IS: "+selectedLocation.name);
           setFreeBreakfastOnly(!freeBreakfastOnly);
           setCurrentPage(1);
         }}

@@ -7,6 +7,7 @@ import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { useNavigate } from "react-router-dom";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
+import HelpTooltip from "../../components/HelpTooltip.jsx";
 
 const TravelerProfile = () => {
   const { email } = useParams();
@@ -16,7 +17,19 @@ const TravelerProfile = () => {
     username: "",
     profilePic: UserAvatar,
   });
-  const [stats, setStats] = useState({ totalTrips: 0, countriesVisited: 0 });
+  const [stats, setStats] = useState({
+    totalTrips: 0,
+    countriesVisited: 0,
+    points: {
+      total: 0,
+      breakdown: {
+        trips: 0,
+        trip_days: 0,
+        expenses: 0,
+        activities: 0,
+      },
+    },
+  });
   const [friendsList, setFriendsList] = useState([]);
   const [friends, setFriends] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
@@ -49,11 +62,25 @@ const TravelerProfile = () => {
             username: data.user.username,
             profilePic: data.user.user_image_url || UserAvatar,
           });
-          setStats({
+          setStats((prevStats) => ({
+            ...prevStats,
             totalTrips: data.totalTrips,
             countriesVisited: data.countriesVisited,
-          });
+          }));
           setFriends(data.friends);
+
+          // Fetch user points
+          const pointsRes = await fetch(
+            `/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserPoints.php?email=${email}`
+          );
+          const pointsData = await pointsRes.json();
+
+          if (pointsData.success) {
+            setStats((prevStats) => ({
+              ...prevStats,
+              points: pointsData.points,
+            }));
+          }
         }
       } catch (err) {
         console.error("Failed to fetch traveler info:", err);
@@ -88,9 +115,9 @@ const TravelerProfile = () => {
         console.log("Trips fetched: ", data);
 
         if (data.success) {
-          const tripsWithEmail = data.trips.map(trip => ({
+          const tripsWithEmail = data.trips.map((trip) => ({
             ...trip,
-            email: email // inject the email from useParams
+            email: email, // inject the email from useParams
           }));
           setUserTrips(tripsWithEmail);
         }
@@ -133,7 +160,9 @@ const TravelerProfile = () => {
     fetchFriends();
   }, []);
 
-  const isFriend = selectedTrip ? friendsList.includes(selectedTrip.email) : false;
+  const isFriend = selectedTrip
+    ? friendsList.includes(selectedTrip.email)
+    : false;
 
   return (
     <>
@@ -166,6 +195,43 @@ const TravelerProfile = () => {
           <h3>Trip Stats</h3>
           <p>Total Trips Taken: {stats.totalTrips}</p>
           <p>Countries Visited: {stats.countriesVisited}</p>
+          <div className="points-section">
+            <div className="tooltip-container">
+              <HelpTooltip>
+                <h4>
+                  <span className="tooltip-purple">
+                    Earn points as you explore!
+                  </span>
+                </h4>
+                <ul>
+                  <li>
+                    <strong>Trip Bonus:</strong> 100 points per trip
+                  </li>
+                  <li>
+                    <strong>Day Bonus:</strong> 25 points for each day of your
+                    trips
+                  </li>
+                  <li>
+                    <strong>Expense Bonus:</strong> 15 points per expense you
+                    add
+                  </li>
+                  <li>
+                    <strong>Activity Bonus:</strong> 10 points per activity you
+                    plan
+                  </li>
+                </ul>
+              </HelpTooltip>
+              <h4>Travel Points: {stats.points.total}</h4>
+            </div>
+            <div className="points-breakdown">
+              <p data-points={stats.points.breakdown.trips}>Trip Bonus</p>
+              <p data-points={stats.points.breakdown.trip_days}>Day Bonus</p>
+              <p data-points={stats.points.breakdown.expenses}>Expense Bonus</p>
+              <p data-points={stats.points.breakdown.activities}>
+                Activity Bonus
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="bucket-list user-profile-section">
@@ -220,10 +286,10 @@ const TravelerProfile = () => {
           location={selectedTrip?.city_name}
           imageUrl={selectedTrip?.image_url}
           comment={selectedTrip?.comment}
-          isFriend={isFriend} 
+          isFriend={isFriend}
           tripId={selectedTrip?.id}
           userEmail={email} // traveler’s email from useParams
-          currentUserEmail={user?.email} 
+          currentUserEmail={user?.email}
         />
       </div>
     </>
