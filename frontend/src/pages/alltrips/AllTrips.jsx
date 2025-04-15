@@ -307,7 +307,7 @@ const AllTrips = () => {
                       };
                       console.log("Viewing group trip:", selected);
                       navigate("/profile", {
-                        state: { tripId: trip.id, fromInvite: true },
+                        state: { tripId: trip.id, fromInvite: true},
                       });
                     }}
                   >

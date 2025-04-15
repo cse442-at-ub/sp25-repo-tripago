@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json");
 
-// Get JSON payload
 $data = json_decode(file_get_contents("php://input"), true);
 
 $tripId = $data['tripId'] ?? null;
@@ -14,7 +13,6 @@ if (!$tripId || !$email) {
     exit();
 }
 
-// Connect to database
 $mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
 
 if ($mysqli->connect_errno) {
@@ -22,7 +20,7 @@ if ($mysqli->connect_errno) {
     exit();
 }
 
-// Make sure the user is already invited before accepting
+// Verify user was actually invited
 $stmt = $mysqli->prepare("SELECT * FROM trip_collaborators WHERE trip_id = ? AND user_email = ?");
 $stmt->bind_param("is", $tripId, $email);
 $stmt->execute();
@@ -33,13 +31,38 @@ if ($res->num_rows === 0) {
     exit();
 }
 
-// Update the invite to mark it as accepted
+// Accept the trip invite
 $stmt = $mysqli->prepare("UPDATE trip_collaborators SET accepted = 1 WHERE trip_id = ? AND user_email = ?");
 $stmt->bind_param("is", $tripId, $email);
+$stmt->execute();
 
-if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Invite accepted successfully"]);
-} else {
-    echo json_encode(["success" => false, "message" => "Failed to accept invitation"]);
+// Get trip owner's email to make friendship
+$stmt = $mysqli->prepare("SELECT email FROM trips WHERE id = ?");
+$stmt->bind_param("i", $tripId);
+$stmt->execute();
+$result = $stmt->get_result();
+$tripOwnerRow = $result->fetch_assoc();
+$tripOwner = $tripOwnerRow['email'] ?? null;
+
+if ($tripOwner && $tripOwner !== $email) {
+    // Check if a pending friend request exists between the two
+    $stmt = $mysqli->prepare("SELECT * FROM friends WHERE sender = ? AND recipient = ? OR sender = ? AND recipient = ?");
+    $stmt->bind_param("ssss", $email, $tripOwner, $tripOwner, $email);
+    $stmt->execute();
+    $friendRes = $stmt->get_result();
+
+    if ($friendRes->num_rows > 0) {
+        // If exists and not approved, update it
+        $stmt = $mysqli->prepare("UPDATE friends SET approved = 1 WHERE (sender = ? AND recipient = ?) OR (sender = ? AND recipient = ?)");
+        $stmt->bind_param("ssss", $email, $tripOwner, $tripOwner, $email);
+        $stmt->execute();
+    } else {
+        // Otherwise insert new approved friendship
+        $stmt = $mysqli->prepare("INSERT INTO friends (sender, recipient, approved) VALUES (?, ?, 1)");
+        $stmt->bind_param("ss", $email, $tripOwner);
+        $stmt->execute();
+    }
 }
+
+echo json_encode(["success" => true, "message" => "Invite accepted and friendship established"]);
 ?>

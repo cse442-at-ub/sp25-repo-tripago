@@ -4,15 +4,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Tripago_VX.png";
 import backArrow from "../assets/arrow-left.png";
 import fav from "../assets/favicon.png";
+import { useSearchParams } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams()
 
   const isBrowseHotelsPage = location.pathname === "/browse-hotels";
   const isProfilePage = location.pathname === "/profile";
-  const tripId = location.state?.tripId;
-  const fromInvite = location.state?.fromInvite;
+
+  const tripId = searchParams.get("tripId");
+  const fromInvite = searchParams.get("fromInvite");
   
   return (
     <nav className="navbar">
