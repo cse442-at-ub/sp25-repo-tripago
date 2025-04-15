@@ -191,11 +191,6 @@
   margin: 0;
 }
 
-.at-view-more-btn:hover {
-  padding: 0;
-  margin: 0;
-}
-
 .trip-stats h3 {
   font-size: 1.3rem;
   color: var(--black);
