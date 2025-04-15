@@ -8,7 +8,6 @@ $jsonData = file_get_contents("php://input");
 $data = json_decode($jsonData,true);
 $tripId = $data["id"];
 
-
 // Get email from auth token
 $token = $_COOKIE['authCookie'];
 $mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
@@ -23,15 +22,18 @@ if (!$email) {
     exit();
 }
 
-// Check if the trip id from data really belongs to the user
-$stmt = $mysqli->prepare("SELECT * FROM trips WHERE id=? AND email=?");
-$stmt->bind_param("is", $tripId, $email);
+// Check if user is owner or user is collaborator or trip is shared
+$stmt = $mysqli->prepare("
+  SELECT t.id FROM trips t
+  LEFT JOIN trip_collaborators c ON t.id = c.trip_id
+  WHERE (t.id = ? AND (t.email = ? OR c.user_email = ?)) OR (t.travel_log = 1)
+");
+$stmt->bind_param("iss", $tripId, $email, $email);
 $stmt->execute();
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
+$result = $stmt->get_result()->fetch_assoc();
 if (!$result) {
-    echo json_encode(["success" => false, "message" => "Trip not found"]);
-    exit();
+  echo json_encode(["success" => false, "message" => "You don’t have access to this trip"]);
+  exit();
 }
 
 // Fetch memories

@@ -46,7 +46,8 @@ const FriendsModal = ({
       );
       axios
         .post(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getCommunityActivities.php",
+          // BACKEND!!
+          "/CSE442/2025-Spring/cse-442aj/owenbackend/api/community/getCommunityActivities.php",
           {
             tripId: tripId,
             email: userEmail,
@@ -66,7 +67,8 @@ const FriendsModal = ({
     const fetchMemories = async () => {
 
       try {
-        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: tripId}, {
+        // CHANGE THIS TO BACKEND
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/getMemories.php", {id: tripId}, {
           headers: { "Content-Type": "application/json" },
         });
         const result = response.data;
@@ -217,7 +219,7 @@ const FriendsModal = ({
               <h3>Memories</h3>
               {memories.length === 0 ? (
                 <p className="no-memories-message">
-                  Looks like this trip has no memories. Use the button above to post a memory to this trip. Memories can include pictures and comments about your trip.
+                  Looks like this trip has no memories.
                 </p>
               ) : (
                 memories.map((memory) => (

@@ -847,7 +847,8 @@ const Memories = ({ trip }) => {
     const fetchMemories = async () => {
 
       try {
-        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: trip.id}, {
+        // CHANGE THIS BACK TO BACKEND
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/getMemories.php", {id: trip.id}, {
           headers: { "Content-Type": "application/json" },
         });
         const result = response.data;
