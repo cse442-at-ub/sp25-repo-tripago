@@ -222,12 +222,12 @@ const FriendsModal = ({
               ) : (
                 memories.map((memory) => (
                   <div key={memory.id} className="memory-card">
-                    <div className="slide-container">
+                    <div className={"slide-container " + (memory.images.length === 1 && "one-image")}>
                       <Slide {...properties} arrows={memory.images.length > 1}>
                         {memory.images.map((slideImage, index) => (
                           <div key={index}>
                             <div
-                              className="memory-image"
+                              className={"memory-image " + (memory.images.length === 1 && "one-image")}
                               style={{
                                 ...divStyle,
                                 backgroundImage: `url(${slideImage})`,
