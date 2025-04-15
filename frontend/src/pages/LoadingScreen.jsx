@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { encode } from "html-entities";
 import { searchLocations, searchHotels } from "../services/hotelService";
 import "../styles/LoadingScreen.css";
@@ -7,6 +7,10 @@ import "../styles/LoadingScreen.css";
 const LoadingScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const tripId = searchParams.get("tripId");
+  const fromInvite = searchParams.get("fromInvite") === "true";
 
   const { headerText, redirectTo, recommendations, hotels } =
     location.state || {
@@ -40,26 +44,27 @@ const LoadingScreen = () => {
           );
           console.log("hotels from amadeus", results);
 
-          console.log("In LoadingScreen, before nav to hotels page, tripId and fromInvite: ",location.state?.tripId,  location.state?.fromInvite)
+          console.log("In LoadingScreen, before nav to hotels page, tripId and fromInvite: ",tripId,  fromInvite)
+
+          const query = new URLSearchParams({
+            tripId,
+            fromInvite,
+          });
 
           // Step 3: Navigate to hotels page with results
-          navigate(redirectTo, {
+          navigate(`/browse-hotels?${query.toString()}`, {
             state: {
               location: locationMatch,
               searchResults: results,
               checkIn: hotels.checkIn,
               checkOut: hotels.checkOut,
-              tripId: location.state?.tripId,
-              fromInvite: location.state?.fromInvite,
             },
           });
         } catch (error) {
           console.error("Error fetching hotels:", error);
-          navigate("/browse-hotels", {
+          navigate(`/browse-hotels?${query.toString()}`, {
             state: {
               error: error.message,
-              tripId: location.state?.tripId,
-              fromInvite: location.state?.fromInvite,
             },
           });
         }

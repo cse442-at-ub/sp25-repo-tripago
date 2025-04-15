@@ -438,12 +438,11 @@ but can expand it in the future, if need (or want) be!
                   <button
                     className="find-hotel-btn"
                     onClick={() =>
-                      navigate("/loading-screen", {
+                      navigate(`/loading-screen?tripId=${tripID}&fromInvite=${isInvitee}`, {
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
                           redirectTo: "/browse-hotels",
-                          tripId: tripID,
                           hotels: {
                             location: trip.name,
                             checkIn: trip.startDate,
@@ -467,12 +466,11 @@ but can expand it in the future, if need (or want) be!
                   <button
                     className="find-hotel-btn"
                     onClick={() =>
-                      navigate("/loading-screen", {
+                      navigate(`/loading-screen?tripId=${tripID}&fromInvite=${isInvitee}`, {
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
                           redirectTo: "/browse-hotels",
-                          tripId: tripID,
                           hotels: {
                             location: trip.name,
                             checkIn: trip.startDate,
@@ -480,7 +478,7 @@ but can expand it in the future, if need (or want) be!
                             adults: 2, // safe default
                             rooms: 1, // safe default
                           },
-                          fromInvite: isInvitee || false,
+                          
                         },
                       })
                     }

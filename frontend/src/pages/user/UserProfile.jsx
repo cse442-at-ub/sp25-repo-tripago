@@ -132,6 +132,28 @@ const UserProfile = () => {
     fetchTripInvites();
   }, [user.email]);
 
+  const fetchFriends = async () => {
+    console.log("Getting friends");
+    try {
+      const res = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+        {
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      console.log("Response from getting friends is: ", data);
+
+      if (data.success) {
+        setFriends(data.friends);
+      } else {
+        console.warn("Failed to fetch friends:", data.message);
+      }
+    } catch (err) {
+      console.error("Error fetching friends:", err);
+    }
+  };
+
   useEffect(() => {
     if (!user.email) return;
 
@@ -173,30 +195,6 @@ const UserProfile = () => {
         console.error("Error fetching stats:", err);
       }
     };
-
-    const fetchFriends = async () => {
-      console.log("Getting friends");
-      try {
-        const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
-          {
-            credentials: "include",
-          }
-        );
-        const data = await res.json();
-        console.log("Response from getting friends is: ", data);
-
-        if (data.success) {
-          setFriends(data.friends);
-        } else {
-          console.warn("Failed to fetch friends:", data.message);
-        }
-      } catch (err) {
-        console.error("Error fetching friends:", err);
-      }
-    };
-
-   
 
     fetchStats();
     fetchFriends();
@@ -293,9 +291,13 @@ const UserProfile = () => {
       const data = await res.json();
       console.log("After accepting invite and data is", data)
       if (data.success) {
+
         setTripInvites((prev) =>
           prev.filter((invite) => invite.trip_id !== tripId)
         );
+
+        fetchFriends(); // Update Friends section 
+
         navigate("/profile", {
           state: {
             tripId: tripId,
