@@ -54,8 +54,8 @@ if ($result == null){ //email is available
   $stmt = $mysqli->prepare("UPDATE users SET email=? WHERE token=?");
   $stmt->bind_param("ss", $email, $token);
   $stmt->execute();
-/*
-  $stmt = $mysqli->prepare("UPDATE trip SET email=? WHERE email=?");
+
+  $stmt = $mysqli->prepare("UPDATE trips SET email=? WHERE email=?");
   $stmt->bind_param("ss",$email,$oldEmail);
   $stmt->execute();
 
@@ -88,7 +88,7 @@ if ($result == null){ //email is available
 ");
   $stmt->bind_param("ssssss",$oldEmail,$email,$oldEmail,$email,$oldEmail,$oldEmail);
   $stmt->execute();
- */
+
 
 
   $expiration = (new DateTime())->getTimestamp() + 3600;
