@@ -21,15 +21,18 @@ if (!$email) {
     exit();
 }
 
-// Check if the trip id from data really belongs to the user
-$stmt = $mysqli->prepare("SELECT * FROM trips WHERE id=? AND email=?");
-$stmt->bind_param("is", $tripId, $email);
+// Check if user is owner or user is collaborator
+$stmt = $mysqli->prepare("
+  SELECT t.id FROM trips t
+  LEFT JOIN trip_collaborators c ON t.id = c.trip_id
+  WHERE t.id = ? AND (t.email = ? OR c.user_email = ?)
+");
+$stmt->bind_param("iss", $tripId, $email, $email);
 $stmt->execute();
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
+$result = $stmt->get_result()->fetch_assoc();
 if (!$result) {
-    echo json_encode(["success" => false, "message" => "Trip not found: id=" . $tripId]);
-    exit();
+  echo json_encode(["success" => false, "message" => "You don’t have access to this trip"]);
+  exit();
 }
 
 // Add memory to database
@@ -65,7 +68,8 @@ foreach($_FILES["images"]["tmp_name"] as $i => $tmp) {
     }
     
     // Prepare DB
-    $relativePath = "/CSE442/2025-Spring/cse-442aj/backend/api/trips/pictures/" . $uniqueName;
+    // CHANGE THIS TO BACKEND
+    $relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
     $stmt = $mysqli->prepare("INSERT INTO memory_images (trip_id, memory_id, image_url) VALUES (?, ?, ?)");
     $stmt->bind_param("iis", $tripId, $memId, $relativePath);
     $stmt->execute();
