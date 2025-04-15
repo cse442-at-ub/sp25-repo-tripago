@@ -268,14 +268,42 @@ const ShareTripModal = ({ onClose, trip }) => {
               </div>
             </div>
 
+            {images.length < 1 && (
+              <span className="upload-info">No images selected</span>
+            )}
+
+            {previewImages.length > 0 && (
+              <div className="image-previews">
+                {previewImages.map((src, index) => (
+                  <div key={index} className="image-preview-container">
+                    <img
+                      src={src}
+                      alt={`Preview ${index + 1}`}
+                      className="image-preview"
+                    />
+                    <div className="image-preview-overlay">
+                      <button
+                        className="remove-image-btn"
+                        onClick={() => removeImage(index)}
+                        aria-label="Remove image"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Email trip */}
+            <br/>
             <p style={{ width: '100%', margin: '0', padding: '0' }}>
-              Add user emails you wish to share with
+              Want to share with someone who isn't on Tripago? We'll email a postcard!
             </p>
 
             <div style={{ width: '100%', display: 'block' }}>
               <input
-                style={{ width: '50%', margin: '0' }}
+                className="email-input"
                 type="email"
                 name="email"
                 placeholder="Email address"
@@ -316,33 +344,6 @@ const ShareTripModal = ({ onClose, trip }) => {
             </div>
 
             {/* ------------------ */}
-
-            {images.length < 1 && (
-              <span className="upload-info">No images selected</span>
-            )}
-
-            {previewImages.length > 0 && (
-              <div className="image-previews">
-                {previewImages.map((src, index) => (
-                  <div key={index} className="image-preview-container">
-                    <img
-                      src={src}
-                      alt={`Preview ${index + 1}`}
-                      className="image-preview"
-                    />
-                    <div className="image-preview-overlay">
-                      <button
-                        className="remove-image-btn"
-                        onClick={() => removeImage(index)}
-                        aria-label="Remove image"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
