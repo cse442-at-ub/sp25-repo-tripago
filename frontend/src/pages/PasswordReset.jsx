@@ -54,7 +54,10 @@ const PasswordReset = () => {
     <div className="login-container ">
       <h2>Reset Password</h2>
           {resetMessage && (
-      <div style={{ color: '#52DDA2', marginBottom: '10px', fontWeight: 'bold' }}>
+      <div style={{ color: '#52DDA2',
+        marginBottom: '10px',
+        fontWeight: 'bold',
+        textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' }}>
         {resetMessage}
       </div>
     )}
