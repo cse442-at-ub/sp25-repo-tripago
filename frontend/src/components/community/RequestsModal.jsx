@@ -2,7 +2,6 @@ import React, {useState,useEffect} from "react";
 import "../../styles/community/RequestsModal.css";
 import axios from 'axios'
 import { encode } from "html-entities";
-//import "../../styles/community/FriendsModal.css"
 
 const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequests, sentRequests }) => {
   const [successMessage, setSuccessMessage] = useState(""); // State for the success message
