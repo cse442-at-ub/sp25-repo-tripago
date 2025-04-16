@@ -44,6 +44,7 @@ const Profile = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [dateErrorMessage, setDateErrorMessage] = useState(""); // New state for date error message
 
   useEffect(() => {
     const incomingTripId = incomingDestination.tripId;
@@ -383,26 +384,35 @@ const Profile = () => {
                   <input
                     type="date"
                     value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    onChange={(e) => {
+                      setStartDate(e.target.value);
+                      setDateErrorMessage(""); // Clear error on start date change
+                    }}
                   />
                   <div className="travel-dates-modal">
                     <label>End Date:</label>
                     <input
                       type="date"
                       value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
+                      onChange={(e) => {
+                        setEndDate(e.target.value);
+                        setDateErrorMessage(""); // Clear error on end date change
+                      }}
                     />
                   </div>
-
+                  {dateErrorMessage && (
+                    <p style={{ color: 'red' }}>{dateErrorMessage}</p>
+                  )}
                   <button
                     onClick={() => {
                       if (!startDate || !endDate) {
-                        alert("Please select both start and end dates.");
+                        setDateErrorMessage("Please select both start and end dates.");
                         return;
                       }
 
                       if (new Date(startDate) > new Date(endDate)) {
-                        alert("End date cannot be before start date.");
+                        //alert("End date cannot be before start date.");
+                        setDateErrorMessage("End date cannot be before start date.");
                         return;
                       }
 

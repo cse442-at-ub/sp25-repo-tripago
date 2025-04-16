@@ -17,6 +17,7 @@ const FriendsModal = ({
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [itinerary, setItinerary] = useState([]);
+  
 
   console.log("is friend is: ", isFriend);
 

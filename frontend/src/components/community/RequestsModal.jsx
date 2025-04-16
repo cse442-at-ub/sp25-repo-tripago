@@ -1,9 +1,23 @@
-import React from "react";
+import React, {useState,useEffect} from "react";
 import "../../styles/community/RequestsModal.css";
 import axios from 'axios'
 import { encode } from "html-entities";
+//import "../../styles/community/FriendsModal.css"
 
 const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequests, sentRequests }) => {
+  const [successMessage, setSuccessMessage] = useState(""); // State for the success message
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 2000); // Adjust the duration as needed
+
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+
   if (!isOpen) return null;
 
   const approveRequest = async(name) => {
@@ -33,10 +47,9 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
 
         //remove entry when success!
         setIncomingRequests(prevRequests => prevRequests.filter(req => req.name !== name));
-
-        alert(result.message);
+        setSuccessMessage("You are now the friend of " + first_name);
       } else {
-        alert(result.message);
+        setSuccessMessage("An error has occurred accepting the request");
       }
       
     } catch (error){
@@ -83,10 +96,9 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
 
         //remove entry when success!
         setIncomingRequests(prevRequests => prevRequests.filter(req => req.name !== name));
-
-        alert(result.message);
+        setSuccessMessage("The request was successfully deleted");
       } else {
-        alert(result.message);
+        setSuccessMessage("There was an error removing the request");
       }
       
     } catch (error){
@@ -105,13 +117,22 @@ const RequestsModal = ({ isOpen, onClose, type, incomingRequests,setIncomingRequ
 
   }
 
+  /*
+
+  */
 
   return (
     <div className="request-modal-overlay modal-overlay">
       <div className="request-modal-content modal-content">
         <button className="close-btn" onClick={onClose}>×</button>
         <h2>{type === "incoming" ? "Incoming Requests" : "Friends"}</h2>
-
+        {successMessage && (
+          <div className="modal-overlay">
+            <div className="modal-content send-req-modal-content"> 
+              {successMessage}
+            </div>
+          </div>
+        )}
         {type === "incoming" ? (
           <ul className="requests-list">
             {incomingRequests.map((req) => (
