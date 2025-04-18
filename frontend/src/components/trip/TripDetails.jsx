@@ -10,6 +10,7 @@ import autofillIcon from "../../assets/autofill.png";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
+import TripTags from "./TripTags.jsx";
 import HelpTooltip from "../HelpTooltip.jsx";
 
 const Itinerary = ({ trip, setShowModal, isInvitee }) => {
@@ -973,6 +974,9 @@ const TripDetails = ({
               Select a different trip
             </p>
           </div>
+
+          <TripTags tripId={tripId} isInvitee={isInvitee} />
+
           <div className="itin-budget-container">
             <p
               className={`itin-budget-tab ${
@@ -1039,7 +1043,7 @@ const tripProps = PropTypes.shape({
   name: PropTypes.string.isRequired,
   startDate: PropTypes.string,
   endDate: PropTypes.string,
-  // location: PropTypes.string.isRequired,
+  id: PropTypes.number,
   countryCode: PropTypes.string,
   days: PropTypes.arrayOf(
     PropTypes.shape({
@@ -1070,18 +1074,27 @@ const tripProps = PropTypes.shape({
 TripDetails.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
+  isInvitee: PropTypes.bool,
+  currentTab: PropTypes.string.isRequired,
+  setCurrentTab: PropTypes.func.isRequired,
 };
+
 Itinerary.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
+  isInvitee: PropTypes.bool,
 };
+
 Budgeting.propTypes = {
   trip: tripProps,
+  isInvitee: PropTypes.bool,
 };
+
 ExpenseModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
+
 BudgetModal.propTypes = {
   currentBudget: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
