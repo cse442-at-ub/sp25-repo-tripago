@@ -15,6 +15,7 @@ import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext.jsx";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
+import HelpTooltip from "../../components/HelpTooltip.jsx";
 
 const AllTrips = () => {
   const navigate = useNavigate();
@@ -30,9 +31,8 @@ const AllTrips = () => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-
     const fetchTrips = async () => {
-    console.log("Fetching trips...");
+      console.log("Fetching trips...");
 
       try {
         const res = await fetch(
@@ -68,7 +68,7 @@ const AllTrips = () => {
 
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
-      
+
       setIsMobile(isNowMobile);
     };
 
@@ -174,7 +174,16 @@ const AllTrips = () => {
 
       <div className="all-trips-container">
         <div className="user-profile-main-content all-trips-main-content">
-          <h3>Browse Your Trips</h3>
+          <div className="browse-trips_tooltip-container">
+            <HelpTooltip>
+              {" "}
+              See all your trips, organized by type. Private Trips are <span className="tooltip-purple">just for
+              you</span>. Group Trips are ones you’ve been <span className="tooltip-purple">invited</span> to co-plan with
+              others. Shared Trips are <span className="tooltip-purple">public</span> — viewable in the Community
+              section
+            </HelpTooltip>
+            <h3>Browse Your Trips</h3>
+          </div>
           {/* All Trips Header with Sorting */}
           <div className="trips-header">
             <button
@@ -218,7 +227,7 @@ const AllTrips = () => {
                     onClick={() => {
                       const selected = {
                         name: trip.destination,
-                        countryCode: "", 
+                        countryCode: "",
                         startDate: trip.start_date,
                         endDate: trip.end_date,
                         imageUrl: trip.image_url || "",
@@ -298,7 +307,7 @@ const AllTrips = () => {
                       };
                       console.log("Viewing group trip:", selected);
                       navigate("/profile", {
-                        state: { tripId: trip.id, fromInvite: true },
+                        state: { tripId: trip.id, fromInvite: true},
                       });
                     }}
                   >

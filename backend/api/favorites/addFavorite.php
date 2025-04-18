@@ -10,8 +10,8 @@ $password = "50540565";
 $dbname = "cse442_2025_spring_team_aj_db";
 
 $data = json_decode(file_get_contents("php://input"), true);
-$name = $data["name"];
-$countryCode = isset($data["countryCode"]) ? $data["countryCode"] : null;
+$name = $data["cityName"];
+$cityCode = isset($data["cityCode"]) ? $data["cityCode"] : null;
 
 $token = $_COOKIE['authCookie'];
 
@@ -37,9 +37,9 @@ if (!$email || !$name) {
 
 // SQL query to insert into the favorites table
 
-$query = "INSERT INTO favorites (email, name, country_code) VALUES (?, ?, ?)";
+$query = "INSERT INTO favorites (email, location, city_code) VALUES (?, ?, ?)";
 $stmt = mysqli_prepare($mysqli, $query);
-mysqli_stmt_bind_param($stmt, "sss", $email, $name, $country_code);
+mysqli_stmt_bind_param($stmt, "sss", $email, $name, $cityCode);
 
 if (mysqli_stmt_execute($stmt)) {
     echo json_encode(["success" => true, "message" => "Added to favorites"]);

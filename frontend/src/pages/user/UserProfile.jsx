@@ -7,6 +7,7 @@ import { FaEdit } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
+import HelpTooltip from "../../components/HelpTooltip.jsx";
 
 const UserProfile = () => {
   const [user, setUser] = useState({
@@ -21,6 +22,15 @@ const UserProfile = () => {
   const [stats, setStats] = useState({
     totalTrips: 0,
     countriesVisited: 0,
+    points: {
+      total: 0,
+      breakdown: {
+        trips: 0,
+        trip_days: 0,
+        expenses: 0, 
+        activities: 0
+      }
+    }
   });
   const [bucketList, setBucketList] = useState([]);
   const [newDestination, setNewDestination] = useState("");
@@ -122,54 +132,69 @@ const UserProfile = () => {
     fetchTripInvites();
   }, [user.email]);
 
+  const fetchFriends = async () => {
+    console.log("Getting friends");
+    try {
+      const res = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+        {
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      console.log("Response from getting friends is: ", data);
+
+      if (data.success) {
+        setFriends(data.friends);
+      } else {
+        console.warn("Failed to fetch friends:", data.message);
+      }
+    } catch (err) {
+      console.error("Error fetching friends:", err);
+    }
+  };
+
   useEffect(() => {
     if (!user.email) return;
 
     const fetchStats = async () => {
       try {
-        const res = await fetch(
+        // Fetch trip stats
+        const tripStatsRes = await fetch(
           "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php",
           {
             credentials: "include",
           }
         );
-        const data = await res.json();
-        if (data.success) {
-          setStats({
-            totalTrips: data.totalTrips,
-            countriesVisited: data.countriesVisited,
-          });
-        } else {
-          console.error("Failed to fetch stats:", data.message);
-        }
-      } catch (err) {
-        console.error("Error fetching stats:", err);
-      }
-    };
+        const tripStatsData = await tripStatsRes.json();
 
-    const fetchFriends = async () => {
-      console.log("Getting friends");
-      try {
-        const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+        // Fetch user points
+        const pointsRes = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserPoints.php`,
           {
             credentials: "include",
           }
         );
-        const data = await res.json();
-        console.log("Response from getting friends is: ", data);
+        const pointsData = await pointsRes.json();
 
-        if (data.success) {
-          setFriends(data.friends);
-        } else {
-          console.warn("Failed to fetch friends:", data.message);
-        }
+        setStats(prevStats => ({
+          ...prevStats,
+          totalTrips: tripStatsData.success ? tripStatsData.totalTrips : 0,
+          countriesVisited: tripStatsData.success ? tripStatsData.countriesVisited : 0,
+          points: pointsData.success ? pointsData.points : {
+            total: 0,
+            breakdown: {
+              trips: 0,
+              trip_days: 0,
+              expenses: 0,
+              activities: 0
+            }
+          }
+        }));
       } catch (err) {
-        console.error("Error fetching friends:", err);
+        console.error("Error fetching stats:", err);
       }
     };
-
-   
 
     fetchStats();
     fetchFriends();
@@ -266,9 +291,13 @@ const UserProfile = () => {
       const data = await res.json();
       console.log("After accepting invite and data is", data)
       if (data.success) {
+
         setTripInvites((prev) =>
           prev.filter((invite) => invite.trip_id !== tripId)
         );
+
+        fetchFriends(); // Update Friends section 
+
         navigate("/profile", {
           state: {
             tripId: tripId,
@@ -408,6 +437,42 @@ const UserProfile = () => {
           <h3>Trip Stats</h3>
           <p>Total Trips Taken: {stats.totalTrips}</p>
           <p>Countries Visited: {stats.countriesVisited}</p>
+          <div className="points-section">
+          <div className="tooltip-container">
+              <HelpTooltip>
+                <h4>
+                  <span className="tooltip-purple">
+                    Earn points as you explore!
+                  </span>
+                </h4>
+                <ul
+                >
+                  <li>
+                    <strong>Trip Bonus:</strong> 100 points per trip
+                  </li>
+                  <li>
+                    <strong>Day Bonus:</strong> 25 points for each day of your
+                    trips
+                  </li>
+                  <li>
+                    <strong>Expense Bonus:</strong> 15 points per expense you
+                    add
+                  </li>
+                  <li>
+                    <strong>Activity Bonus:</strong> 10 points per activity you
+                    plan
+                  </li>
+                </ul>
+              </HelpTooltip>
+              <h4>Travel Points: {stats.points.total}</h4>
+            </div>
+            <div className="points-breakdown">
+              <p data-points={stats.points.breakdown.trips}>Trip Bonus</p>
+              <p data-points={stats.points.breakdown.trip_days}>Day Bonus</p>
+              <p data-points={stats.points.breakdown.expenses}>Expense Bonus</p>
+              <p data-points={stats.points.breakdown.activities}>Activity Bonus</p>
+            </div>
+          </div>
         </div>
 
         <div className="friends-list user-profile-section">

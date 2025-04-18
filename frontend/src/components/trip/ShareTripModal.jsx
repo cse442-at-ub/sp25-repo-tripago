@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FaImage, FaQuoteLeft, FaTrash } from "react-icons/fa";
 import "../../styles/trip/ShareTripModal.css";
+import { UserContext } from "../../context/UserContext.jsx";
+
 
 const ShareTripModal = ({ onClose }) => {
   const [quote, setQuote] = useState("");
@@ -9,6 +11,124 @@ const ShareTripModal = ({ onClose }) => {
   const [previewImages, setPreviewImages] = useState([]);
   const [isShared, setIsShared] = useState(false);
   const modalRef = useRef(null);
+  const { user } = UserContext;
+
+  /* Email trip */
+
+    const [shareData, setShareData] = useState({ email: '' });
+    const [emailList, setEmailList] = useState([]);
+
+    const handleChange = (e) => {
+      setShareData({ ...shareData, [e.target.name]: e.target.value });
+    };
+
+    const HandleAddingEmails = (e) => {
+      // Prevent adding empty or duplicate email
+      if (
+        shareData.email &&
+        !emailList.includes(shareData.email)
+      ) {
+        const updatedList = [...emailList, shareData.email];
+        setEmailList(updatedList);
+        setShareData({ email: '' });
+    }
+  }
+  
+    const handleEmailSubmit = async (e) => {
+      e.preventDefault();
+
+      const tripName = JSON.parse(localStorage.getItem("selectedTrip"))?.name;
+      const tripImage = JSON.parse(localStorage.getItem("selectedTrip"))?.imageUrl;
+      const userName = user?.name;
+      console.log("User sending message: " + tripImage);
+      // Convert images to base64 (if they're File objects)
+      const base64Images = await Promise.all(images.map(async (file) => {
+        const reader = new FileReader();
+        return new Promise((resolve) => {
+          reader.onloadend = () => {
+            resolve({
+              filename: file.name,
+              data: reader.result.split(",")[1], // strip base64 prefix
+              type: file.type
+            });
+          };
+          reader.readAsDataURL(file);
+        });
+      }));
+
+
+        // Send emails to everyone in the updated list
+        for (const email of emailList) {
+          try {
+           // const response = await fetch('http://localhost/tripago/send_trip.php', {
+            const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/send_trip.php", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                email: email,
+                quote: quote,
+                trip: tripName,
+                userName: userName,
+                tripImage: tripImage,
+                photos: base64Images
+              })
+            });
+  
+            const result = await response.json();
+            console.log(`Sent to ${email}:`, result);
+          } catch (error) {
+            console.error(`Failed to send to ${email}:`, error);
+          }
+        }
+    };
+  
+    const removeEmail = (index) => {
+      const updatedList = [...emailList];
+      updatedList.splice(index, 1);
+      setEmailList(updatedList);
+    };
+
+
+/*
+  const handleChange = (e) => {
+    setShareData({ ...shareData, [e.target.name]: e.target.value });
+  }; */
+
+  /*
+  const [shareData, setShareData] = useState({
+    email: "",
+    quote: "",
+    trip: "",
+    userName: ""
+  });
+
+  
+  const handleEmailSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost/tripago/send_trip.php', {
+      //const response = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/send_trip.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: shareData.email,
+          quote: quote,
+          trip: JSON.parse(localStorage.getItem("selectedTrip"))?.name,
+          userName: "Jane"
+        })
+      });
+      
+      const result = await response.json();
+      console.log(result.message);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }; */
+
+  /*---------------------------------*/
 
   const handleQuoteChange = (e) => {
     setQuote(e.target.value);
@@ -39,7 +159,9 @@ const ShareTripModal = ({ onClose }) => {
     setImages(updatedImages);
   };
 
-  const handleShare = () => {
+  const handleShare = (e) => {
+    e.preventDefault();
+
     // TODO: Implement the actual sharing functionality
 
     onClose();
@@ -103,6 +225,55 @@ const ShareTripModal = ({ onClose }) => {
               </div>
             </div>
 
+            {/* Email trip */}
+            <p style={{ width: '100%', margin: '0', padding: '0' }}>
+              Add user emails you wish to share with
+            </p>
+
+            <div style={{ width: '100%', display: 'block' }}>
+              <input
+                style={{ width: '50%', margin: '0' }}
+                type="email"
+                name="email"
+                placeholder="Email address"
+                value={shareData.email}
+                onChange={handleChange}
+                required
+              />
+              <button onClick={HandleAddingEmails}>Add</button>
+
+              <ul style={{ listStyle: 'none', padding: '0', marginTop: '10px' }}>
+                {emailList.map((email, index) => (
+                  <li
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      marginTop: '5px',
+                      color: 'black'
+                    }}
+                  >
+                    <span>{email}</span>
+                    <button
+                      onClick={() => removeEmail(index)}
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        color: 'red',
+                        cursor: 'pointer',
+                        fontSize: '16px'
+                      }}
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* ------------------ */}
+
             {images.length < 1 && (
               <span className="upload-info">No images selected</span>
             )}
@@ -133,7 +304,7 @@ const ShareTripModal = ({ onClose }) => {
         </div>
 
         <div className="modal-footer">
-          <button className="modal-button" onClick={handleShare}>
+          <button className="modal-button" onClick={(e) => { handleShare(e); handleEmailSubmit(e); }}>
             Post Trip Memory
           </button>
         </div>
