@@ -187,7 +187,7 @@ const ShareTripModal = ({ onClose, trip }) => {
 
       const response = await axios.post(
         // CHANGE TO BACKEND
-        "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/saveMemory.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveMemory.php",
         formData,
         {headers:
           {"Content-Type": "multipart/form-data"},

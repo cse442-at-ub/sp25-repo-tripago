@@ -68,8 +68,7 @@ foreach($_FILES["images"]["tmp_name"] as $i => $tmp) {
     }
     
     // Prepare DB
-    // CHANGE THIS TO BACKEND
-    $relativePath = "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/pictures/" . $uniqueName;
+    $relativePath = "/CSE442/2025-Spring/cse-442aj/backend/api/trips/pictures/" . $uniqueName;
     $stmt = $mysqli->prepare("INSERT INTO memory_images (trip_id, memory_id, image_url) VALUES (?, ?, ?)");
     $stmt->bind_param("iis", $tripId, $memId, $relativePath);
     $stmt->execute();

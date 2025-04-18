@@ -47,7 +47,7 @@ const FriendsModal = ({
       axios
         .post(
           // BACKEND!!
-          "/CSE442/2025-Spring/cse-442aj/owenbackend/api/community/getCommunityActivities.php",
+          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getCommunityActivities.php",
           {
             tripId: tripId,
             email: userEmail,
@@ -68,7 +68,7 @@ const FriendsModal = ({
 
       try {
         // CHANGE THIS TO BACKEND
-        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/getMemories.php", {id: tripId}, {
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: tripId}, {
           headers: { "Content-Type": "application/json" },
         });
         const result = response.data;
