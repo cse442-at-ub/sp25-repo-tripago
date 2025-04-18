@@ -303,7 +303,7 @@
 
   .settings-right {
     width: 100%;
-    padding: 50px;
+    padding: 0;
     /* height: auto; */
     margin-top: 50px;
     min-height: 100vh;
@@ -318,6 +318,7 @@
     width: 100%; /* Full width */
     padding: 10px;
     font-size: 14px;
+    text-align: center;
   }
 
   .settings-right button {
