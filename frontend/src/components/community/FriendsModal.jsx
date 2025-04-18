@@ -217,33 +217,33 @@ const FriendsModal = ({
 
             <div className="memories-section">
               <h3>Memories</h3>
-              {memories.length === 0 ? (
-                <p className="no-memories-message">
-                  Looks like this trip has no memories.
-                </p>
-              ) : (
-                memories.map((memory) => (
-                  <div key={memory.id} className="memory-card">
-                    <div className={"slide-container " + (memory.images.length === 1 && "one-image")}>
-                      <Slide {...properties} arrows={memory.images.length > 1}>
-                        {memory.images.map((slideImage, index) => (
-                          <div key={index}>
-                            <div
-                              className={"memory-image " + (memory.images.length === 1 && "one-image")}
-                              style={{
-                                ...divStyle,
-                                backgroundImage: `url(${slideImage})`,
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </Slide>
-                    </div>
+                {memories.length === 0 ? (
+                  <p className="no-memories-message">
+                    Looks like this trip has no memories.
+                  </p>
+                ) : (
+                  memories.map((memory) => (
+                    <div key={memory.id} className="memory-card">
+                      <div className={"slide-container"}>
+                        <Slide {...properties} arrows={memory.images.length > 1}>
+                          {memory.images.map((slideImage, index) => (
+                            <div key={index}>
+                              <div
+                                className={"memory-image"}
+                                style={{
+                                  ...divStyle,
+                                  backgroundImage: `url(${slideImage})`,
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </Slide>
+                      </div>
 
-                    <p>{memory.caption}</p>
-                  </div>
-                ))
-              )}
+                      <p>{memory.caption}</p>
+                    </div>
+                  ))
+                )}
             </div>
 
             <div className="comments-section">

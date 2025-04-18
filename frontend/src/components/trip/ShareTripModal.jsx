@@ -228,7 +228,7 @@ const ShareTripModal = ({ onClose, trip }) => {
       <div className="share-modal" ref={modalRef}>
         <div className="modal-header">
           <h3>
-            Share a <span className="modal-highlight">memory</span>
+            Share a <span className="modal-highlight">Memory</span>
           </h3>
         </div>
 
