@@ -5,7 +5,7 @@ import { encode } from 'html-entities';
 import HelpTooltip from '../HelpTooltip.jsx';
 
 // Predefined list of available tags
-const AVAILABLE_TAGS = [
+export const AVAILABLE_TAGS = [
   'Beach', 'Mountain', 'City', 'Adventure', 'Relaxation',
   'Family', 'Solo', 'Romantic', 'Business', 'Cultural',
   'Food', 'Nature', 'Shopping', 'Historical', 'Nightlife'
