@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TripTags.css';
-import { FaTimes } from "react-icons/fa";
 import { encode } from 'html-entities';
 
+// Predefined list of available tags
+const AVAILABLE_TAGS = [
+  'Beach', 'Mountain', 'City', 'Adventure', 'Relaxation',
+  'Family', 'Solo', 'Romantic', 'Business', 'Cultural',
+  'Food', 'Nature', 'Shopping', 'Historical', 'Nightlife'
+];
+
 const TripTags = ({ tripId, isInvitee }) => {
-  const [tags, setTags] = useState([]);
-  const [inputValue, setInputValue] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [error, setError] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
 
   useEffect(() => {
     fetchTags();
@@ -19,27 +22,23 @@ const TripTags = ({ tripId, isInvitee }) => {
       const res = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripTags.php?trip_id=${tripId}`);
       const data = await res.json();
       if (data.success) {
-        setTags(data.tags);
+        setSelectedTags(data.tags);
       }
     } catch (err) {
       console.error('Failed to fetch tags:', err);
     }
   };
 
-  const handleAddTag = async () => {
-    if (!inputValue.trim()) return;
+  const handleTagToggle = async (tag) => {
+    if (isInvitee) return;
     
-    const newTag = inputValue.trim().toLowerCase();
-    
-    // Check for duplicates
-    if (tags.some(tag => tag.toLowerCase() === newTag)) {
-      setError('This tag already exists');
-      setTimeout(() => setError(''), 3000); // Clear error after 3 seconds
-      return;
+    let updatedTags;
+    if (selectedTags.includes(tag)) {
+      updatedTags = selectedTags.filter(t => t !== tag);
+    } else {
+      updatedTags = [...selectedTags, tag];
     }
-    
-    const updatedTags = [...tags, newTag];
-    
+
     try {
       const res = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripTags.php', {
         method: 'POST',
@@ -52,42 +51,34 @@ const TripTags = ({ tripId, isInvitee }) => {
       
       const data = await res.json();
       if (data.success) {
-        setTags(updatedTags);
-        setInputValue('');
-        setError('');
+        setSelectedTags(updatedTags);
       }
     } catch (err) {
-      console.error('Failed to add tag:', err);
-      setError('Failed to add tag');
+      console.error('Failed to update tags:', err);
     }
   };
 
-  const handleRemoveTag = async (tagToRemove) => {
-    const updatedTags = tags.filter(tag => tag !== tagToRemove);
+  const createRipple = (event) => {
+    if (isInvitee) return;
     
-    try {
-      const res = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripTags.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          trip_id: tripId,
-          tags: updatedTags
-        })
-      });
-      
-      const data = await res.json();
-      if (data.success) {
-        setTags(updatedTags);
-      }
-    } catch (err) {
-      console.error('Failed to remove tag:', err);
-    }
-  };
+    const button = event.currentTarget;
+    const circle = document.createElement('span');
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleAddTag();
+    const rect = button.getBoundingClientRect();
+    
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - rect.left - radius}px`;
+    circle.style.top = `${event.clientY - rect.top - radius}px`;
+    circle.classList.add('ripple');
+
+    const ripple = button.getElementsByClassName('ripple')[0];
+    if (ripple) {
+      ripple.remove();
     }
+
+    button.appendChild(circle);
   };
 
   if (!tripId) return null;
@@ -96,58 +87,23 @@ const TripTags = ({ tripId, isInvitee }) => {
     <div className="trip-tags">
       <div className="tags-header">
         <h3>Tags</h3>
-        {!isInvitee && (
-          <button 
-            className="edit-tags-btn"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            {isEditing ? 'Done' : 'Edit Tags'}
-          </button>
-        )}
       </div>
 
       <div className="tags-container">
-        {tags.length === 0 ? (
-          <em className="no-tags">No tags yet</em>
-        ) : (
-          tags.map((tag, index) => (
-            <span key={index} className="tag">
-              {encode(tag)}
-              {isEditing && !isInvitee && (
-                <button 
-                  className="remove-tag"
-                  onClick={() => handleRemoveTag(tag)}
-                >
-                  <FaTimes />
-                </button>
-              )}
-            </span>
-          ))
-        )}
+        {AVAILABLE_TAGS.map((tag) => (
+          <button
+            key={tag}
+            className={`tag-chip ${selectedTags.includes(tag) ? 'selected' : ''}`}
+            onClick={(e) => {
+              createRipple(e);
+              handleTagToggle(tag);
+            }}
+            disabled={isInvitee}
+          >
+            {encode(tag)}
+          </button>
+        ))}
       </div>
-
-      {isEditing && !isInvitee && (
-        <>
-          <div className="add-tag">
-            <div className="tag-input-wrapper">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value);
-                  setError('');
-                }}
-                onKeyPress={handleKeyPress}
-                placeholder="Add a tag..."
-                maxLength={20}
-              />
-            </div>
-            <button onClick={handleAddTag}>+ Add</button>
-          </div>
-
-          {error && <div className="tag-error">{error}</div>}
-        </>
-      )}
     </div>
   );
 };
