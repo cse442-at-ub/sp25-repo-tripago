@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/TripTags.css';
 import { encode } from 'html-entities';
+import HelpTooltip from '../HelpTooltip.jsx';
 
 // Predefined list of available tags
 const AVAILABLE_TAGS = [
@@ -86,7 +87,12 @@ const TripTags = ({ tripId, isInvitee }) => {
   return (
     <div className="trip-tags">
       <div className="tags-header">
-        <h3>Tags</h3>
+        <div className="tooltip-container">
+          <HelpTooltip>
+            Add tags to categorize your trip. <span className="tooltip-purple">Click to select or deselect</span> tags that match your interests. These tags help you discover trips from the community and find your past trips with matching experiences.
+          </HelpTooltip>
+          <h3>Tags</h3>
+        </div>
       </div>
 
       <div className="tags-container">
