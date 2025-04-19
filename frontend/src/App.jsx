@@ -20,7 +20,7 @@ import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx"
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
 import Recommended from "./pages/Recommended.jsx";
-import Favorites from "./pages/Favorites.jsx";
+import Favorites from "./pages/favorites.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";

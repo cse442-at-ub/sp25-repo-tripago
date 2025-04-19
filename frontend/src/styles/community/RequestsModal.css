@@ -71,3 +71,10 @@
 .status.rejected {
   color: #ff6b6b;
 }
+
+.clickable-name, .friends-list li .clickable-name {
+  cursor: pointer;
+  color: var(--dark-grey);
+  text-decoration: none;
+  transition: all 0.5s ease-in-out;
+}
