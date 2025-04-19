@@ -25,62 +25,8 @@ const Favorites = () => {
   const { user } = UserContext;
 const location = useLocation();
 const destinations = location.state?.destinations || [];
-
-  // const fetchDestinations = async () => {
-  //   try {
-  //     const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/getFavorites.php", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email: user?.email }),
-  //     });
   
-  //     let favoritesData = await favoritesResponse.json();
-  
-  //     if (!favoritesData.success) {
-  //       throw new Error("Failed to fetch favorite city codes");
-  //     }
-  
-  //     const favoriteDestinations = favoritesData.locations; // [{ location, cityCode }]
-
-  //     // Fetch images for each favorite location
-  //     const destinationsWithImages = await Promise.all(
-  //       favoriteDestinations.map(async ({ location, cityCode }) => {
-  //         try {
-  //           const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${location}`);
-  //           const imgData = await imgResponse.json();
-  //           return {
-  //             name: location,
-  //             iataCode: cityCode,
-  //             image_url: imgData.photos[0]?.src.large || Paris,
-  //           };
-  //         } catch {
-  //           return {
-  //             name: location,
-  //             iataCode: cityCode,
-  //             image_url: Paris,
-  //           };
-  //         }
-  //       })
-  //     );
-  
-  //     // Optionally remove duplicates by name (in case they exist)
-  //     const uniqueDestinations = destinationsWithImages.filter(
-  //       (item, index, self) =>
-  //         index === self.findIndex((d) => d.name + d.countryCode === item.name + item.countryCode)
-  //     );
-  
-  //     setDestinations(uniqueDestinations);
-  //   } catch (err) {
-  //     console.error("Error fetching favorite destinations:", err);
-  //     setError("Something went wrong loading destinations.");
-  //   }
-  // };
-  
-
   useEffect(() => {
-    // fetchDestinations();
 
     // Copied from userprofile.jsx
     const handleResize = () => {

@@ -93,7 +93,7 @@ const LoadingScreen = () => {
         console.log("Loading Screen: In get favorites")
         try {
           const res = await fetch(
-            "/CSE442/2025-Spring/cse-442aj/backend/api/getFavorites.php",
+            "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getFavorites.php",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -147,7 +147,7 @@ const LoadingScreen = () => {
       if (redirectTo === "/recommended") {
         try {
           const res = await fetch(
-            "/CSE442/2025-Spring/cse-442aj/backend/api/getFavorites.php",
+            "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getFavorites.php",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

@@ -25,79 +25,7 @@ const Recommended = () => {
   const location = useLocation();
 const destinations = location.state?.destinations || [];
 
-// const fetchDestinations = async () => {
-//     try {
-       
-//         const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/getFavorites.php", {
-//             method: "POST",
-//             headers: {
-//               "Content-Type": "application/json",
-//             },
-//             body: JSON.stringify({ /*email: "npula@buffalo.edu"*/ }),
-//           });
-//       const favoritesData = await favoritesResponse.json();
-  
-//       if (!favoritesData.success) {
-//         throw new Error("Failed to fetch favorite city codes");
-//       }
-
-//       // Convert the list of favorites into a lookup object for quick access
-//       console.log("favoritesData:", favoritesData);
-//       const favoritesLookup = {};
-//       favoritesData.locations.forEach((fav) => {
-//         console.log(fav);
-//         favoritesLookup[fav.location] = true;
-//       });
-      
-//       setFavorites(favoritesLookup);
-  
-//       let cityCodes = [{location: "New York City", cityCode: "NYC"}]
-//       if (favoritesData.locations.length != 0) {
-//         cityCodes = favoritesData.locations; // assuming this is an array of city codes
-//       }
-    
-//       const allRecommendations = [];
-  
-//       for (const code of cityCodes) {
-//         const recRes = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/recommendedFromFavorites.php?cityCode=${code.cityCode}`);
-//         if (!recRes.ok) continue;
-//         const recData = await recRes.json();
-  
-//         if (recData?.data) {
-//           allRecommendations.push(...recData.data);
-//         }
-//       }
-  
-//       // Fetch images for each recommendation
-//       const destinationsWithImages = await Promise.all(
-//         allRecommendations.map(async (destination) => {
-//           try {
-            
-//             const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${destination.name}`);
-//             const imgData = await imgResponse.json();
-//             return { ...destination, image_url: imgData.photos[0]?.src.large || Paris };
-//           } catch {
-//             return { ...destination, image_url: Paris };
-//           }
-//         })
-//       );
-  
-//       // Filter out duplicates by destination name
-//       const uniqueDestinations = destinationsWithImages.filter(
-//         (item, index, self) =>
-//           index === self.findIndex((d) => d.name === item.name)
-//       );
-
-//       setDestinations(uniqueDestinations);
-//       //setDestinations(destinationsWithImages);
-//     } catch (err) {
-//       console.error("Error fetching personalized recommendations:", err);
-//       setError("Something went wrong loading destinations.");
-//     }
-//   };
-
   useEffect(() => {
-    // fetchDestinations();
 
     // Copied from userprofile.jsx
     const handleResize = () => {
