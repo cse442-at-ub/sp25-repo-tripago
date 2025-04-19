@@ -21,7 +21,7 @@ const HotelCard = ({ hotel, tripId, fromInvite }) => {
   const handleSelectDeal = async () => {
     console.log("Updating trip hotel and  tripId, city_name, hotel_name, hotel_price:" , tripId, hotel.location.split(',')[0].trim(), hotel.name, hotel.bestPrice)
     try {
-      const response = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripHotel.php', {
+      const response = await fetch('/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/updateTripHotel.php', {
         method: 'POST',
         credentials: 'include',
         headers: {

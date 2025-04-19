@@ -12,7 +12,7 @@ const DiscussionBar = ({ tripId, isInvitee }) => {
     console.log("Fetching comments");
     try {
       const res = await fetch(
-        `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getComments.php?tripId=${tripId}`
+        `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getComments.php?tripId=${tripId}`
       );
       const data = await res.json();
       console.log("Comments fetched: data is: ", data);
@@ -32,7 +32,7 @@ const DiscussionBar = ({ tripId, isInvitee }) => {
     const fetchCollaborators = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getCollaborators.php?tripId=${tripId}`
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getCollaborators.php?tripId=${tripId}`
         );
         const data = await res.json();
         if (data.success) {
@@ -57,7 +57,7 @@ const DiscussionBar = ({ tripId, isInvitee }) => {
 
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/addComment.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/addComment.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

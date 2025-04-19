@@ -61,7 +61,7 @@ const ShareTripModal = ({ onClose }) => {
         for (const email of emailList) {
           try {
            // const response = await fetch('http://localhost/tripago/send_trip.php', {
-            const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/send_trip.php", {
+            const response = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/send_trip.php", {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ const ShareTripModal = ({ onClose }) => {
   const handleEmailSubmit = async () => {
     try {
       const response = await fetch('http://localhost/tripago/send_trip.php', {
-      //const response = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/send_trip.php', {
+      //const response = await fetch('/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/send_trip.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

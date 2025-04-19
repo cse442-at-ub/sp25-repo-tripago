@@ -50,7 +50,7 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
       console.log("Before post");
 
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getAllActivities.php",
         { trip_id: tripID, start_date: startDate, city_name: trip.name },
         {
           headers: {
@@ -117,7 +117,7 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
 
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/generateActivity.php",
         { location: trip.name, trip_id: tripID },
         {
           headers: {
@@ -188,7 +188,7 @@ but can expand it in the future, if need (or want) be!
       to the same location on the same day, because why would they?
       */
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/addActivity.php",
         {
           trip_id: tripID,
           day: day,
@@ -555,7 +555,7 @@ const Budgeting = ({ trip, isInvitee }) => {
 
     try {
       await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/saveBudgetExpense.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -576,7 +576,7 @@ const Budgeting = ({ trip, isInvitee }) => {
 
     try {
       await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/saveBudgetExpense.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -598,7 +598,7 @@ const Budgeting = ({ trip, isInvitee }) => {
     const loadExpenses = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?trip_id=${trip.id}`
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripExpenses.php?trip_id=${trip.id}`
         );
 
         const data = await res.json();
@@ -848,7 +848,7 @@ const Memories = () => {
           id: 23,
           caption: "hi",
           images: [
-            "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
+            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png",
           ],
         },
         { id: 53, caption: "hello", images: [] },
@@ -857,7 +857,7 @@ const Memories = () => {
           caption: "I am a memory",
           images: [
             "",
-            "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
+            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s",
           ],
         },

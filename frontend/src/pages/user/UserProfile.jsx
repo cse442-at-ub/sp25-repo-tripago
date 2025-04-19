@@ -46,7 +46,7 @@ const UserProfile = () => {
     const fetchUserInfo = async () => {
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserInfo.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/getUserInfo.php",
           {
             credentials: "include",
           }
@@ -76,7 +76,7 @@ const UserProfile = () => {
       console.log("Fetching bucket list, email is: ", email)
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getBucketList.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getBucketList.php",
           {
             method: "POST",
             headers: {
@@ -106,7 +106,7 @@ const UserProfile = () => {
       console.log("Getting invites")
       try {
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripInvites.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripInvites.php",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -136,7 +136,7 @@ const UserProfile = () => {
     console.log("Getting friends");
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFriends.php",
         {
           credentials: "include",
         }
@@ -161,7 +161,7 @@ const UserProfile = () => {
       try {
         // Fetch trip stats
         const tripStatsRes = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripStats.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripStats.php",
           {
             credentials: "include",
           }
@@ -170,7 +170,7 @@ const UserProfile = () => {
 
         // Fetch user points
         const pointsRes = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/backend/api/users/getUserPoints.php`,
+          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/getUserPoints.php`,
           {
             credentials: "include",
           }
@@ -221,7 +221,7 @@ const UserProfile = () => {
 
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/users/uploadUserImage.php",
         {
           method: "POST",
           body: formData,
@@ -249,7 +249,7 @@ const UserProfile = () => {
 
     try {
       const response = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/community/addToBucketList.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addToBucketList.php",
         {
           method: "POST",
           headers: {
@@ -280,7 +280,7 @@ const UserProfile = () => {
     console.log("Accepting invite and tripId and email is", tripId, user.email)
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/acceptInvite.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/acceptInvite.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -315,7 +315,7 @@ const UserProfile = () => {
   const handleIgnoreInvite = async (tripId) => {
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/removeCollaborator.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/removeCollaborator.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

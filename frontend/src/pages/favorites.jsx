@@ -24,7 +24,7 @@ const VerifyLocation = () => {
 
   const fetchDestinations = async () => {
     try {
-      const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/getFavorites.php", {
+      const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFavorites.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ const VerifyLocation = () => {
       const destinationsWithImages = await Promise.all(
         favoriteDestinations.map(async ({ location, cityCode }) => {
           try {
-            const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${location}`);
+            const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${location}`);
             const imgData = await imgResponse.json();
             return {
               name: location,
@@ -105,8 +105,8 @@ const VerifyLocation = () => {
   
     try {
       const url = isFavorited
-        ? "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/removeFavorite.php"
-        : "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/addFavorite.php";
+        ? "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/removeFavorite.php"
+        : "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/addFavorite.php";
   
       const response = await fetch(url, {
         method: "POST",
