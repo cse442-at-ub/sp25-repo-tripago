@@ -17,7 +17,7 @@ const TripCollaborators = ({ tripId, firstName, lastName, isInvitee }) => {
 
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/addCollaborator.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/addCollaborator.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -43,7 +43,7 @@ const TripCollaborators = ({ tripId, firstName, lastName, isInvitee }) => {
   const handleRemoveInvite = async (usernameToRemove) => {
     try {
       const res = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/removeCollaborator.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/removeCollaborator.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -20,7 +20,7 @@ const TripTags = ({ tripId, isInvitee }) => {
 
   const fetchTags = async () => {
     try {
-      const res = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripTags.php?trip_id=${tripId}`);
+      const res = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripTags.php?trip_id=${tripId}`);
       const data = await res.json();
       if (data.success) {
         setSelectedTags(data.tags);
@@ -41,7 +41,7 @@ const TripTags = ({ tripId, isInvitee }) => {
     }
 
     try {
-      const res = await fetch('/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/updateTripTags.php', {
+      const res = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripTags.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

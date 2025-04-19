@@ -55,7 +55,7 @@ const Profile = () => {
 
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${encodeURIComponent(
+          `/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(
             cityName
           )} tourism attractions`
         );
@@ -81,7 +81,7 @@ const Profile = () => {
         console.log("Loading trip from invite:", incomingTripId);
         try {
           const res = await fetch(
-            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripById.php",
+            "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripById.php",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ const Profile = () => {
 
             const image =
               data.trip.image_url ||
-              "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png";
+              "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
             const budget = data.trip.budget || { amount: 0, expenses: [] };
 
             setTrip({
@@ -144,7 +144,7 @@ const Profile = () => {
 
             try {
               const res = await fetch(
-                "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTrip.php",
+                "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTrip.php",
                 {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -216,7 +216,7 @@ const Profile = () => {
 
             // Save trip to database
             fetch(
-              "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/saveTrip.php",
+              "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveTrip.php",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -227,7 +227,7 @@ const Profile = () => {
                   end_date: null,
                   image_url:
                     image ||
-                    "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png",
+                    "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
                   hotel_name: null,
                   hotel_price: null,
                 }),
@@ -289,7 +289,7 @@ const Profile = () => {
       try {
         console.log("Pt2 : Fetching full trip from db");
         const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getLatestTrip.php"
+          "/CSE442/2025-Spring/cse-442aj/backend/api/trips/getLatestTrip.php"
         );
         const data = await res.json();
         console.log("Data recieved from latest trip is: ", data);
@@ -308,7 +308,7 @@ const Profile = () => {
 
           const image =
             data.trip.image_url ||
-            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/uploads/default_img.png";
+            "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png";
           const budget = data.trip.budget || { amount: 0, expenses: [] };
 
           console.log("Budget recieved is: ", budget);
@@ -434,7 +434,7 @@ const Profile = () => {
                       console.log("1Updated trip is: ", updatedTrip);
 
                       fetch(
-                        `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/${endpoint}`,
+                        `/CSE442/2025-Spring/cse-442aj/backend/api/trips/${endpoint}`,
                         {
                           method: "POST",
                           headers: {
