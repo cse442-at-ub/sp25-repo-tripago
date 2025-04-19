@@ -90,6 +90,7 @@ const LoadingScreen = () => {
 
       // === 1. FAVORITES: Fetch user's favorite city codes + images
       if (redirectTo === "/favorites") {
+        console.log("Loading Screen: In get favorites")
         try {
           const res = await fetch(
             "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFavorites.php",
@@ -101,6 +102,7 @@ const LoadingScreen = () => {
           );
 
           const data = await res.json();
+          console.log("Data recieved from getFavorites is, ", data)
           if (!data.success || !data.locations) throw new Error("No favorites");
 
           const destinationsWithImages = await Promise.all(
@@ -154,6 +156,7 @@ const LoadingScreen = () => {
           );
 
           const data = await res.json();
+          console.log("Data recieved from getFavorites is, ", data)
           if (!data.success || !data.locations) throw new Error("No favorites");
 
           const cityCodes =
@@ -168,6 +171,8 @@ const LoadingScreen = () => {
               `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/recommendedFromFavorites.php?cityCode=${code.cityCode}`
             );
             const recData = await recRes.json();
+          console.log("recData recieved from recommendedFromFavorites is, ", recData)
+
             if (recData?.data) {
               allRecommendations.push(...recData.data);
             }
@@ -226,10 +231,6 @@ const LoadingScreen = () => {
 
           if (!data || !data.data) throw new Error("No recommendations found");
 
-          // const recs = data.data.map((rec) => ({
-          //   name: rec.name,
-          //   countryCode: getCountryFromCity(rec.name),
-          // }));
           const recs = await Promise.all(
             data.data.map(async (rec) => {
               const query = `${rec.name} travel`;

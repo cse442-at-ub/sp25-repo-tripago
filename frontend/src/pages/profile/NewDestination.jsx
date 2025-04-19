@@ -192,7 +192,7 @@ const NewDestination = () => {
   //     alert("Something went wrong while fetching recommendations.");
   //   }
   // };
-  
+
   const handleCategoryClick = (category) => {
     localStorage.removeItem("trip");
   
@@ -292,13 +292,12 @@ const NewDestination = () => {
           </p>
           <div className="recommendation-list">
             {[
-              "Favorites",
               "Relaxation",
               "Culture",
               "Adventure",
               "Nature",
-              "Choose for me",
               "Recommendations",
+              "Favorites",
             ].map((category, index) => (
               <div
                 key={index}
