@@ -120,7 +120,7 @@
 
 .category-text {
   font-size: 16px;
-  color: var(--dark-grey);
+  color: var(--black);
 }
 
 .arrow {
@@ -178,6 +178,14 @@
   opacity: 0.9;
   z-index: 0;
   pointer-events: none;
+}
+
+.favorites-text {
+  color: grey;
+}
+
+.recommendations-text {
+  color: grey;
 }
 
 @media screen and (max-width: 868px) {

@@ -144,7 +144,7 @@ const NewDestination = () => {
 
   //   if (category === "Favorites") {
   //     redirectPath = "/favorites";
-    
+
   //     navigate("/loading-screen", {
   //       state: {
   //         headerText: "Scanning the map for your ideal getaway",
@@ -195,15 +195,15 @@ const NewDestination = () => {
 
   const handleCategoryClick = (category) => {
     localStorage.removeItem("trip");
-  
+
     let redirectPath = "/profile/accept-reject"; // Default
-  
+
     if (category === "Favorites") {
       redirectPath = "/favorites";
     } else if (category === "Recommendations") {
       redirectPath = "/recommended";
     }
-  
+
     navigate("/loading-screen", {
       state: {
         headerText: "Scanning the map for your ideal getaway",
@@ -212,8 +212,6 @@ const NewDestination = () => {
       },
     });
   };
-  
-
 
   return (
     <>
@@ -304,7 +302,17 @@ const NewDestination = () => {
                 className="recommendation-item"
                 onClick={() => handleCategoryClick(category)}
               >
-                <span className="category-text">{category}</span>
+                <span
+                  className={`category-text ${
+                    category === "Favorites"
+                      ? "favorites-text"
+                      : category === "Recommendations"
+                      ? "recommendations-text"
+                      : ""
+                  }`}
+                >
+                  {category}
+                </span>
                 <span className="arrow">&gt;</span>
               </div>
             ))}
