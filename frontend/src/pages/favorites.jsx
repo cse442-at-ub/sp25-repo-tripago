@@ -8,75 +8,79 @@ import "../styles/recommended.css";
 import MobileSidebarToggle from "../components/MobileSidebarToggle.jsx";
 import '../styles/trip/AcceptRejectDest.css';
 import { UserContext } from "../context/UserContext.jsx";
+import { useLocation } from "react-router-dom";
 
-const VerifyLocation = () => {
+
+const Favorites = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [favorites, setFavorites] = useState({});
-  const [destinations, setDestinations] = useState([]);
+  // const [destinations, setDestinations] = useState([]);
   const [destinationImages, setDestinationImages] = useState([]);
   const [error, setError] = useState(null);
   const [imagesFetched, setImagesFetched] = useState(false); // Flag to ensure images are fetched only once
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
   const { user } = UserContext;
+const location = useLocation();
+const destinations = location.state?.destinations || [];
 
-  const fetchDestinations = async () => {
-    try {
-      const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFavorites.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: user?.email }),
-      });
+  // const fetchDestinations = async () => {
+  //   try {
+  //     const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFavorites.php", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email: user?.email }),
+  //     });
   
-      let favoritesData = await favoritesResponse.json();
+  //     let favoritesData = await favoritesResponse.json();
   
-      if (!favoritesData.success) {
-        throw new Error("Failed to fetch favorite city codes");
-      }
+  //     if (!favoritesData.success) {
+  //       throw new Error("Failed to fetch favorite city codes");
+  //     }
   
-      const favoriteDestinations = favoritesData.locations; // [{ location, cityCode }]
+  //     const favoriteDestinations = favoritesData.locations; // [{ location, cityCode }]
 
-      // Fetch images for each favorite location
-      const destinationsWithImages = await Promise.all(
-        favoriteDestinations.map(async ({ location, cityCode }) => {
-          try {
-            const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${location}`);
-            const imgData = await imgResponse.json();
-            return {
-              name: location,
-              iataCode: cityCode,
-              image_url: imgData.photos[0]?.src.large || Paris,
-            };
-          } catch {
-            return {
-              name: location,
-              iataCode: cityCode,
-              image_url: Paris,
-            };
-          }
-        })
-      );
+  //     // Fetch images for each favorite location
+  //     const destinationsWithImages = await Promise.all(
+  //       favoriteDestinations.map(async ({ location, cityCode }) => {
+  //         try {
+  //           const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${location}`);
+  //           const imgData = await imgResponse.json();
+  //           return {
+  //             name: location,
+  //             iataCode: cityCode,
+  //             image_url: imgData.photos[0]?.src.large || Paris,
+  //           };
+  //         } catch {
+  //           return {
+  //             name: location,
+  //             iataCode: cityCode,
+  //             image_url: Paris,
+  //           };
+  //         }
+  //       })
+  //     );
   
-      // Optionally remove duplicates by name (in case they exist)
-      const uniqueDestinations = destinationsWithImages.filter(
-        (item, index, self) =>
-          index === self.findIndex((d) => d.name + d.countryCode === item.name + item.countryCode)
-      );
+  //     // Optionally remove duplicates by name (in case they exist)
+  //     const uniqueDestinations = destinationsWithImages.filter(
+  //       (item, index, self) =>
+  //         index === self.findIndex((d) => d.name + d.countryCode === item.name + item.countryCode)
+  //     );
   
-      setDestinations(uniqueDestinations);
-    } catch (err) {
-      console.error("Error fetching favorite destinations:", err);
-      setError("Something went wrong loading destinations.");
-    }
-  };
+  //     setDestinations(uniqueDestinations);
+  //   } catch (err) {
+  //     console.error("Error fetching favorite destinations:", err);
+  //     setError("Something went wrong loading destinations.");
+  //   }
+  // };
   
 
   useEffect(() => {
-    fetchDestinations();
+    // fetchDestinations();
 
     // Copied from userprofile.jsx
     const handleResize = () => {
@@ -146,10 +150,6 @@ const VerifyLocation = () => {
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  //const toggleFavorite = (name) => {
-  //  setFavorites(prev => ({ ...prev, [name]: !prev[name] }));
-  //  console.log(destinations);
-  //};
 
   return (
     <>
@@ -263,4 +263,4 @@ const VerifyLocation = () => {
   );
 };
 
-export default VerifyLocation;
+export default Favorites;

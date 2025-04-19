@@ -8,95 +8,96 @@ import "../styles/recommended.css";
 import MobileSidebarToggle from "../components/MobileSidebarToggle.jsx";
 import '../styles/trip/AcceptRejectDest.css';
 import { UserContext } from "../context/UserContext.jsx";
+import { useLocation } from "react-router-dom";
 
-const VerifyLocation = () => {
+const Recommended = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [favorites, setFavorites] = useState({});
-  const [destinations, setDestinations] = useState([]);
+  // const [destinations, setDestinations] = useState([]);
   const [destinationImages, setDestinationImages] = useState([]);
   const [error, setError] = useState(null);
   const [imagesFetched, setImagesFetched] = useState(false); // Flag to ensure images are fetched only once
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
   const { user } = UserContext;
+  const location = useLocation();
+const destinations = location.state?.destinations || [];
 
-const fetchDestinations = async () => {
-    try {
-        //const favoritesResponse = await fetch("http://localhost/tripago/getFavorites.php", {
-        const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFavorites.php", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ /*email: "npula@buffalo.edu"*/ }),
-          });
-      const favoritesData = await favoritesResponse.json();
+// const fetchDestinations = async () => {
+//     try {
+       
+//         const favoritesResponse = await fetch("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/getFavorites.php", {
+//             method: "POST",
+//             headers: {
+//               "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ /*email: "npula@buffalo.edu"*/ }),
+//           });
+//       const favoritesData = await favoritesResponse.json();
   
-      if (!favoritesData.success) {
-        throw new Error("Failed to fetch favorite city codes");
-      }
+//       if (!favoritesData.success) {
+//         throw new Error("Failed to fetch favorite city codes");
+//       }
 
-      // Convert the list of favorites into a lookup object for quick access
-      console.log("favoritesData:", favoritesData);
-      const favoritesLookup = {};
-      favoritesData.locations.forEach((fav) => {
-        console.log(fav);
-        favoritesLookup[fav.location] = true;
-      });
+//       // Convert the list of favorites into a lookup object for quick access
+//       console.log("favoritesData:", favoritesData);
+//       const favoritesLookup = {};
+//       favoritesData.locations.forEach((fav) => {
+//         console.log(fav);
+//         favoritesLookup[fav.location] = true;
+//       });
       
-      setFavorites(favoritesLookup);
+//       setFavorites(favoritesLookup);
   
-      let cityCodes = [{location: "New York City", cityCode: "NYC"}]
-      if (favoritesData.locations.length != 0) {
-        cityCodes = favoritesData.locations; // assuming this is an array of city codes
-      }
+//       let cityCodes = [{location: "New York City", cityCode: "NYC"}]
+//       if (favoritesData.locations.length != 0) {
+//         cityCodes = favoritesData.locations; // assuming this is an array of city codes
+//       }
     
-      const allRecommendations = [];
+//       const allRecommendations = [];
   
-      for (const code of cityCodes) {
-        //const recRes = await fetch(`http://localhost/tripago/recommendedFromFavorites.php?cityCode=${code}`);
-        const recRes = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/recommendedFromFavorites.php?cityCode=${code.cityCode}`);
-        if (!recRes.ok) continue;
-        const recData = await recRes.json();
+//       for (const code of cityCodes) {
+//         const recRes = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/recommendedFromFavorites.php?cityCode=${code.cityCode}`);
+//         if (!recRes.ok) continue;
+//         const recData = await recRes.json();
   
-        if (recData?.data) {
-          allRecommendations.push(...recData.data);
-        }
-      }
+//         if (recData?.data) {
+//           allRecommendations.push(...recData.data);
+//         }
+//       }
   
-      // Fetch images for each recommendation
-      const destinationsWithImages = await Promise.all(
-        allRecommendations.map(async (destination) => {
-          try {
+//       // Fetch images for each recommendation
+//       const destinationsWithImages = await Promise.all(
+//         allRecommendations.map(async (destination) => {
+//           try {
             
-            //const imgResponse = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
-            const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${destination.name}`);
-            const imgData = await imgResponse.json();
-            return { ...destination, image_url: imgData.photos[0]?.src.large || Paris };
-          } catch {
-            return { ...destination, image_url: Paris };
-          }
-        })
-      );
+//             const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${destination.name}`);
+//             const imgData = await imgResponse.json();
+//             return { ...destination, image_url: imgData.photos[0]?.src.large || Paris };
+//           } catch {
+//             return { ...destination, image_url: Paris };
+//           }
+//         })
+//       );
   
-      // Filter out duplicates by destination name
-      const uniqueDestinations = destinationsWithImages.filter(
-        (item, index, self) =>
-          index === self.findIndex((d) => d.name === item.name)
-      );
+//       // Filter out duplicates by destination name
+//       const uniqueDestinations = destinationsWithImages.filter(
+//         (item, index, self) =>
+//           index === self.findIndex((d) => d.name === item.name)
+//       );
 
-      setDestinations(uniqueDestinations);
-      //setDestinations(destinationsWithImages);
-    } catch (err) {
-      console.error("Error fetching personalized recommendations:", err);
-      setError("Something went wrong loading destinations.");
-    }
-  };
+//       setDestinations(uniqueDestinations);
+//       //setDestinations(destinationsWithImages);
+//     } catch (err) {
+//       console.error("Error fetching personalized recommendations:", err);
+//       setError("Something went wrong loading destinations.");
+//     }
+//   };
 
   useEffect(() => {
-    fetchDestinations();
+    // fetchDestinations();
 
     // Copied from userprofile.jsx
     const handleResize = () => {
@@ -122,10 +123,6 @@ const fetchDestinations = async () => {
         ? "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/removeFavorite.php"
         : "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/addFavorite.php";
 
-      //const url = isFavorited
-      //  ? "http://localhost/tripago/removeFavorite.php"
-      //  : "http://localhost/tripago/addFavorite.php";
-      
       
       const response = await fetch(url, {
         method: "POST",
@@ -162,14 +159,11 @@ const fetchDestinations = async () => {
   };
 
   const filteredDestinations = destinations.filter(destination =>
-    //destination.city_name.toLowerCase().includes(searchQuery.toLowerCase())
+ 
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  //const toggleFavorite = (name) => {
-  //  setFavorites(prev => ({ ...prev, [name]: !prev[name] }));
-  //  console.log(destinations);
-  //};
+ 
 
   return (
     <>
@@ -243,7 +237,6 @@ const fetchDestinations = async () => {
                 maxWidth: "500px",
                 minWidth: '300px',
                 transition: "border 0.3s ease-in-out"
-                /*border: selectedLocation === destination.name ? "3px solid #7c3aed" : "3px solid transparent",*/
               }}
               onClick={() => setSelectedLocation(destination.name)}
             >
@@ -287,4 +280,4 @@ const fetchDestinations = async () => {
   );
 };
 
-export default VerifyLocation;
+export default Recommended;

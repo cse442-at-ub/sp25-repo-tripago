@@ -137,61 +137,83 @@ const NewDestination = () => {
   }
 
   // Handles when a category (e.g., "Relaxation") is clicked
-  const handleCategoryClick = async (category) => {
+  // const handleCategoryClick = async (category) => {
+  //   localStorage.removeItem("trip");
+
+  //   let redirectPath = "/profile/accept-reject"; // Default redirect
+
+  //   if (category === "Favorites") {
+  //     redirectPath = "/favorites";
+    
+  //     navigate("/loading-screen", {
+  //       state: {
+  //         headerText: "Scanning the map for your ideal getaway",
+  //         redirectTo: redirectPath
+  //       },
+  //     });
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
+  //         category
+  //       )}`
+  //     );
+
+  //     // Add this to debug the raw response:
+  //     const text = await response.text();
+  //     console.log("Raw response:", text);
+
+  //     try {
+  //       const data = JSON.parse(text);
+  //       if (!data || !data.data) throw new Error("No recommendations found");
+
+  //       if (category === "Recommendations") {
+  //         redirectPath = "/recommended";
+  //       }
+
+  //       console.log("redirect path: " + redirectPath);
+  //       navigate("/loading-screen", {
+  //         state: {
+  //           headerText: "Scanning the map for your ideal getaway",
+  //           redirectTo: redirectPath,
+  //           category,
+  //           recommendations: data.data.map((rec) => ({
+  //             name: rec.name,
+  //             countryCode: getCountryFromCity(rec.name),
+  //           })),
+  //         },
+  //       });
+  //     } catch (err) {
+  //       console.error("Error parsing response:", err);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching recommendations:", error);
+  //     alert("Something went wrong while fetching recommendations.");
+  //   }
+  // };
+  
+  const handleCategoryClick = (category) => {
     localStorage.removeItem("trip");
-
-    let redirectPath = "/profile/accept-reject"; // Default redirect
-
+  
+    let redirectPath = "/profile/accept-reject"; // Default
+  
     if (category === "Favorites") {
       redirectPath = "/favorites";
-    
-      navigate("/loading-screen", {
-        state: {
-          headerText: "Scanning the map for your ideal getaway",
-          redirectTo: redirectPath
-        },
-      });
+    } else if (category === "Recommendations") {
+      redirectPath = "/recommended";
     }
-
-    try {
-      const response = await fetch(
-        `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
-          category
-        )}`
-      );
-
-      // Add this to debug the raw response:
-      const text = await response.text();
-      console.log("Raw response:", text);
-
-      try {
-        const data = JSON.parse(text);
-        if (!data || !data.data) throw new Error("No recommendations found");
-
-        if (category === "Recommendations") {
-          redirectPath = "/recommended";
-        }
-
-        console.log("redirect path: " + redirectPath);
-        navigate("/loading-screen", {
-          state: {
-            headerText: "Scanning the map for your ideal getaway",
-            redirectTo: redirectPath,
-            category,
-            recommendations: data.data.map((rec) => ({
-              name: rec.name,
-              countryCode: getCountryFromCity(rec.name),
-            })),
-          },
-        });
-      } catch (err) {
-        console.error("Error parsing response:", err);
-      }
-    } catch (error) {
-      console.error("Error fetching recommendations:", error);
-      alert("Something went wrong while fetching recommendations.");
-    }
+  
+    navigate("/loading-screen", {
+      state: {
+        headerText: "Scanning the map for your ideal getaway",
+        redirectTo: redirectPath,
+        category, // loading screen will use this
+      },
+    });
   };
+  
+
 
   return (
     <>

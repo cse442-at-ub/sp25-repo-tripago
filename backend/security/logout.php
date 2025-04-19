@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Content-Type: application/json");
 
-// Optional: write to a debug log
 function write_debug($msg) {
   file_put_contents(__DIR__ . "/debug_log.txt", date("Y-m-d H:i:s") . " - " . $msg . "\n", FILE_APPEND);
 }
