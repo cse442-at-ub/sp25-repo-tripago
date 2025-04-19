@@ -35,7 +35,7 @@ const LoadingScreen = () => {
 
   useEffect(() => {
     async function doLoad() {
-      // If we are going to the hotels page, we need to fetch the location and hotels from amadeus
+      // 1. If we are going to the hotels page, we need to fetch the location and hotels from amadeus
       if (redirectTo === "/browse-hotels" && hotels) {
         try {
           // Step 1: Get location from amadeus
