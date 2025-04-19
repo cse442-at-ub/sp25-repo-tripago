@@ -49,7 +49,7 @@ const Navbar = () => {
             className="logo-btn"
             onClick={() => {
               if (user) {
-                navigate("/profile");
+                navigate("/user-profile");
               } else {
                 navigate("/");
               }

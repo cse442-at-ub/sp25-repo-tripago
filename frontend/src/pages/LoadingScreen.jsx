@@ -226,10 +226,32 @@ const LoadingScreen = () => {
 
           if (!data || !data.data) throw new Error("No recommendations found");
 
-          const recs = data.data.map((rec) => ({
-            name: rec.name,
-            countryCode: getCountryFromCity(rec.name),
-          }));
+          // const recs = data.data.map((rec) => ({
+          //   name: rec.name,
+          //   countryCode: getCountryFromCity(rec.name),
+          // }));
+          const recs = await Promise.all(
+            data.data.map(async (rec) => {
+              const query = `${rec.name} travel`;
+              try {
+                const imgRes = await fetch(
+                  `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${encodeURIComponent(query)}`
+                );
+                const imgData = await imgRes.json();
+                return {
+                  name: rec.name,
+                  countryCode: getCountryFromCity(rec.name),
+                  image_url: imgData.photos?.[0]?.src?.large || null,
+                };
+              } catch {
+                return {
+                  name: rec.name,
+                  countryCode: getCountryFromCity(rec.name),
+                  image_url: null,
+                };
+              }
+            })
+          );          
 
           navigate("/profile/accept-reject", {
             state: {
