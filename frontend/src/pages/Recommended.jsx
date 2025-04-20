@@ -184,32 +184,14 @@ const fetchDestinations = async () => {
       {/* Sidebar: always visible on desktop, toggled on mobile */}
       {console.log("send to sidebar: ", !isMobile || isSidebarOpen)}
       <Sidebar isOpen={!isMobile || isSidebarOpen} />
-    <div style={{display: 'flex', width:'100%', height: '100vh', textAlign: 'left'}}>
+    <div style={{display: 'flex', width:'100%', height: '100vh', textAlign: 'left', justifyContent: 'center', backgroundColor: '#f3f4f6'}}>
 
-    <div style={{paddingTop: '5rem', paddingBottom: '10rem', display: 'flex', flexWrap: 'wrap', height: '600vh', backgroundColor: '#f3f4f6', backgroundSize: 'cover', width: '100%' }}>
+    <div style={{paddingTop: '5rem', paddingBottom: '10rem', display: 'flex', flexWrap: 'wrap', height: '600vh', backgroundColor: '#f3f4f6', backgroundSize: 'cover' }}>
       
       <div class="card_positions">
         <h2 style={{ fontSize: "1.5rem", fontWeight: "600", color: "#374151", marginTop: "2rem" }}>
           Select a <span style={{ color: "#7c3aed" }}>Trip</span>
         </h2>
-
-        <input
-        className="location-search-input"
-          type="text"
-          placeholder="Search for a location..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            marginTop: "1rem",
-            width: "50%",
-            maxWidth: "1000px",
-            padding: "0.5rem",
-            borderRadius: "0.5rem",
-            border: "1px solid #ccc",
-            fontSize: "1rem",
-            textAlign: "center",
-          }}
-        />
 
         <p
         className="reject-text"
