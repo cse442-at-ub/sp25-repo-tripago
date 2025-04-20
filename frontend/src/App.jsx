@@ -67,9 +67,9 @@ const App = () => {
             <Route 
                 path="/favorites" 
                 element={
-                  //<ProtectedRoute>
+                  <ProtectedRoute>
                     <Favorites />
-                  //</ProtectedRoute>
+                  </ProtectedRoute>
                 }
             />      
             
@@ -114,9 +114,9 @@ const App = () => {
               <Route
                 path="/recommended"
                 element={
-                  //<ProtectedRoute>
+                  <ProtectedRoute>
                     <Recommended />
-                  //</ProtectedRoute>
+                  </ProtectedRoute>
                 }
               />
               <Route
