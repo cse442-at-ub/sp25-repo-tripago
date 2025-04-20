@@ -255,16 +255,7 @@ const AllTrips = () => {
                       {encode(trip.destination)}
                     </h4>
                     <p className="trip-dates">{encode(trip.dates)}</p>
-
-                    {/* Bottom Row: Icons + Price */}
-                    <div className="trip-bottom-row">
-                      <div className="trip-icons">
-                        <img src={plane} alt="Plane" className="icon" />
-                        <img src={house} alt="House" className="icon" />
-                        <img src={car} alt="Car" className="icon" />
-                      </div>
-                      <p className="trip-price">${trip.price}</p>
-                    </div>
+                    <p className="trip-price">${trip.price}</p>
                   </div>
 
                   {/* Trip Image */}
@@ -320,14 +311,7 @@ const AllTrips = () => {
                       {encode(trip.destination)}
                     </h4>
                     <p className="trip-dates">{trip.dates}</p>
-                    <div className="trip-bottom-row">
-                      <div className="trip-icons">
-                        <img src={plane} alt="Plane" className="icon" />
-                        <img src={house} alt="House" className="icon" />
-                        <img src={car} alt="Car" className="icon" />
-                      </div>
-                      <p className="trip-price">${trip.price}</p>
-                    </div>
+                    <p className="trip-price">${trip.price}</p>
                   </div>
 
                   <img
@@ -393,15 +377,7 @@ const AllTrips = () => {
                     </h4>
                     <p className="trip-dates">{trip.dates}</p>
 
-                    {/* Bottom Row: Icons + Price */}
-                    <div className="trip-bottom-row">
-                      <div className="trip-icons">
-                        <img src={plane} alt="Plane" className="icon" />
-                        <img src={house} alt="House" className="icon" />
-                        <img src={car} alt="Car" className="icon" />
-                      </div>
-                      <p className="trip-price">${trip.price}</p>
-                    </div>
+                    <p className="trip-price">${trip.price}</p>
                   </div>
 
                   <button

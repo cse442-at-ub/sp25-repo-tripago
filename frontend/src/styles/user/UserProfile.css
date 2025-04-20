@@ -420,20 +420,6 @@
   color: var(--dark-grey);
 }
 
-.trip-bottom-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  width: 95%;
-}
-
-.trip-icons img {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-}
-
 .trip-price {
   font-size: 16px;
   font-weight: bold;
