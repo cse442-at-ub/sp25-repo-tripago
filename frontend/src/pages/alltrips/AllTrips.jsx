@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { UserContext } from "../../context/UserContext.jsx";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
 import HelpTooltip from "../../components/HelpTooltip.jsx";
+import DeleteTrip from "../../components/trip/DeleteTrip.jsx";
 
 const AllTrips = () => {
   const navigate = useNavigate();
@@ -267,6 +268,8 @@ const AllTrips = () => {
                     alt={encode(trip.destination)}
                     className="at-trip-image"
                   />
+
+                  <DeleteTrip/>
                 </div>
               ))
             )}
