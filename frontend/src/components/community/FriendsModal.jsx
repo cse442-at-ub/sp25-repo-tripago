@@ -3,6 +3,7 @@ import "../../styles/community/FriendsModal.css";
 import axios from "axios";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
+import DeleteComment from "./DeleteComment.jsx";
 
 const FriendsModal = ({
   isOpen,
@@ -46,7 +47,6 @@ const FriendsModal = ({
       );
       axios
         .post(
-          // BACKEND!!
           "/CSE442/2025-Spring/cse-442aj/backend/api/community/getCommunityActivities.php",
           {
             tripId: tripId,
@@ -67,7 +67,6 @@ const FriendsModal = ({
     const fetchMemories = async () => {
 
       try {
-        // CHANGE THIS TO BACKEND
         const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: tripId}, {
           headers: { "Content-Type": "application/json" },
         });
@@ -251,8 +250,13 @@ const FriendsModal = ({
               <div className="comments-list">
                 {comments.map((c, i) => (
                   <div key={i} className="comment">
-                    <span className="comment-user">{c.first_name} {c.last_name}:</span>{" "}
-                    {c.comment_text}
+                    <div>
+                      <span className="comment-user">{c.first_name} {c.last_name}:</span>{" "}
+                      {c.comment_text}
+                    </div>
+                    {currentUserEmail === c.commenter_email &&
+                      <DeleteComment comment={c} tripId={tripId} setComments={setComments} />
+                    }
                   </div>
                 ))}
               </div>
