@@ -269,7 +269,7 @@ const AllTrips = () => {
                     className="at-trip-image"
                   />
 
-                  <DeleteTrip/>
+                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
                 </div>
               ))
             )}
@@ -399,6 +399,8 @@ const AllTrips = () => {
                     alt={encode(trip.destination)}
                     className="at-trip-image"
                   />
+
+                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
                 </div>
               ))
             )}
