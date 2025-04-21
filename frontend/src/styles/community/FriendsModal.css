@@ -184,8 +184,8 @@
 }
 
 .comments-list {
-  max-height: 500px; /* Prevent overflow */
-  overflow-y: auto;
+  /* max-height: 400px; */ /* Prevent overflow */
+  /* overflow-y: auto; */
   margin-bottom: 10px;
 }
 
@@ -228,6 +228,28 @@
   cursor: pointer;
 }
 
+/* Delete Comment */
+.delete-comment-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-comment-box {
+  position: absolute;
+  bottom: 2rem;
+  right: 0;
+  width: 300px;
+  background: #fff;
+  border: none;
+  padding: 15px;
+  font-size: 0.8rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px #0000001a;
+  z-index: 999;
+  color: var(--secondary-text);
+  line-height: 1.1;
+}
+
 .delete-comment-button {
   background-color: red;
   margin-right: 0px;
@@ -236,4 +258,10 @@
 .delete-comment-button:hover {
   color: red;
   border-color: red;
+}
+
+@media (max-width: 480px)  {
+  .delete-comment-box {
+    width: 150px;
+  }
 }

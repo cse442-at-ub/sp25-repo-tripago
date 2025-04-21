@@ -3,7 +3,7 @@ import "../../styles/community/FriendsModal.css";
 import axios from "axios";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
-import { FaRegTrashAlt } from "react-icons/fa";
+import DeleteComment from "./DeleteComment.jsx";
 
 const FriendsModal = ({
   isOpen,
@@ -257,9 +257,7 @@ const FriendsModal = ({
                       {c.comment_text}
                     </div>
                     {currentUserEmail === c.commenter_email &&
-                      <button className="delete-comment-button">
-                        <FaRegTrashAlt/>
-                      </button>
+                      <DeleteComment />
                     }
                   </div>
                 ))}
