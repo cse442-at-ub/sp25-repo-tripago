@@ -79,7 +79,7 @@ const DiscussionBar = ({ tripId, isInvitee }) => {
   return (
     <div className={`discussion-bar ${open ? "open" : "collapsed"}`}>
       <div className="discussion-header" onClick={() => setOpen(!open)}>
-        <FaComments /> {open ? "Discussion" : ""}
+        <FaComments /> {open ? "Discussion" : "Discussion"}
       </div>
       <div className={`discussion-body-wrapper ${open ? "open" : ""}`}>
         <div className="discussion-body">

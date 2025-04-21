@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import { FaImage, FaQuoteLeft, FaTrash } from "react-icons/fa";
 import "../../styles/trip/ShareTripModal.css";
 import { UserContext } from "../../context/UserContext.jsx";
+import axios from 'axios';
+import imageCompression from 'browser-image-compression';
 
-
-const ShareTripModal = ({ onClose }) => {
+const ShareTripModal = ({ onClose, trip }) => {
   const [quote, setQuote] = useState("");
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
@@ -134,15 +135,28 @@ const ShareTripModal = ({ onClose }) => {
     setQuote(e.target.value);
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
 
+    const options  = {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
+    // Compress the images
+    const compressedImages = [];
+    for (const file of files) {
+      const compressedImage = await imageCompression(file, options);
+      compressedImages.push(compressedImage)
+    }
+    
     // Create preview URLs for the images
-    const newPreviewImages = files.map((file) => URL.createObjectURL(file));
+    const newPreviewImages = compressedImages.map((file) => URL.createObjectURL(file))
     setPreviewImages([...previewImages, ...newPreviewImages]);
 
     // Store the actual files
-    setImages([...images, ...files]);
+    setImages([...images, ...compressedImages]);
   };
 
   const removeImage = (index) => {
@@ -159,13 +173,42 @@ const ShareTripModal = ({ onClose }) => {
     setImages(updatedImages);
   };
 
-  const handleShare = (e) => {
-    e.preventDefault();
+  const handleShare = async () => {
 
-    // TODO: Implement the actual sharing functionality
+    const formData = new FormData();
+    
+    formData.set("tripId", trip.id);
+    formData.set("caption", quote);
+    for (const img of images) {
+      formData.append("images[]", img);
+    }
+
+    try {
+
+      const response = await axios.post(
+        // CHANGE TO BACKEND
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveMemory.php",
+        formData,
+        {headers:
+          {"Content-Type": "multipart/form-data"},
+        },
+      );
+
+      const data = await response.data;
+      console.log("Data recieved after saving memory: ", data);
+
+      if (data.success) {
+        console.log("saveMemory form response: ", data.message);
+      } else {
+        console.error("Saving memory failed: ", data.message);
+      }
+
+    } catch(err) {
+      console.error("Error saving memory: ", err);
+    }
 
     onClose();
-  };
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -185,7 +228,7 @@ const ShareTripModal = ({ onClose }) => {
       <div className="share-modal" ref={modalRef}>
         <div className="modal-header">
           <h3>
-            Share a <span className="modal-highlight">memory</span>
+            Share a <span className="modal-highlight">Memory</span>
           </h3>
         </div>
 
@@ -225,14 +268,42 @@ const ShareTripModal = ({ onClose }) => {
               </div>
             </div>
 
+            {images.length < 1 && (
+              <span className="upload-info">No images selected</span>
+            )}
+
+            {previewImages.length > 0 && (
+              <div className="image-previews">
+                {previewImages.map((src, index) => (
+                  <div key={index} className="image-preview-container">
+                    <img
+                      src={src}
+                      alt={`Preview ${index + 1}`}
+                      className="image-preview"
+                    />
+                    <div className="image-preview-overlay">
+                      <button
+                        className="remove-image-btn"
+                        onClick={() => removeImage(index)}
+                        aria-label="Remove image"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Email trip */}
+            <br/>
             <p style={{ width: '100%', margin: '0', padding: '0' }}>
-              Add user emails you wish to share with
+              Want to share with someone who isn't on Tripago? We'll email a postcard!
             </p>
 
             <div style={{ width: '100%', display: 'block' }}>
               <input
-                style={{ width: '50%', margin: '0' }}
+                className="email-input"
                 type="email"
                 name="email"
                 placeholder="Email address"
@@ -273,33 +344,6 @@ const ShareTripModal = ({ onClose }) => {
             </div>
 
             {/* ------------------ */}
-
-            {images.length < 1 && (
-              <span className="upload-info">No images selected</span>
-            )}
-
-            {previewImages.length > 0 && (
-              <div className="image-previews">
-                {previewImages.map((src, index) => (
-                  <div key={index} className="image-preview-container">
-                    <img
-                      src={src}
-                      alt={`Preview ${index + 1}`}
-                      className="image-preview"
-                    />
-                    <div className="image-preview-overlay">
-                      <button
-                        className="remove-image-btn"
-                        onClick={() => removeImage(index)}
-                        aria-label="Remove image"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
@@ -315,6 +359,7 @@ const ShareTripModal = ({ onClose }) => {
 
 ShareTripModal.propTypes = {
   onClose: PropTypes.func.isRequired,
+  trip: PropTypes.object.isRequired,
 };
 
 export default ShareTripModal;

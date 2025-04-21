@@ -159,6 +159,14 @@
   margin-bottom: 8px;
 } */
 
+/* Memories Section */
+.memories-section h3 {
+  font-size: 20px;
+  color: #6b4dfc;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
 /* Comments Section */
 .comments-section {
   margin-top: 20px;

@@ -42,7 +42,7 @@ if (!$email) {
 }
 
 // 3. Validate file
-if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+if (!isset($_FILES['image'])) {
   fwrite($debugLog, "Invalid file upload\n");
   echo json_encode(["success" => false, "message" => "Invalid file upload"]);
   fclose($debugLog);

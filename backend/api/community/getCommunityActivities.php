@@ -19,6 +19,15 @@ if ($mysqli->connect_errno) {
   exit();
 }
 
+$stmt = $mysqli->prepare("SELECT * FROM trips WHERE trip_id = ? AND travel_log = 1");
+$stmt->bind_param("i", $tripId);
+$stmt->execute();
+$result = $stmt->get_result();
+if (!$result) {
+  echo json_encode(["success" => false, "message" => "This trip is not shared."]);
+  exit();
+}
+
 $stmt = $mysqli->prepare("
   SELECT day_number AS day, activity_name AS name, price
   FROM activities
