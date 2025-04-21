@@ -175,20 +175,20 @@ const Community = () => {
 
       //handle accepted names
       if (result[0].length > 0) {
-        result[0].forEach((name) => {
+        result[0].forEach((req) => {
           newSentRequests.push({
             id: Date.now() + Math.random(),
-            name: name,
+            name: req.name,
             status: "Accepted",
           });
         });
       }
       //handle pending names
       if (result[1].length > 0) {
-        result[1].forEach((name) => {
+        result[1].forEach((req) => {
           newSentRequests.push({
             id: Date.now() + Math.random(),
-            name: name,
+            name: req.name,
             status: "Pending",
           });
         });
@@ -335,6 +335,7 @@ const Community = () => {
               onClick={() => {
                 setModalType("sent");
                 getSentRequests();
+                console.log("sentRequests: " + sentRequests);
               }}
             >
               View Friends

@@ -424,13 +424,11 @@ p {
 }
 
 .slide-container {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
 }
 
 .memory-image {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
 }
 
 .no-caption {
