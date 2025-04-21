@@ -359,7 +359,7 @@
   border: none;
   border-radius: 10px;
   padding: 20px;
-  height: 320px;
+  height: 350px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
   position: relative;
   width: 40%;
@@ -571,6 +571,7 @@
 
 .delete-trip-button {
   background-color: red;
+  font-size: 12px;
 }
 
 .delete-trip-button:hover {

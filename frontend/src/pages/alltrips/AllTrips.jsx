@@ -269,7 +269,8 @@ const AllTrips = () => {
                     className="at-trip-image"
                   />
 
-                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
+                {/* Delete Button */}
+                <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
                 </div>
               ))
             )}
@@ -400,6 +401,7 @@ const AllTrips = () => {
                     className="at-trip-image"
                   />
 
+                  {/* Delete Trip */}
                   <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
                 </div>
               ))

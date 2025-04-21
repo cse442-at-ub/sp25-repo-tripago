@@ -274,6 +274,7 @@
 
 .delete-comment-button {
   background-color: red;
+  font-size: 12px;
 }
 
 .delete-comment-button:hover {
