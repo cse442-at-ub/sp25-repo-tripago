@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../styles/community/Community.css";
+import "../../styles/TripTags.css";
 import paris from "../../assets/paris.jpg";
 import sandiego from "../../assets/sandiego.jpg";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
@@ -12,6 +13,7 @@ import { useContext } from "react";
 import { UserContext } from "../../context/UserContext.jsx";
 import UserAvatar from "../../assets/UserAvatar.png";
 import { useNavigate } from "react-router-dom";
+import { AVAILABLE_TAGS } from "../../components/trip/TripTags.jsx";
 
 const Community = () => {
   const [trips, setTrips] = useState([]);
@@ -21,6 +23,7 @@ const Community = () => {
   const [modalType, setModalType] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedTags, setSelectedTags] = useState([]);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -249,6 +252,21 @@ const Community = () => {
     }
   };
 
+  const handleTagToggle = (tag) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
+  const filteredTrips = trips
+    .filter((trip) => trip.email !== user?.email)
+    .filter((trip) => 
+      selectedTags.length === 0 || 
+      selectedTags.every(tag => trip.tags?.includes(tag))
+    );
+
   return (
     <>
       {/* Hamburger toggle for mobile */}
@@ -327,13 +345,42 @@ const Community = () => {
         <div className="community-bottom">
           {/* Main Section: List of Trips */}
           <div className="trip-list">
+            <div className="trip-filters">
+              <h3>Filter by Tags</h3>
+              <div className="tags-container">
+                {AVAILABLE_TAGS.map((tag) => (
+                  <button
+                    key={tag}
+                    className={`tag-chip ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                    onClick={() => handleTagToggle(tag)}
+                  >
+                    {encode(tag)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <h3>Discover Friends</h3>
-            {trips
-              .filter((trip) => trip.email !== user?.email)
-              .map((trip) => (
+            {filteredTrips.length === 0 ? (
+              <div className="no-results-message">
+                {selectedTags.length > 0 ? (
+                  <>
+                    <p>No trips found matching the selected tags.</p>
+                    <button 
+                      className="clear-filters-btn"
+                      onClick={() => setSelectedTags([])}
+                    >
+                      Clear Filters
+                    </button>
+                  </>
+                ) : (
+                  <p>No trips have been shared in the community yet.</p>
+                )}
+              </div>
+            ) : (
+              filteredTrips.map((trip) => (
                 <div key={trip.id} className="trip-card">
                   {/* Left Side: Text & Buttons */}
-
                   <div className="trip-info">
                     <div className="trip-header">
                       {console.log("default", UserAvatar)}
@@ -364,7 +411,7 @@ const Community = () => {
                             )
                           }
                         >
-                          {encode(trip.user)}'s
+                          {encode(trip.user)}&apos;s
                         </span>{" "}
                         trip to{" "}
                         <span className="highlight">
@@ -375,9 +422,19 @@ const Community = () => {
                     </div>
 
                     {trip.comment && (
-                      <p className="trip-comment">"{encode(trip.comment)}"</p>
+                      <p className="trip-comment">&ldquo;{encode(trip.comment)}&rdquo;</p>
                     )}
-                    {/* Hide "Send Request" button if already friends */}
+
+                    {trip.tags && trip.tags.length > 0 && (
+                      <div className="trip-tags-display">
+                        {trip.tags.map(tag => (
+                          <span key={tag} className="tag-chip readonly">
+                            {encode(tag)}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                     {!friendsList.includes(trip.email) && (
                       <button className="send-request-btn">Send Request</button>
                     )}
@@ -389,7 +446,6 @@ const Community = () => {
                     </button>
                   </div>
 
-                  {/* Right Side: Image */}
                   <div className="community-image">
                     <img
                       src={trip.imageUrl}
@@ -398,7 +454,8 @@ const Community = () => {
                     />
                   </div>
                 </div>
-              ))}
+              ))
+            )}
           </div>
         </div>
 
