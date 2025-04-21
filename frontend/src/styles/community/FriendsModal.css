@@ -184,7 +184,7 @@
 }
 
 .comments-list {
-  max-height: 150px; /* Prevent overflow */
+  max-height: 500px; /* Prevent overflow */
   overflow-y: auto;
   margin-bottom: 10px;
 }
@@ -195,6 +195,9 @@
   font-size: 14px;
   color: #555;
   text-align: left; 
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .comment-user {
@@ -225,4 +228,12 @@
   cursor: pointer;
 }
 
+.delete-comment-button {
+  background-color: red;
+  margin-right: 0px;
+}
 
+.delete-comment-button:hover {
+  color: red;
+  border-color: red;
+}

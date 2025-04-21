@@ -3,6 +3,7 @@ import "../../styles/community/FriendsModal.css";
 import axios from "axios";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 const FriendsModal = ({
   isOpen,
@@ -251,8 +252,15 @@ const FriendsModal = ({
               <div className="comments-list">
                 {comments.map((c, i) => (
                   <div key={i} className="comment">
-                    <span className="comment-user">{c.first_name} {c.last_name}:</span>{" "}
-                    {c.comment_text}
+                    <div>
+                      <span className="comment-user">{c.first_name} {c.last_name}:</span>{" "}
+                      {c.comment_text}
+                    </div>
+                    {currentUserEmail === c.commenter_email &&
+                      <button className="delete-comment-button">
+                        <FaRegTrashAlt/>
+                      </button>
+                    }
                   </div>
                 ))}
               </div>
