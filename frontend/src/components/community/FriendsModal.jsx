@@ -29,7 +29,7 @@ const FriendsModal = ({
     if (isOpen && isFriend && tripId && userEmail) {
       axios
         .post(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getComments.php",
+          "/CSE442/2025-Spring/cse-442aj/owenbackend/api/community/getComments.php",
           {
             tripId: tripId,
           }
@@ -47,7 +47,6 @@ const FriendsModal = ({
       );
       axios
         .post(
-          // BACKEND!!
           "/CSE442/2025-Spring/cse-442aj/backend/api/community/getCommunityActivities.php",
           {
             tripId: tripId,
@@ -68,7 +67,6 @@ const FriendsModal = ({
     const fetchMemories = async () => {
 
       try {
-        // CHANGE THIS TO BACKEND
         const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: tripId}, {
           headers: { "Content-Type": "application/json" },
         });
@@ -112,7 +110,7 @@ const FriendsModal = ({
   
       // Re-fetch updated comments after successful post
       const res = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/community/getComments.php",
+        "/CSE442/2025-Spring/cse-442aj/owenbackend/api/community/getComments.php",
         { tripId: tripId }
       );
   
@@ -257,7 +255,7 @@ const FriendsModal = ({
                       {c.comment_text}
                     </div>
                     {currentUserEmail === c.commenter_email &&
-                      <DeleteComment />
+                      <DeleteComment comment={c} tripId={tripId} setComments={setComments} />
                     }
                   </div>
                 ))}

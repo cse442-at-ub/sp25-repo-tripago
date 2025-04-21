@@ -244,15 +244,36 @@
   padding: 15px;
   font-size: 0.8rem;
   border-radius: 12px;
-  box-shadow: 0 8px 20px #0000001a;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
   z-index: 999;
   color: var(--secondary-text);
   line-height: 1.1;
 }
 
+.delete-comment-box button {
+  margin: 0.4rem;
+}
+
+.confirm-delete {
+  background-color: red;
+}
+
+.confirm-delete:hover {
+  color: red;
+  border-color: red;
+}
+
+/* .cancel-delete {
+  background-color: var(--medium-grey);
+}
+
+.cancel-delete:hover {
+  color: var(--medium-grey);
+  border-color: var(--medium-grey);
+} */
+
 .delete-comment-button {
   background-color: red;
-  margin-right: 0px;
 }
 
 .delete-comment-button:hover {
