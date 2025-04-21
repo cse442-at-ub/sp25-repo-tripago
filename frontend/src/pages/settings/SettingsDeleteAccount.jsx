@@ -32,7 +32,7 @@ const DeleteAccount = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch('/CSE442/2025-Spring/cse-442aj/sambackend/api/users/deleteAccount.php', {
+      const response = await fetch('/CSE442/2025-Spring/cse-442aj/backend/api/users/deleteAccount.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,10 +103,29 @@ const DeleteAccount = () => {
             </p>
             <ul className="deletion-effects">
               <li>Remove all your personal information</li>
-              <li>Delete all your trips and travel plans</li>
-              <li>Remove all your expenses and financial data</li>
-              <li>Delete all your friend connections</li>
-              <li>Remove all your preferences and settings</li>
+              <li>Delete all your trips and travel plans, including:
+                <ul>
+                  <li>Trip memories and associated images</li>
+                  <li>Trip discussions and comments</li>
+                  <li>Travel expenses and financial records</li>
+                  <li>Trip activities and itineraries</li>
+                  <li>Trip collaborations with other users</li>
+                </ul>
+              </li>
+              <li>Remove your social connections:
+                <ul>
+                  <li>Friend relationships</li>
+                  <li>Comments on other travelers&apos; trips</li>
+                  <li>Discussion participations</li>
+                </ul>
+              </li>
+              <li>Delete your personal collections:
+                <ul>
+                  <li>Favorite destinations</li>
+                  <li>Bucket list entries</li>
+                  <li>Travel activity history</li>
+                </ul>
+              </li>
             </ul>
 
             {!showConfirmation ? (
@@ -118,7 +137,7 @@ const DeleteAccount = () => {
               </button>
             ) : (
               <div className="confirmation-dialog">
-                <p>Please enter your password to confirm deletion:</p>
+                <p>Please enter your password to confirm deletion</p>
                 <input
                   type="password"
                   value={password}
