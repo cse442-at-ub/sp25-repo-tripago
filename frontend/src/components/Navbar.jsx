@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import "../styles/Navbar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Tripago_VX.png";
@@ -21,6 +21,7 @@ const Navbar = () => {
     // Add more notifications as needed
   ]);
   const toggleNotifications = () => {
+    console.log("notification toggle");
     setIsNotificationsOpen(!isNotificationsOpen);
   };
 
@@ -92,26 +93,29 @@ const Navbar = () => {
         </ul>
       ) : (
         <ul className="nav-links">
-          <li className="notifications-container">
-            <button className="notification-button" onClick={toggleNotifications}>
-              Notifications ({notifications.length})
+          <li className={`notifications-container ${isNotificationsOpen ? 'open' : ''}`}>
+          <button className="notification-button" onClick={toggleNotifications}>
+            Notifications ({notifications.length})
+          </button>
+          <div className="notifications-window">
+            <h3>Notifications</h3>
+            {notifications.length > 0 ? (
+              <>
+              {console.log("Current notifications state:", notifications)} {/* Add the console.log here */}
+              <ul className="notifications-list">
+                {notifications.map((note) => (
+                  <li key={note.id}>{note.message}</li>
+                ))}
+              </ul>
+            </>
+            ) : (
+              <p className="notifications-empty">No new notifications.</p>
+            )}
+            <button className="notifications-close-button" onClick={() => setIsNotificationsOpen(false)}>
+              Close
             </button>
-            <div className={`notifications-window ${isNotificationsOpen ? 'open' : ''}`}>
-              <h3>Notifications</h3>
-              {notifications.length > 0 ? (
-                <ul className="notifications-list">
-                  {notifications.map((note) => (
-                    <li key={note.id}>{note.message}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="notifications-empty">No new notifications.</p>
-              )}
-              <button className="notifications-close-button" onClick={() => setIsNotificationsOpen(false)}>
-                Close
-              </button>
-            </div>
-          </li>
+          </div>
+        </li>
           <li>
             <button
               className="navbar-links"

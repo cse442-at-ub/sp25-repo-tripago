@@ -171,12 +171,13 @@
   padding: 8px 0;
   border-bottom: 1px solid #eee;
   color: var(--secondary-text); /* Or your preferred text color */
+  margin-bottom: 8px; /* Added margin at the bottom of each item */
 }
 
 .notifications-list li:last-child {
   border-bottom: none;
+  margin-bottom: 0; /* Remove extra margin from the last item */
 }
-
 .notifications-empty {
   color: var(--secondary-text); /* Or your preferred text color */
 }
@@ -190,12 +191,20 @@
   cursor: pointer;
   font-size: 0.9em;
   transition: background-color 0.3s ease-in-out;
+  color: var(--black); /* Changed text color to black */
 }
 
 .notifications-close-button:hover {
   background-color: #e0e0e0;
 }
-
 .notifications-container.open .notifications-window {
   display: block; /* Show the window when the container has the 'open' class */
+}
+
+.notifications-list li {
+  display: block; /* Force block display for notification list items */
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: var(--secondary-text);
+  margin-bottom: 8px;
 }
