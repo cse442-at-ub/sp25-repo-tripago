@@ -50,7 +50,7 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
       console.log("Before post");
 
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getAllActivities.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",
         { trip_id: tripID, start_date: startDate, city_name: trip.name },
         {
           headers: {
@@ -117,7 +117,7 @@ const Itinerary = ({ trip, setShowModal, isInvitee }) => {
 
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/generateActivity.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",
         { location: trip.name, trip_id: tripID },
         {
           headers: {
@@ -188,7 +188,7 @@ but can expand it in the future, if need (or want) be!
       to the same location on the same day, because why would they?
       */
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/addActivity.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",
         {
           trip_id: tripID,
           day: day,
@@ -555,7 +555,7 @@ const Budgeting = ({ trip, isInvitee }) => {
 
     try {
       await fetch(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/saveBudgetExpense.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -576,7 +576,7 @@ const Budgeting = ({ trip, isInvitee }) => {
 
     try {
       await fetch(
-        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/saveBudgetExpense.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/saveBudgetExpense.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -598,7 +598,7 @@ const Budgeting = ({ trip, isInvitee }) => {
     const loadExpenses = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getTripExpenses.php?trip_id=${trip.id}`
+          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?trip_id=${trip.id}`
         );
 
         const data = await res.json();
@@ -851,7 +851,7 @@ const Memories = ({ trip }) => {
 
       try {
         // CHANGE THIS BACK TO BACKEND
-        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getMemories.php", {id: trip.id}, {
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: trip.id}, {
           headers: { "Content-Type": "application/json" },
         });
         const result = response.data;

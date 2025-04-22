@@ -55,8 +55,8 @@ const destinations = location.state?.destinations || [];
   
     try {
       const url = isFavorited
-        ? "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/removeFavorite.php"
-        : "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/favorites/addFavorite.php";
+        ? "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/removeFavorite.php"
+        : "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/addFavorite.php";
   
       const response = await fetch(url, {
         method: "POST",

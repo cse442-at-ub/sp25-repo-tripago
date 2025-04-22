@@ -32,7 +32,7 @@ const Login = () => {
     
     try{
       
-      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/security/login.php",formData,{
+      const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/security/login.php",formData,{
         headers:{
           'Content-Type':'application/json'
         }
