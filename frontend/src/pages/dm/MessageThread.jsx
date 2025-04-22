@@ -1,9 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/dm/MessageThread.css";
-import boy from "../../assets/avatars/boy.png";
-import girl from "../../assets/avatars/girl.png";
-import { useNavigate } from "react-router-dom";
 
 const dummyMessages = [
   { sender: "them", text: "Hey! Are you there?", time: "3:01 PM" },
@@ -15,17 +12,21 @@ const dummyMessages = [
 
 const MessageThread = () => {
   const { name } = useParams();
+  const decodedName = decodeURIComponent(name);
   const navigate = useNavigate();
-  const avatar = name === "Brooklyn" || name === "Hawkins" || name === "Williamson" ? boy : girl;
+  const avatar = location.state?.image; 
+
+  console.log("avatar is", avatar)
+  console.log("name in thread is", decodedName)
 
   return (
     <div className="message-thread-container">
       <div className="message-thread-header">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ← Back
+        <button className="dm-back-button" onClick={() => navigate(-1)}>
+          ←
         </button>
         <img src={avatar} alt={name} className="thread-avatar" />
-        <h2 className="thread-name">{name}</h2>
+        <h2 className="thread-name">{decodedName}</h2>
       </div>
 
       <div className="message-bubble-list">
@@ -40,12 +41,12 @@ const MessageThread = () => {
         ))}
       </div>
 
-      <div className="message-input-container">
+      <div className="message-input-container ">
         <input
           className="message-input"
           placeholder="Type a message..."
         />
-        <button className="send-button">Send</button>
+        <button className="collab-add-btn">Send</button>
       </div>
     </div>
   );

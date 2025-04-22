@@ -55,7 +55,7 @@ const dummyChats = [
   {
     name: "Brooklyn",
     time: "3/10/22",
-    message: "Rather you'd love to...",
+    message: "Would you rather...",
     unread: 0,
     image: girl,
   },
@@ -64,6 +64,8 @@ const dummyChats = [
 const DirectMessages = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 680;
@@ -94,11 +96,19 @@ const DirectMessages = () => {
 
       <div className="direct-messages-container">
         <h2 className="header">Chats</h2>
-        <input className="search-bar" type="text" placeholder="Search" />
+        <input className="dm-search-bar" type="text" placeholder="Search" />
 
         <div className="chat-list">
           {dummyChats.map((chat, index) => (
-            <div className="chat-item" key={index}>
+            <div
+              className="chat-item"
+              key={index}
+              onClick={() =>
+                navigate(`/messages/${encodeURIComponent(chat.name)}`, {
+                  state: { image: chat.image }
+                })
+              }
+            >
               <img className="chat-avatar" src={chat.image} alt={chat.name} />
               <div className="chat-details">
                 <div className="chat-header">
