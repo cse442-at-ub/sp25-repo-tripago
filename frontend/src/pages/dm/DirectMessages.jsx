@@ -7,58 +7,6 @@ import Sidebar from "../../components/Sidebar.jsx";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { useNavigate } from "react-router-dom";
 
-const dummyChats = [
-  {
-    name: "Jane",
-    time: "5mins",
-    message: "Hello are you home?",
-    unread: 2,
-    image: girl,
-  },
-  {
-    name: "Leslie",
-    time: "3:00PM",
-    message: "Yes, I will be available tomorrow...",
-    unread: 3,
-    image: girl,
-  },
-  {
-    name: "Dianne",
-    time: "1:35PM",
-    message: "Nice performance today dear!",
-    unread: 0,
-    image: girl,
-  },
-  {
-    name: "Hawkins",
-    time: "Yesterday",
-    message: "Can we talk now?",
-    unread: 0,
-    image: boy,
-  },
-  {
-    name: "Williamson",
-    time: "Monday",
-    message: "It's my pleasure",
-    unread: 0,
-    image: boy,
-  },
-  {
-    name: "Jerome",
-    time: "Wednesday",
-    message: "Nice to meet you",
-    unread: 0,
-    image: boy,
-  },
-  {
-    name: "Brooklyn",
-    time: "3/10/22",
-    message: "Would you rather...",
-    unread: 0,
-    image: girl,
-  },
-];
-
 const DirectMessages = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -123,38 +71,9 @@ const DirectMessages = () => {
           <input className="dm-search-bar" type="text" placeholder="Search" />
         </div>
 
-        <div className="chat-list">
-          {dummyChats.map((chat, index) => (
-            <div
-              className="chat-item"
-              key={index}
-              onClick={() =>
-                navigate(`/messages/${encodeURIComponent(chat.name)}`, {
-                  state: { image: chat.image || UserAvatar },
-                })
-              }
-            >
-              <img className="chat-avatar" src={chat.image} alt={chat.name} />
-              <div className="chat-details">
-                <div className="chat-header">
-                  <span className="chat-name">
-                    {chat.name}
-                    {chat.emoji && ` ${chat.emoji}`}
-                  </span>
-                  <span className="chat-time">{chat.time}</span>
-                </div>
-                <div className="chat-message">{chat.message}</div>
-              </div>
-              {chat.unread > 0 && (
-                <div className="unread-badge">{chat.unread}</div>
-              )}
-            </div>
-          ))}
-        </div>
-
         {friends.length === 0 ? (
           <div className="dm-empty-state">
-            <p>No messages yet.</p>
+            <p>Nothing to see here.</p>
             <p
               onClick={() => navigate("/community")}
               className="find-new-friends-p"
@@ -176,6 +95,7 @@ const DirectMessages = () => {
                     {
                       state: {
                         image: friend.user_image_url || UserAvatar,
+                        email: friend.email
                       },
                     }
                   )
