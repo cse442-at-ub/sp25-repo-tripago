@@ -239,16 +239,19 @@ const AllTrips = () => {
                       };
                       console.log("When clicking view, we send,");
                       console.log(selected);
-
+                      
                       localStorage.setItem(
                         "selectedTrip",
                         JSON.stringify(selected)
                       );
                       navigate("/profile");
                     }}
-                  >
+                    >
                     Edit
                   </button>
+
+                  {/* Delete Button */}
+                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
 
                   {/* Trip Info */}
                   <div className="trip-info">
@@ -268,9 +271,6 @@ const AllTrips = () => {
                     alt={encode(trip.destination)}
                     className="at-trip-image"
                   />
-
-                {/* Delete Button */}
-                <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
                 </div>
               ))
             )}
@@ -374,6 +374,9 @@ const AllTrips = () => {
                     View
                   </button>
 
+                  {/* Delete Trip */}
+                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
+
                   {/* Trip Info */}
                   <div className="trip-info">
                     <h4 className="trip-destination">
@@ -400,9 +403,6 @@ const AllTrips = () => {
                     alt={encode(trip.destination)}
                     className="at-trip-image"
                   />
-
-                  {/* Delete Trip */}
-                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
                 </div>
               ))
             )}
