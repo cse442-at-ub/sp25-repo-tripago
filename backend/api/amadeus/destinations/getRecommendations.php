@@ -24,7 +24,6 @@ $categoryToCityCode = [
     "Culture"    => "PAR",     // Paris
     "Adventure"  => "DEN",     // Denver
     "Nature"     => "YVR",     // Vancouver
-    "Choose for me" => "NYC",  // New York
     "Recommendations" => "NYC"
 ];
 

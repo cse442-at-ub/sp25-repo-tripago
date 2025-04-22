@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Accordion from "../Accordion";
 import { resolvePath, useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import autofillIcon from "../../assets/autofill.png";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
+import TripTags from "./TripTags.jsx";
 import HelpTooltip from "../HelpTooltip.jsx";
 
 const Itinerary = ({ trip, setShowModal, isInvitee }) => {
@@ -838,35 +839,43 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
-const Memories = () => {
+const Memories = ({ trip }) => {
+
   const [memories, setMemories] = useState([]);
 
+  const [showShareModal, setShowShareModal] = useState(false);
+
   useEffect(() => {
-    // HARDCODED DATA WHEN I DO BACKEND I HAVE A SPECIFIC PLAN
+
     const fetchMemories = async () => {
-      setMemories([
-        {
-          id: 23,
-          caption: "hi",
-          images: [
-            "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
-          ],
-        },
-        { id: 53, caption: "hello", images: [] },
-        {
-          id: 12,
-          caption: "I am a memory",
-          images: [
-            "",
-            "/CSE442/2025-Spring/cse-442aj/backend/uploads/default_img.png",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHHosEL4A2uC8ncP6RnDDGMULMgy0cXnnEHA&s",
-          ],
-        },
-      ]);
+
+      try {
+        // CHANGE THIS BACK TO BACKEND
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: trip.id}, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const result = response.data;
+        console.log("getMemories form response: ", result);
+
+        const mem = []
+        for (const memory of result.memories) {
+          memory["images"] = []
+          for (const image of result.images) {
+            if (image.memory_id === memory.id) {
+              memory["images"].push(image.image_url)
+            }
+          }
+          mem.push(memory);
+        }
+        setMemories(mem);
+
+      } catch(err) {
+          console.log("Error fetching memories: ", err);
+      }
     };
 
     fetchMemories();
-  });
+  }, [showShareModal]);
 
   // Style for image slideshow
   const divStyle = {
@@ -889,7 +898,7 @@ const Memories = () => {
 
   return (
     <div className="memories-container tab-pane-container">
-      <ShareTripButton />
+      <ShareTripButton trip={trip} showShareModal={showShareModal} setShowShareModal={setShowShareModal} />
       {memories.length === 0 ? (
         <p className="no-memories-message">
           Looks like this trip has no memories. Use the button above to post a
@@ -967,6 +976,9 @@ const TripDetails = ({
               Select a different trip
             </p>
           </div>
+
+          <TripTags tripId={tripId} isInvitee={isInvitee} />
+
           <div className="itin-budget-container">
             <p
               className={`itin-budget-tab ${
@@ -1006,7 +1018,7 @@ const TripDetails = ({
             {currentTab === "budgeting" && (
               <Budgeting trip={trip} isInvitee={isInvitee} />
             )}
-            {currentTab === "memories" && <Memories />}
+            {currentTab === "memories" && <Memories trip={trip} />}
           </div>
         </div>
       ) : (
@@ -1033,7 +1045,7 @@ const tripProps = PropTypes.shape({
   name: PropTypes.string.isRequired,
   startDate: PropTypes.string,
   endDate: PropTypes.string,
-  // location: PropTypes.string.isRequired,
+  id: PropTypes.number,
   countryCode: PropTypes.string,
   days: PropTypes.arrayOf(
     PropTypes.shape({
@@ -1064,22 +1076,34 @@ const tripProps = PropTypes.shape({
 TripDetails.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
+  isInvitee: PropTypes.bool,
+  currentTab: PropTypes.string.isRequired,
+  setCurrentTab: PropTypes.func.isRequired,
 };
+
 Itinerary.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
+  isInvitee: PropTypes.bool,
 };
+
 Budgeting.propTypes = {
   trip: tripProps,
+  isInvitee: PropTypes.bool,
 };
+
 ExpenseModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
+
 BudgetModal.propTypes = {
   currentBudget: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
+Memories.propTypes = {
+  trip: tripProps,
+}
 
 export default TripDetails;

@@ -22,6 +22,7 @@ if ($mysqli->connect_errno) {
 // Fetch comments with names
 $stmt = $mysqli->prepare("
   SELECT 
+    c.id,
     c.commenter_email, 
     c.comment_text, 
     c.created_at, 
@@ -39,6 +40,7 @@ $result = $stmt->get_result();
 $comments = [];
 while ($row = $result->fetch_assoc()) {
   $comments[] = [
+    "id" => $row["id"],
     "commenter_email" => $row["commenter_email"],
     "comment_text" => $row["comment_text"],
     "created_at" => $row["created_at"],
