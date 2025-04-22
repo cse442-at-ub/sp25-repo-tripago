@@ -31,6 +31,8 @@ import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 import Community from "./pages/community/Community.jsx";
 import TravelerProfile from "./pages/community/TravelerProfile.jsx";
+import DirectMessages from "./pages/dm/DirectMessages.jsx";
+import MessageThread from "./pages/dm/MessageThread.jsx";
 
 const App = () => {
   return (
@@ -64,15 +66,15 @@ const App = () => {
                 }
               />
 
-            <Route 
-                path="/favorites" 
+              <Route
+                path="/favorites"
                 element={
                   <ProtectedRoute>
                     <Favorites />
                   </ProtectedRoute>
                 }
-            />      
-            
+              />
+
               <Route
                 path="/profile"
                 element={
@@ -83,14 +85,18 @@ const App = () => {
               />
               <Route
                 path="/traveler-profile/:email"
-                element={<ProtectedRoute><TravelerProfile /></ProtectedRoute>}
+                element={
+                  <ProtectedRoute>
+                    <TravelerProfile />
+                  </ProtectedRoute>
+                }
               />
 
               <Route
                 path="/profile/new-destination"
                 element={
                   //<ProtectedRoute>
-                    <NewDestination />
+                  <NewDestination />
                   //</ProtectedRoute>
                 }
               />
@@ -124,6 +130,22 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <DirectMessages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/messages/:name"
+                element={
+                  <ProtectedRoute>
+                    <MessageThread />
                   </ProtectedRoute>
                 }
               />

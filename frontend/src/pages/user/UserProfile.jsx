@@ -538,7 +538,7 @@ const UserProfile = () => {
             onClick={() => navigate("/community")}
             className="find-new-friends-p"
           >
-            Find new friends in the Community tab →
+            Find new friends in the Community tab
           </p>
         </div>
         
