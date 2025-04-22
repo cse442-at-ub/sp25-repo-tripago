@@ -63,6 +63,7 @@ const Navbar = () => {
       {location.pathname === "/" ||
       location.pathname === "/login" ||
       location.pathname === "/signup" ||
+      location.pathname.startsWith("/new-password") ||
       location.pathname === "/forgot-password" ? (
         <ul className="nav-links">
           <li>
