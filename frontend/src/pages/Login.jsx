@@ -8,6 +8,8 @@ import axios from 'axios'
 
 const Login = () => {
 
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
+
   const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate()
@@ -21,6 +23,7 @@ const Login = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMessage("");
   };
 
   const handleSubmit = async(e) => {
@@ -51,7 +54,8 @@ const Login = () => {
           state: { fromLogin: false }
         });
       } else {
-        alert(result.message)
+        //alert(result.message)
+        setErrorMessage("Authentication failed");
       }
       
     } catch(error){
@@ -64,6 +68,8 @@ const Login = () => {
   return (
     <div className="login-container ">
     <h2>Login to Tripa<span>go</span></h2>
+    {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
+
     <form onSubmit={handleSubmit}>
       <input
         type="email"

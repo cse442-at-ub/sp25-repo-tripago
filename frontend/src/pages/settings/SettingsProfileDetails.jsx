@@ -7,6 +7,19 @@ import { FaCog } from 'react-icons/fa';
 import axios from 'axios';
 
 const SettingsProfileDetails = () => {
+  const [successMessage, setSuccessMessage] = useState(""); // State for the success message
+
+  useEffect(() => {
+      if (successMessage) {
+        const timer = setTimeout(() => {
+          setSuccessMessage("");
+        }, 1500); // Adjust the duration as needed
+  
+        return () => clearTimeout(timer);
+      }
+    }, [successMessage]);
+  
+  
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -60,8 +73,10 @@ const SettingsProfileDetails = () => {
       })
       const result = response.data
       console.log("Profile Details Form Response: ", result);
-      alert(result.message)
+      setSuccessMessage(result.message);
+      //alert(result.message)
     } catch(error) {
+      setSuccessMessage("There was an error changing your email");
       console.log("Error updating profile details:", error)
     }
   };
@@ -109,6 +124,14 @@ const SettingsProfileDetails = () => {
       {/* Right Panel */}
       <div className="settings-right">
         <h2>Profile Details</h2>
+
+        {successMessage && (
+          <div className="modal-overlay">
+            <div className="modal-content send-req-modal-content"> 
+              {successMessage}
+            </div>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">

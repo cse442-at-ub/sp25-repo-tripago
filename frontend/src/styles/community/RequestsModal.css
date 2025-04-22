@@ -71,3 +71,38 @@
 .status.rejected {
   color: #ff6b6b;
 }
+
+/*For the alert message*/
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1003;
+}
+
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 90%;
+  max-height: 80vh;  
+  overflow-y: auto;  
+  text-align: center;
+  position: relative;
+}
+
+.send-req-modal-content {
+  color: var(--primary-color);
+  font-weight: 600;
+  width: 300px
+}
+
