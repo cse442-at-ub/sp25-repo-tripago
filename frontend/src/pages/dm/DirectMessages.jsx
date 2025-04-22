@@ -155,40 +155,12 @@ const DirectMessages = () => {
         {friends.length === 0 ? (
           <div className="dm-empty-state">
             <p>No messages yet.</p>
-            <div className="chat-list">
-              {friends.map((friend, index) => (
-                <div
-                  className="chat-item"
-                  key={index}
-                  onClick={() =>
-                    navigate(
-                      `/messages/${encodeURIComponent(
-                        friend.first_name + " " + friend.last_name
-                      )}`,
-                      {
-                        state: { image: friend.user_image_url || UserAvatar },
-                      }
-                    )
-                  }
-                >
-                  <img
-                    className="chat-avatar"
-                    src={
-                      friend.user_image_url ? friend.user_image_url : UserAvatar
-                    }
-                    alt={friend.first_name}
-                  />
-                  <div className="chat-details">
-                    <div className="chat-header">
-                      <span className="chat-name">
-                        {friend.first_name} {friend.last_name}
-                      </span>
-                    </div>
-                    <div className="chat-message">Start a conversation</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <p
+              onClick={() => navigate("/community")}
+              className="find-new-friends-p"
+            >
+              Find new friends in the Community tab
+            </p>
           </div>
         ) : (
           <div className="chat-list">
