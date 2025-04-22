@@ -8,7 +8,7 @@ const DeleteTrip = ({trip, trips, setTrips, setLogged, setNotLogged}) => {
 
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/owenbackend/api/trips/deleteTrip.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/trips/deleteTrip.php",
         trip,
         {
           headers: { "Content-Type": "application/json" },

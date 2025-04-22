@@ -8,7 +8,7 @@ const DeleteComment = ({comment, tripId, setComments}) => {
 
     try {
       const response = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/owenbackend/api/community/deleteComment.php",
+        "/CSE442/2025-Spring/cse-442aj/backend/api/community/deleteComment.php",
         comment,
         {
           headers: { "Content-Type": "application/json" },
