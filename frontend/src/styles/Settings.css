@@ -157,6 +157,16 @@
   color: var(--black);
 }
 
+.error-message {
+  color: red;
+  margin-bottom: 30px;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 30px;
+}
+
 @media screen and (max-width: 980px) {
   .settings-left.open {
     display: flex;
