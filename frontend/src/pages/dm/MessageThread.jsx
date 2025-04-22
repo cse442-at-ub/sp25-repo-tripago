@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "../../styles/dm/MessageThread.css";
 
 const dummyMessages = [
@@ -14,6 +14,7 @@ const MessageThread = () => {
   const { name } = useParams();
   const decodedName = decodeURIComponent(name);
   const navigate = useNavigate();
+  const location = useLocation();
   const avatar = location.state?.image; 
 
   console.log("avatar is", avatar)
@@ -28,6 +29,7 @@ const MessageThread = () => {
         <img src={avatar} alt={name} className="thread-avatar" />
         <h2 className="thread-name">{decodedName}</h2>
       </div>
+
 
       <div className="message-bubble-list">
         {dummyMessages.map((msg, i) => (
