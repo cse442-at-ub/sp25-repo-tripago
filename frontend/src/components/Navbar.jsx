@@ -14,6 +14,16 @@ const Navbar = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, message: "New message from user A" },
+    { id: 2, message: "Your trip to Paris is approaching!" },
+    // Add more notifications as needed
+  ]);
+  const toggleNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
+
   const isBrowseHotelsPage = location.pathname === "/browse-hotels";
   const isProfilePage = location.pathname === "/profile";
 
@@ -82,6 +92,26 @@ const Navbar = () => {
         </ul>
       ) : (
         <ul className="nav-links">
+          <li className="notifications-container">
+            <button className="notification-button" onClick={toggleNotifications}>
+              Notifications ({notifications.length})
+            </button>
+            <div className={`notifications-window ${isNotificationsOpen ? 'open' : ''}`}>
+              <h3>Notifications</h3>
+              {notifications.length > 0 ? (
+                <ul className="notifications-list">
+                  {notifications.map((note) => (
+                    <li key={note.id}>{note.message}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="notifications-empty">No new notifications.</p>
+              )}
+              <button className="notifications-close-button" onClick={() => setIsNotificationsOpen(false)}>
+                Close
+              </button>
+            </div>
+          </li>
           <li>
             <button
               className="navbar-links"
