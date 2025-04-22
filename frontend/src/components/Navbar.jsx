@@ -88,7 +88,7 @@ const Navbar = () => {
               onClick={async () => {
                 try {
                   const response = await axios.post(
-                    "/CSE442/2025-Spring/cse-442aj/backend/security/logout.php",
+                    "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/security/logout.php",
                     {},
                     {
                       withCredentials: true,

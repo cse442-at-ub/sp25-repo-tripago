@@ -29,7 +29,7 @@ const FriendsModal = ({
     if (isOpen && isFriend && tripId && userEmail) {
       axios
         .post(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getComments.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getComments.php",
           {
             tripId: tripId,
           }
@@ -47,7 +47,7 @@ const FriendsModal = ({
       );
       axios
         .post(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/community/getCommunityActivities.php",
+          "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getCommunityActivities.php",
           {
             tripId: tripId,
             email: userEmail,
@@ -67,7 +67,7 @@ const FriendsModal = ({
     const fetchMemories = async () => {
 
       try {
-        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: tripId}, {
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/getMemories.php", {id: tripId}, {
           headers: { "Content-Type": "application/json" },
         });
         const result = response.data;
@@ -100,7 +100,7 @@ const FriendsModal = ({
   
     try {
       await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/community/addComment.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/addComment.php",
         {
           tripId: tripId,
           commenter: currentUserEmail,
@@ -110,7 +110,7 @@ const FriendsModal = ({
   
       // Re-fetch updated comments after successful post
       const res = await axios.post(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/community/getComments.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/community/getComments.php",
         { tripId: tripId }
       );
   
@@ -130,7 +130,7 @@ const FriendsModal = ({
   const handleSendRequest = async () => {
     try {
       const response = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/sendFriendRequest.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/sendFriendRequest.php",
         {
           method: "POST",
           headers: {

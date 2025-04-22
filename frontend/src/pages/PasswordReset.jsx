@@ -26,7 +26,7 @@ const PasswordReset = () => {
     console.log("Password Reset Data:", formData);
     try {
       const response = await fetch(
-        "/CSE442/2025-Spring/cse-442aj/backend/api/reset_password.php",
+        "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/reset_password.php",
         {
           method: "POST",
           headers: {

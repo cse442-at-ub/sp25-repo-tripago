@@ -204,7 +204,7 @@ const Hotels = () => {
       //Update the trip dates to match check in/out:
       console.log("location being sent is: " + selectedLocation.name);
       fetch(
-        `/CSE442/2025-Spring/cse-442aj/backend/api/trips/updateTripDates.php`,
+        `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/trips/updateTripDates.php`,
         {
           method: "POST",
           headers: {

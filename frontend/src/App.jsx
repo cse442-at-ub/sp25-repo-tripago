@@ -31,6 +31,7 @@ import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 import Community from "./pages/community/Community.jsx";
 import TravelerProfile from "./pages/community/TravelerProfile.jsx";
+import DirectMessages from "./pages/dm/DirectMessages.jsx";
 
 const App = () => {
   return (
@@ -124,6 +125,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Settings />
+                  </ProtectedRoute>
+                }
+              />
+                <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <DirectMessages />
                   </ProtectedRoute>
                 }
               />

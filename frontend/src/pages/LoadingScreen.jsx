@@ -93,7 +93,7 @@ const LoadingScreen = () => {
         console.log("Loading Screen: In get favorites")
         try {
           const res = await fetch(
-            "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getFavorites.php",
+            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getFavorites.php",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -109,7 +109,7 @@ const LoadingScreen = () => {
             data.locations.map(async ({ location, cityCode }) => {
               try {
                 const imgRes = await fetch(
-                  `/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(
+                  `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${encodeURIComponent(
                     location
                   )}`
                 );
@@ -147,7 +147,7 @@ const LoadingScreen = () => {
       if (redirectTo === "/recommended") {
         try {
           const res = await fetch(
-            "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getFavorites.php",
+            "/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getFavorites.php",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -168,7 +168,7 @@ const LoadingScreen = () => {
 
           for (const code of cityCodes) {
             const recRes = await fetch(
-              `/CSE442/2025-Spring/cse-442aj/backend/api/recommendedFromFavorites.php?cityCode=${code.cityCode}`
+              `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/recommendedFromFavorites.php?cityCode=${code.cityCode}`
             );
             const recData = await recRes.json();
           console.log("recData recieved from recommendedFromFavorites is, ", recData)
@@ -187,7 +187,7 @@ const LoadingScreen = () => {
             deduped.map(async (destination) => {
               try {
                 const imgRes = await fetch(
-                  `/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(
+                  `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${encodeURIComponent(
                     destination.name
                   )}`
                 );
@@ -222,7 +222,7 @@ const LoadingScreen = () => {
           const category = location.state.category;
 
           const res = await fetch(
-            `/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
+            `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/amadeus/destinations/getRecommendations.php?category=${encodeURIComponent(
               category
             )}`
           );
@@ -236,7 +236,7 @@ const LoadingScreen = () => {
               const query = `${rec.name} travel`;
               try {
                 const imgRes = await fetch(
-                  `/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${encodeURIComponent(query)}`
+                  `/CSE442/2025-Spring/cse-442aj/angeliqueBackend/api/images/pexelsSearch.php?query=${encodeURIComponent(query)}`
                 );
                 const imgData = await imgRes.json();
                 return {
