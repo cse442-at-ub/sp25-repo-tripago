@@ -27,6 +27,10 @@ const Community = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
+  const [usernameSearchTerm, setUsernameSearchTerm] = useState("");
+  const [usernameSuggestions, setUsernameSuggestions] = useState([]);
+  const [showUsernameSuggestions, setShowUsernameSuggestions] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
@@ -66,6 +70,35 @@ const Community = () => {
 
     fetchFriends();
   }, []);
+
+//HANDLES THE AUTO COMPLETE THING FOR USER SEARCH
+  const handleUsernameSearchChange = async (e) => {
+    const value = e.target.value;
+    setUsernameSearchTerm(value);
+  
+    if (value.length < 2) { // Adjust the minimum characters as needed
+      setUsernameSuggestions([]);
+      setShowUsernameSuggestions(false);
+      return;
+    }
+  
+    try {
+      const res = await fetch(
+        `/CSE442/2025-Spring/cse-442aj/backend/api/users/searchUsernames.php?keyword=${encodeURIComponent(
+          value
+        )}` // Replace with your actual API endpoint for searching users
+      );
+      const data = await res.json();
+  
+      setUsernameSuggestions(data.usernames.map(username => ({ username }))); // Map to the expected format
+      setShowUsernameSuggestions(true);
+    } catch (err) {
+      console.error("Error fetching username suggestions:", err);
+      setUsernameSuggestions([]);
+      setShowUsernameSuggestions(false);
+    }
+  };
+
 
   useEffect(() => {
     console.log("Fetching community trips:");
@@ -115,13 +148,13 @@ const Community = () => {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    console.log("Search term:", searchTerm);
-    setSearchTerm("");
+    console.log("Username Search Term:", usernameSearchTerm); // Log the correct state
+    setSearchTerm(usernameSearchTerm); // Update searchTerm with the input value
     setSearchError(""); // reset any previous error
     try {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/sendFriendRequest.php",
-        { searchTerm: searchTerm },
+        { searchTerm: usernameSearchTerm },
         {
           headers: {
             "Content-Type": "application/json",
@@ -156,7 +189,7 @@ const Community = () => {
   //Will show you requests that you sent
   const getSentRequests = async (e) => {
     try {
-      console.log("hello!");
+      console.log("Fetching sent requests with emails!");
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/getSentRequests.php",
         { test: "empty" },
@@ -169,34 +202,35 @@ const Community = () => {
 
       const result = response.data;
 
-      console.log(result);
+      console.log("Sent requests data:", result);
 
       let newSentRequests = []; // Create a new array
 
-      //handle accepted names
-      if (result[0].length > 0) {
-        result[0].forEach((req) => {
+      // Handle accepted friends
+      if (result[0] && result[0].length > 0) {
+        result[0].forEach((friend) => {
           newSentRequests.push({
             id: Date.now() + Math.random(),
-            name: req.name,
+            name: friend.name,
+            email: friend.email, // Extract email
             status: "Accepted",
           });
         });
       }
-      //handle pending names
-      if (result[1].length > 0) {
-        result[1].forEach((req) => {
+
+      // Handle pending requests
+      if (result[1] && result[1].length > 0) {
+        result[1].forEach((request) => {
           newSentRequests.push({
             id: Date.now() + Math.random(),
-            name: req.name,
+            name: request.name,
+            email: request.email, // Extract email
             status: "Pending",
           });
         });
       }
 
       setSentRequests(newSentRequests); // Update sentRequests with the new array
-
-      //result should have a list of lists of names??
     } catch (error) {
       if (error.response) {
         console.error("Server responded with:", error.response.data);
@@ -285,15 +319,41 @@ const Community = () => {
           <div className="find-friends">
             <label className="find-friends-label">Find Friends</label>
 
-            <div className="find-friends-inputs">
+            <div className="find-friends-inputs" style={{ position: "relative" }}>
               <input
                 type="text"
                 placeholder="Search by username"
                 className="search-input"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={usernameSearchTerm}
+                onChange={handleUsernameSearchChange}
+                onFocus={() => setShowUsernameSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowUsernameSuggestions(false), 200)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && usernameSuggestions.length > 2){
+                    e.preventDefault();
+                    setUsernameSearchTerm(usernameSuggestions[0].username); 
+                    setShowUsernameSuggestions(false);
+                  }
+                }}
                 style={{ border: searchError ? "0.9px solid red" : undefined }}
               />
+
+              {showUsernameSuggestions && usernameSuggestions.length > 0 && (
+                  <ul className="autocomplete-dropdown"> 
+                    {usernameSuggestions.map((user, index) => (
+                      <li
+                        key={index}
+                        className="autocomplete-option" 
+                        onClick={() => {
+                          setUsernameSearchTerm(user.username);
+                          setShowUsernameSuggestions(false);
+                        }}
+                      >
+                        {encode(user.username)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               <button style={{ marginLeft: "10px" }} onClick={handleSend}>
                 Send
               </button>

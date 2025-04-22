@@ -695,12 +695,13 @@ const Budgeting = ({ trip, isInvitee }) => {
 
 const BudgetModal = ({ currentBudget, onClose, onSave }) => {
   const [amount, setAmount] = useState(currentBudget.toString());
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-      alert("Please enter a valid budget amount");
+      setErrorMessage("Please enter a valid budget amount"); // Set the error message
       return;
     }
 
@@ -714,6 +715,7 @@ const BudgetModal = ({ currentBudget, onClose, onSave }) => {
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setAmount(value);
     }
+    setErrorMessage(""); // Clear error message on input change
   };
 
   return (
@@ -737,7 +739,7 @@ const BudgetModal = ({ currentBudget, onClose, onSave }) => {
             onChange={handleAmountChange}
             required
           />
-
+          {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
           <button type="submit" className="modal-button">
             Save Budget
           </button>
