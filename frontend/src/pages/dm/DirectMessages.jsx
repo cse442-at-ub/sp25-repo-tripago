@@ -42,6 +42,7 @@ const DirectMessages = () => {
 
         if (data.success) {
           setFriends(data.friends);
+          console.log(data);
         } else {
           console.error("Failed to load friends:", data.message);
         }

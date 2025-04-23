@@ -2,16 +2,64 @@ import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "../../styles/dm/MessageThread.css";
 import Van from "../../assets/Van.png";
+import { UserContext } from "../../context/UserContext.jsx";
 
 const MessageThread = () => {
   const { name } = useParams();
+  const { user } = UserContext;
   const decodedName = decodeURIComponent(name);
   const navigate = useNavigate();
   const location = useLocation();
   const avatar = location.state?.image;
   const email = location.state?.email;
+  const senderEmail = user?.email;
+  
+  const [messages, setMessages] = React.useState([]);
+  const [newMessage, setNewMessage] = React.useState("");
 
   const [showDummyMessages, setShowDummyMessages] = React.useState(true);
+
+
+  React.useEffect(() => {
+    //fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/dm/getMessages.php?sender=${senderEmail}&receiver=${email}`)
+    let intervalId;
+
+    const fetchMessages = () => {
+    fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/dm/getMessages.php?receiver=${email}`)
+      .then(res => res.json())
+      .then(data => setMessages(data))
+      .catch(err => console.error("Failed to fetch messages", err));
+    }
+    fetchMessages();
+    intervalId = setInterval(fetchMessages, 3000);
+    return () => clearInterval(intervalId);
+  }, [email]);
+
+  const sendMessage = () => {
+    const msg = {
+      //sender: email,
+      receiver: email,
+      message: newMessage
+    };
+
+    
+  
+    fetch("/CSE442/2025-Spring/cse-442aj/backend/api/dm/sendMessages.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(msg),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        const newMsg = {
+          ...msg,
+          timestamp: new Date().toLocaleTimeString(),
+        };
+        setMessages((prev) => [...prev, newMsg]);
+        setNewMessage("");
+      })
+      .catch((err) => console.error("Failed to send message", err));
+  };
 
   const dummyMessages = showDummyMessages
     ? [
@@ -69,23 +117,27 @@ const MessageThread = () => {
             </p>
           </div>
         ) : (
-          dummyMessages.map((msg, i) => (
+          messages.map((msg, i) => (
             <div
               key={i}
               className={`message-bubble ${
-                msg.sender === "me" ? "from-me" : "from-them"
+                msg.sender === email ? "from-them" : "from-me"
               }`}
             >
-              <div className="bubble-text">{msg.text}</div>
-              <div className="bubble-time">{msg.time}</div>
+              <div className="bubble-text">{msg.message}</div>
+              <div className="bubble-time">{msg.timestamp}</div>
             </div>
           ))
         )}
       </div>
 
       <div className="message-input-container ">
-        <input className="message-input" placeholder="Type a message..." />
-        <button className="collab-add-btn">Send</button>
+        <input 
+          className="message-input" 
+          placeholder="Type a message..." 
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}/>
+        <button className="collab-add-btn" onClick={sendMessage}>Send</button>
       </div>
     </div>
   );
