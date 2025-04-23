@@ -410,6 +410,8 @@
 }
 
 .at-trip-card .trip-destination {
+  /* position: absolute;
+  top: 10px; */
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--primary-color);
@@ -429,6 +431,8 @@
 .at-trip-image {
   width: 100%;
   height: 40%;
+  object-fit: cover;
+  overflow: hidden;
 }
 
 .edit-name-btn:hover {
@@ -534,7 +538,54 @@
   transition: all 0.4s ease-in-out;
 }
 
+/* Delete Trip */
+.delete-trip-wrapper {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  display: inline-block;
+}
 
+.delete-trip-box {
+  position: absolute;
+  bottom: 2rem;
+  right: 0px;
+  width: 300px;
+  background: #fff;
+  border: none;
+  padding: 15px;
+  font-size: 0.8rem;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  color: var(--secondary-text);
+  line-height: 1.1;
+}
+
+.delete-trip-box button {
+  margin: 0.4rem;
+}
+
+.confirm-delete {
+  background-color: red;
+}
+
+.confirm-delete:hover {
+  color: red;
+  border-color: red;
+}
+
+.at-trip-card .delete-trip-wrapper .delete-trip-button {
+  background-color: red;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+.delete-trip-button:hover {
+  color: red;
+  border-color: red;
+  background-color: white !important;
+}
 
 /* Responsiveness */
 @media screen and (max-width: 1039px) {
@@ -603,6 +654,10 @@
   .add-destination button {
     font-size: 10px;
     margin-top: 14px;
+  }
+
+  .delete-trip-box {
+    width: 150px;
   }
 }
 
