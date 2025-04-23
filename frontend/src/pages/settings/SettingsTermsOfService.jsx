@@ -61,6 +61,7 @@ const SettingsTermsOfService = () => {
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
+        <button onClick={() => navigate("/settings/delete-account")}>Delete Account</button>
 
         <h3>Legal</h3>
         <button className="selected" onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
