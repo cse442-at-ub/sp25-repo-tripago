@@ -191,11 +191,6 @@
   margin: 0;
 }
 
-.at-view-more-btn:hover {
-  padding: 0;
-  margin: 0;
-}
-
 .trip-stats h3 {
   font-size: 1.3rem;
   color: var(--black);
@@ -275,7 +270,7 @@
 }
 
 .friends-list {
-  margin-bottom: 200px;
+  margin-bottom: 2rem;
 }
 
 .view-all-trips {
@@ -423,20 +418,6 @@
 .at-trip-card .trip-dates {
   font-size: 14px;
   color: var(--dark-grey);
-}
-
-.trip-bottom-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  width: 95%;
-}
-
-.trip-icons img {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
 }
 
 .trip-price {

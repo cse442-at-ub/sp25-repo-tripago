@@ -6,6 +6,9 @@ import axios from "axios";
 const PasswordReset = () => {
   const navigate = useNavigate();
 
+  const [resetMessage, setResetMessage] = useState(""); // New state for reset message
+  const [errorMessage, setErrorMessage] = useState(""); // New state for error message
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -37,9 +40,9 @@ const PasswordReset = () => {
       console.log("Response:", result);
 
       if (result.status === "success") {
-        alert("Check your email for the reset link: " + result.resetLink);
+        setResetMessage(`Check your email for the reset link: ${result.resetLink}`);
       } else {
-        alert(result.message);
+        setErrorMessage(result.message);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -50,6 +53,19 @@ const PasswordReset = () => {
   return (
     <div className="login-container ">
       <h2>Reset Password</h2>
+          {resetMessage && (
+      <div style={{ color: '#52DDA2',
+        marginBottom: '10px',
+        fontWeight: 'bold',
+        textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' }}>
+        {resetMessage}
+      </div>
+    )}
+    {errorMessage && (
+      <div style={{ color: 'red', marginBottom: '10px' }}>
+        {errorMessage}
+      </div>
+    )}
       <form onSubmit={handleSubmit}>
         <input
           className="email-input-box"
