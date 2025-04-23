@@ -86,10 +86,8 @@ const LoadingScreen = () => {
           });
         }
         // If we are not going to the hotels page, we just navigate to the page after timeout
-      }
-
       // === 1. FAVORITES: Fetch user's favorite city codes + images
-      if (redirectTo === "/favorites") {
+      } else if (redirectTo === "/favorites") {
         console.log("Loading Screen: In get favorites")
         try {
           const res = await fetch(
@@ -141,10 +139,8 @@ const LoadingScreen = () => {
           navigate("/profile/new-destination");
           return;
         }
-      }
-
       // === 2. RECOMMENDATIONS: Fetch city codes from favorites → get recs → attach images
-      if (redirectTo === "/recommended") {
+      } else if (redirectTo === "/recommended") {
         try {
           const res = await fetch(
             "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getFavorites.php",
@@ -214,10 +210,8 @@ const LoadingScreen = () => {
           navigate("/profile/new-destination");
           return;
         }
-      }
-
       // === 3. ACCEPT-REJECT: Fetch city recs from category click
-      if (redirectTo === "/profile/accept-reject" && location.state?.category) {
+      } else if (redirectTo === "/profile/accept-reject" && location.state?.category) {
         try {
           const category = location.state.category;
 

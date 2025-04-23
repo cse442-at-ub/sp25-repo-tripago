@@ -341,6 +341,7 @@
 
 @media (max-width: 480px) {
   .community-container {
+    width: 75%;
     padding-left: 150px;
     padding-right: 150px;
   }
