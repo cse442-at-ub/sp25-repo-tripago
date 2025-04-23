@@ -31,6 +31,7 @@ const MessageThread = () => {
       .catch(err => console.error("Failed to fetch messages", err));
     }
     fetchMessages();
+
     intervalId = setInterval(fetchMessages, 3000);
     return () => clearInterval(intervalId);
   }, [email]);
@@ -61,24 +62,6 @@ const MessageThread = () => {
       .catch((err) => console.error("Failed to send message", err));
   };
 
-  const dummyMessages = showDummyMessages
-    ? [
-        { sender: "them", text: "Hey! Are you there?", time: "3:01 PM" },
-        { sender: "me", text: "Yep! Just got back home.", time: "3:03 PM" },
-        {
-          sender: "them",
-          text: "Did you check the trip plan?",
-          time: "3:04 PM",
-        },
-        {
-          sender: "me",
-          text: "I did. Looks amazing. We should book it.",
-          time: "3:05 PM",
-        },
-        { sender: "them", text: "Awesome, let’s lock it in.", time: "3:06 PM" },
-      ]
-    : [];
-
   return (
     <div className="message-thread-container">
       <div className="message-thread-header">
@@ -96,15 +79,8 @@ const MessageThread = () => {
         </h2>
       </div>
 
-      <button
-        className="toggle-view-button"
-        onClick={() => setShowDummyMessages((prev) => !prev)}
-      >
-        {showDummyMessages ? "Show Empty State" : "Show Messages"}
-      </button>
-
       <div className="message-bubble-list">
-        {dummyMessages.length === 0 ? (
+        {messages.length === 0 ? (
           <div className="thread-empty-state">
             <img
               src={Van}
