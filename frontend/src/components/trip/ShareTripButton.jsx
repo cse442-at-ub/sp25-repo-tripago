@@ -3,8 +3,7 @@ import { FaShare } from "react-icons/fa";
 import ShareTripModal from "./ShareTripModal";
 import "../../styles/trip/ShareTripButton.css";
 
-const ShareTripButton = () => {
-  const [showShareModal, setShowShareModal] = useState(false);
+const ShareTripButton = ({ trip, showShareModal, setShowShareModal }) => {
 
   return (
     <>
@@ -17,7 +16,7 @@ const ShareTripButton = () => {
       </button>
 
       {showShareModal && (
-        <ShareTripModal onClose={() => setShowShareModal(false)} />
+        <ShareTripModal onClose={() => setShowShareModal(false)} trip={trip} />
       )}
     </>
   );

@@ -48,7 +48,8 @@ while ($row = $result->fetch_assoc()) {
         "comment" => $comment,
         "imageUrl" => $row["image_url"],            // from trips
         "userImageUrl" => $row["user_image_url"] ?? null,    // from users
-        "email" => $row["email"]
+        "email" => $row["email"],
+        "tags" => $row["tags"] ? explode(',', $row["tags"]) : []
     ];
 }
 

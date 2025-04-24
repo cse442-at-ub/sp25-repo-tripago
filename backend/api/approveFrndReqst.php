@@ -50,8 +50,7 @@ $result = $result->fetch_all();
 $sender_email = $result[0][0];
 
 /*
-gets the specified friend request in the database, and sets the approved status to true,
-to indicate that the user approved the request
+1. Approve the original friend request (sender -> recipient)
 */
 $stmt = $mysqli->prepare("UPDATE `friends` SET approved=1 WHERE sender=? AND recipient=?");
 $stmt->bind_param("ss",$sender_email,$recipient_email);
@@ -59,10 +58,33 @@ $stmt->execute();
 
 //errno is non zero if an error occurred
 if ($stmt->errno){
-    echo json_encode(["success"=>false,"message"=>"There was an error approving the request"]);
+    echo json_encode(["success"=>false,"message"=>"There was an error approving the initial request (sender -> recipient)"]);
     exit();
 }
 
-echo json_encode(["success"=>true,"message"=>"You are now the friend of " . $sender_email . "!"]);
+/*
+2. Check if a reciprocal friend request (recipient -> sender) already exists and is approved.
+   If not, create and approve it.
+*/
+$stmt = $mysqli->prepare("SELECT * FROM `friends` WHERE sender=? AND recipient=? AND approved=1");
+$stmt->bind_param("ss", $recipient_email, $sender_email);
+$stmt->execute();
+$reciprocal_result = $stmt->get_result();
+
+if ($reciprocal_result->num_rows == 0) {
+    // Reciprocal friendship doesn't exist or isn't approved, so create and approve it
+    $stmt = $mysqli->prepare("INSERT INTO `friends` (sender, recipient, approved) VALUES (?, ?, 1)");
+    $stmt->bind_param("ss", $recipient_email, $sender_email);
+    $stmt->execute();
+
+    if ($stmt->errno) {
+        echo json_encode(["success"=>false,"message"=>"There was an error establishing the reciprocal friendship (recipient -> sender)"]);
+        exit();
+    }
+}
+
+echo json_encode(["success"=>true,"message"=>"You are now friends with " . $sender_email . "!"]);
+
+$mysqli->close();
 
 ?>
