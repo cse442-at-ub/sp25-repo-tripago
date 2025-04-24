@@ -16,10 +16,12 @@ import SettingsLanguageAndRegion from "./pages/settings/SettingsLanguageAndRegio
 import SettingsManagePassword from "./pages/settings/SettingsManagePassword.jsx";
 import SettingsRecentActivity from "./pages/settings/SettingsRecentActivity.jsx";
 import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
+import DeleteAccount from './pages/settings/SettingsDeleteAccount.jsx';
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
 import Recommended from "./pages/Recommended.jsx";
+import Favorites from "./pages/Favorites.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Hotels from "./pages/hotels/Hotels.jsx";
 import LoadingScreen from "./pages/LoadingScreen.jsx";
@@ -30,6 +32,8 @@ import AllTrips from "./pages/alltrips/AllTrips.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 import Community from "./pages/community/Community.jsx";
 import TravelerProfile from "./pages/community/TravelerProfile.jsx";
+import DirectMessages from "./pages/dm/DirectMessages.jsx";
+import MessageThread from "./pages/dm/MessageThread.jsx";
 
 const App = () => {
   return (
@@ -62,6 +66,16 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+
+              <Route
+                path="/favorites"
+                element={
+                  <ProtectedRoute>
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route
                 path="/profile"
                 element={
@@ -72,15 +86,19 @@ const App = () => {
               />
               <Route
                 path="/traveler-profile/:email"
-                element={<ProtectedRoute><TravelerProfile /></ProtectedRoute>}
+                element={
+                  <ProtectedRoute>
+                    <TravelerProfile />
+                  </ProtectedRoute>
+                }
               />
 
               <Route
                 path="/profile/new-destination"
                 element={
-                  <ProtectedRoute>
-                    <NewDestination />
-                  </ProtectedRoute>
+                  //<ProtectedRoute>
+                  <NewDestination />
+                  //</ProtectedRoute>
                 }
               />
               <Route
@@ -113,6 +131,22 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <DirectMessages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/messages/:name"
+                element={
+                  <ProtectedRoute>
+                    <MessageThread />
                   </ProtectedRoute>
                 }
               />
@@ -161,6 +195,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <SettingsMyData />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/delete-account"
+                element={
+                  <ProtectedRoute>
+                    <DeleteAccount />
                   </ProtectedRoute>
                 }
               />

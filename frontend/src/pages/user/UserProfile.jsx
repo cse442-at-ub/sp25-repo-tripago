@@ -7,6 +7,7 @@ import { FaEdit } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
+import FriendsModal from "../../components/community/FriendsModal.jsx";
 import HelpTooltip from "../../components/HelpTooltip.jsx";
 
 const UserProfile = () => {
@@ -38,9 +39,18 @@ const UserProfile = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [tripInvites, setTripInvites] = useState([]);
+  const [userTrips, setUserTrips] = useState([]);
   const navigate = useNavigate();
 
- 
+  const [selectedTrip, setSelectedTrip] = useState(null); 
+
+  const handleViewMore = (trip) => {
+    setSelectedTrip(trip);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTrip(null);
+  };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -100,6 +110,33 @@ const UserProfile = () => {
   }, []);
 
   useEffect(() => {
+
+    const fetchUserTrips = async () => {
+      try {
+        const res = await fetch(
+          `/CSE442/2025-Spring/cse-442aj/backend/api/community/getTripsByEmail.php?email=${user.email}`
+        );
+        const data = await res.json();
+
+        console.log("Trips fetched: ", data);
+
+        if (data.success) {
+          const tripsWithEmail = data.trips.map((trip) => ({
+            ...trip,
+            email: user.email, // inject the email from useParams
+          }));
+          setUserTrips(tripsWithEmail);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user trips:", err);
+      }
+    };
+
+    fetchUserTrips();
+
+  }, [user.email])
+
+  useEffect(() => {
     if (!user.email) return;
 
     const fetchTripInvites = async () => {
@@ -131,6 +168,28 @@ const UserProfile = () => {
 
     fetchTripInvites();
   }, [user.email]);
+
+  const fetchFriends = async () => {
+    console.log("Getting friends");
+    try {
+      const res = await fetch(
+        "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
+        {
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      console.log("Response from getting friends is: ", data);
+
+      if (data.success) {
+        setFriends(data.friends);
+      } else {
+        console.warn("Failed to fetch friends:", data.message);
+      }
+    } catch (err) {
+      console.error("Error fetching friends:", err);
+    }
+  };
 
   useEffect(() => {
     if (!user.email) return;
@@ -173,30 +232,6 @@ const UserProfile = () => {
         console.error("Error fetching stats:", err);
       }
     };
-
-    const fetchFriends = async () => {
-      console.log("Getting friends");
-      try {
-        const res = await fetch(
-          "/CSE442/2025-Spring/cse-442aj/backend/api/getFriends.php",
-          {
-            credentials: "include",
-          }
-        );
-        const data = await res.json();
-        console.log("Response from getting friends is: ", data);
-
-        if (data.success) {
-          setFriends(data.friends);
-        } else {
-          console.warn("Failed to fetch friends:", data.message);
-        }
-      } catch (err) {
-        console.error("Error fetching friends:", err);
-      }
-    };
-
-   
 
     fetchStats();
     fetchFriends();
@@ -293,9 +328,13 @@ const UserProfile = () => {
       const data = await res.json();
       console.log("After accepting invite and data is", data)
       if (data.success) {
+
         setTripInvites((prev) =>
           prev.filter((invite) => invite.trip_id !== tripId)
         );
+
+        fetchFriends(); // Update Friends section 
+
         navigate("/profile", {
           state: {
             tripId: tripId,
@@ -499,9 +538,56 @@ const UserProfile = () => {
             onClick={() => navigate("/community")}
             className="find-new-friends-p"
           >
-            Find new friends in the Community tab →
+            Find new friends in the Community tab
           </p>
         </div>
+        
+        <div className="trip-list user-profile-section">
+          <h3>Shared Trips</h3>
+          {userTrips.length === 0 ? (
+            <p>No trips shared publicly.</p>
+          ) : (
+            userTrips.map((trip) => (
+              <div key={trip.id} className="trip-card">
+                <div className="trip-info">
+                  <h2>
+                    <span className="bold">{encode(user.firstName)}'s</span>{" "}
+                    trip to{" "}
+                    <span className="highlight">{encode(trip.city_name)}</span>
+                  </h2>
+                  {trip.comment && (
+                    <p className="trip-comment">"{encode(trip.comment)}"</p>
+                  )}
+                  <button
+                    className="view-more-btn"
+                    onClick={() => handleViewMore(trip)}
+                  >
+                    View More
+                  </button>
+                </div>
+                <div className="community-image">
+                  <img
+                    src={trip.image_url}
+                    alt={trip.city_name}
+                    className="trip-image"
+                  />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        <FriendsModal
+          isOpen={selectedTrip !== null}
+          onClose={handleCloseModal}
+          user={`${user.firstName} ${user.lastName}`}
+          location={selectedTrip?.city_name}
+          imageUrl={selectedTrip?.image_url}
+          comment={selectedTrip?.comment}
+          isFriend={true}
+          tripId={selectedTrip?.id}
+          userEmail={user.email} // traveler’s email from useParams
+          currentUserEmail={user?.email}
+        />
       </div>
     </>
   );

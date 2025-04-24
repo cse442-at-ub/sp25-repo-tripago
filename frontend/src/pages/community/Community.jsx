@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../styles/community/Community.css";
+import "../../styles/TripTags.css";
 import paris from "../../assets/paris.jpg";
 import sandiego from "../../assets/sandiego.jpg";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
@@ -12,6 +13,7 @@ import { useContext } from "react";
 import { UserContext } from "../../context/UserContext.jsx";
 import UserAvatar from "../../assets/UserAvatar.png";
 import { useNavigate } from "react-router-dom";
+import { AVAILABLE_TAGS } from "../../components/trip/TripTags.jsx";
 
 const Community = () => {
   const [trips, setTrips] = useState([]);
@@ -21,8 +23,13 @@ const Community = () => {
   const [modalType, setModalType] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedTags, setSelectedTags] = useState([]);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const [usernameSearchTerm, setUsernameSearchTerm] = useState("");
+  const [usernameSuggestions, setUsernameSuggestions] = useState([]);
+  const [showUsernameSuggestions, setShowUsernameSuggestions] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -63,6 +70,35 @@ const Community = () => {
 
     fetchFriends();
   }, []);
+
+//HANDLES THE AUTO COMPLETE THING FOR USER SEARCH
+  const handleUsernameSearchChange = async (e) => {
+    const value = e.target.value;
+    setUsernameSearchTerm(value);
+  
+    if (value.length < 2) { // Adjust the minimum characters as needed
+      setUsernameSuggestions([]);
+      setShowUsernameSuggestions(false);
+      return;
+    }
+  
+    try {
+      const res = await fetch(
+        `/CSE442/2025-Spring/cse-442aj/backend/api/users/searchUsernames.php?keyword=${encodeURIComponent(
+          value
+        )}` // Replace with your actual API endpoint for searching users
+      );
+      const data = await res.json();
+  
+      setUsernameSuggestions(data.usernames.map(username => ({ username }))); // Map to the expected format
+      setShowUsernameSuggestions(true);
+    } catch (err) {
+      console.error("Error fetching username suggestions:", err);
+      setUsernameSuggestions([]);
+      setShowUsernameSuggestions(false);
+    }
+  };
+
 
   useEffect(() => {
     console.log("Fetching community trips:");
@@ -112,13 +148,13 @@ const Community = () => {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    console.log("Search term:", searchTerm);
-    setSearchTerm("");
+    console.log("Username Search Term:", usernameSearchTerm); // Log the correct state
+    setSearchTerm(usernameSearchTerm); // Update searchTerm with the input value
     setSearchError(""); // reset any previous error
     try {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/sendFriendRequest.php",
-        { searchTerm: searchTerm },
+        { searchTerm: usernameSearchTerm },
         {
           headers: {
             "Content-Type": "application/json",
@@ -153,7 +189,7 @@ const Community = () => {
   //Will show you requests that you sent
   const getSentRequests = async (e) => {
     try {
-      console.log("hello!");
+      console.log("Fetching sent requests with emails!");
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/getSentRequests.php",
         { test: "empty" },
@@ -166,34 +202,35 @@ const Community = () => {
 
       const result = response.data;
 
-      console.log(result);
+      console.log("Sent requests data:", result);
 
       let newSentRequests = []; // Create a new array
 
-      //handle accepted names
-      if (result[0].length > 0) {
-        result[0].forEach((name) => {
+      // Handle accepted friends
+      if (result[0] && result[0].length > 0) {
+        result[0].forEach((friend) => {
           newSentRequests.push({
             id: Date.now() + Math.random(),
-            name: name,
+            name: friend.name,
+            email: friend.email, // Extract email
             status: "Accepted",
           });
         });
       }
-      //handle pending names
-      if (result[1].length > 0) {
-        result[1].forEach((name) => {
+
+      // Handle pending requests
+      if (result[1] && result[1].length > 0) {
+        result[1].forEach((request) => {
           newSentRequests.push({
             id: Date.now() + Math.random(),
-            name: name,
+            name: request.name,
+            email: request.email, // Extract email
             status: "Pending",
           });
         });
       }
 
       setSentRequests(newSentRequests); // Update sentRequests with the new array
-
-      //result should have a list of lists of names??
     } catch (error) {
       if (error.response) {
         console.error("Server responded with:", error.response.data);
@@ -249,6 +286,21 @@ const Community = () => {
     }
   };
 
+  const handleTagToggle = (tag) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
+  const filteredTrips = trips
+    .filter((trip) => trip.email !== user?.email)
+    .filter((trip) => 
+      selectedTags.length === 0 || 
+      selectedTags.every(tag => trip.tags?.includes(tag))
+    );
+
   return (
     <>
       {/* Hamburger toggle for mobile */}
@@ -267,15 +319,41 @@ const Community = () => {
           <div className="find-friends">
             <label className="find-friends-label">Find Friends</label>
 
-            <div className="find-friends-inputs">
+            <div className="find-friends-inputs" style={{ position: "relative" }}>
               <input
                 type="text"
                 placeholder="Search by username"
                 className="search-input"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={usernameSearchTerm}
+                onChange={handleUsernameSearchChange}
+                onFocus={() => setShowUsernameSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowUsernameSuggestions(false), 200)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && usernameSuggestions.length > 2){
+                    e.preventDefault();
+                    setUsernameSearchTerm(usernameSuggestions[0].username); 
+                    setShowUsernameSuggestions(false);
+                  }
+                }}
                 style={{ border: searchError ? "0.9px solid red" : undefined }}
               />
+
+              {showUsernameSuggestions && usernameSuggestions.length > 0 && (
+                  <ul className="autocomplete-dropdown"> 
+                    {usernameSuggestions.map((user, index) => (
+                      <li
+                        key={index}
+                        className="autocomplete-option" 
+                        onClick={() => {
+                          setUsernameSearchTerm(user.username);
+                          setShowUsernameSuggestions(false);
+                        }}
+                      >
+                        {encode(user.username)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               <button style={{ marginLeft: "10px" }} onClick={handleSend}>
                 Send
               </button>
@@ -317,6 +395,7 @@ const Community = () => {
               onClick={() => {
                 setModalType("sent");
                 getSentRequests();
+                console.log("sentRequests: " + sentRequests);
               }}
             >
               View Friends
@@ -327,13 +406,42 @@ const Community = () => {
         <div className="community-bottom">
           {/* Main Section: List of Trips */}
           <div className="trip-list">
+            <div className="trip-filters">
+              <h3>Filter by Tags</h3>
+              <div className="tags-container">
+                {AVAILABLE_TAGS.map((tag) => (
+                  <button
+                    key={tag}
+                    className={`tag-chip ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                    onClick={() => handleTagToggle(tag)}
+                  >
+                    {encode(tag)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <h3>Discover Friends</h3>
-            {trips
-              .filter((trip) => trip.email !== user?.email)
-              .map((trip) => (
+            {filteredTrips.length === 0 ? (
+              <div className="no-results-message">
+                {selectedTags.length > 0 ? (
+                  <>
+                    <p>No trips found matching the selected tags.</p>
+                    <button 
+                      className="clear-filters-btn"
+                      onClick={() => setSelectedTags([])}
+                    >
+                      Clear Filters
+                    </button>
+                  </>
+                ) : (
+                  <p>No trips have been shared in the community yet.</p>
+                )}
+              </div>
+            ) : (
+              filteredTrips.map((trip) => (
                 <div key={trip.id} className="trip-card">
                   {/* Left Side: Text & Buttons */}
-
                   <div className="trip-info">
                     <div className="trip-header">
                       {console.log("default", UserAvatar)}
@@ -364,7 +472,7 @@ const Community = () => {
                             )
                           }
                         >
-                          {encode(trip.user)}'s
+                          {encode(trip.user)}&apos;s
                         </span>{" "}
                         trip to{" "}
                         <span className="highlight">
@@ -375,9 +483,19 @@ const Community = () => {
                     </div>
 
                     {trip.comment && (
-                      <p className="trip-comment">"{encode(trip.comment)}"</p>
+                      <p className="trip-comment">&ldquo;{encode(trip.comment)}&rdquo;</p>
                     )}
-                    {/* Hide "Send Request" button if already friends */}
+
+                    {trip.tags && trip.tags.length > 0 && (
+                      <div className="trip-tags-display">
+                        {trip.tags.map(tag => (
+                          <span key={tag} className="tag-chip readonly">
+                            {encode(tag)}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                     {!friendsList.includes(trip.email) && (
                       <button className="send-request-btn">Send Request</button>
                     )}
@@ -389,7 +507,6 @@ const Community = () => {
                     </button>
                   </div>
 
-                  {/* Right Side: Image */}
                   <div className="community-image">
                     <img
                       src={trip.imageUrl}
@@ -398,7 +515,8 @@ const Community = () => {
                     />
                   </div>
                 </div>
-              ))}
+              ))
+            )}
           </div>
         </div>
 

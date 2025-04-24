@@ -21,10 +21,10 @@ const Hotels = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const initialSearchDone = useRef(false);
-  const [tripId, setTripId] = useState(location.state?.tripId || null);
-  const [fromInvite, setFromInvite] = useState(
-    location.state?.fromInvite || false
-  );
+
+  const tripId = searchParams.get("tripId");
+  const fromInvite = searchParams.get("fromInvite") === "true";
+
   console.log("In Hotels.jsx, tripId is", tripId);
   console.log("In Hotels.jsx, fromInvite is", fromInvite);
 

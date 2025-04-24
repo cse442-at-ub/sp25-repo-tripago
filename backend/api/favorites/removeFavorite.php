@@ -1,40 +1,36 @@
 <?php
+	ini_set('display_errors', 1);
+    header("Access-Control-Allow-Origin: *");
+    header('Content-Type: application/json');
 
-$servername = "localhost";
-$username = "npula";
-$password = "50540565";
-$dbname = "cse442_2025_spring_team_aj_db";
+    $servername = "localhost";
+    $username = "npula";
+    $password = "50540565";
+    $dbname = "cse442_2025_spring_team_aj_db";
 
-$data = json_decode(file_get_contents("php://input"), true);
-$name = $data["name"];
-$countryCode = $data["countryCode"];
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_errno) {
+      echo json_encode(["success" => false, "message" => "Database connection failed"]);
+      exit();
+    }
 
-$token = $_COOKIE['authCookie'];
+    $data = json_decode(file_get_contents("php://input"), true);
+    $cityName = $data["cityName"];
+    $cityCode = $data["cityCode"];
+    if (!isset($data["email"])) {
+        $email = isset($_COOKIE['user']) ? $_COOKIE['user'] : null;
+    } else {
+        $email = $data["email"];
+    }
 
-$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_error != 0){
-    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
-    exit();
-}
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("DELETE FROM favorites WHERE email = ? AND city_code = ?");
+    $stmt->bind_param("ss", $email, $cityCode);
 
-$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
-$stmt->bind_param("s",$token);
-$stmt->execute();
-
-$result = $stmt->get_result();
-$result = $result->fetch_assoc();
-
-$email = $result["email"];
-if (!$email) {
-  echo json_encode(["success" => false, "message" => "Not logged in"]);
-  exit();
-}
-
-// SQL query to remove from favorites
-$query = "DELETE FROM favorites WHERE email='$email' AND name='$name'";
-if (mysqli_query($mysqli, $query)) {
-    echo json_encode(["success" => true, "message" => "Removed from favorites"]);
-} else {
-    echo json_encode(["success" => false, "message" => "Database error"]);
-}
+    // Execute and check for success
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "Removed from favorites"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Database error"]);
+    }
 ?>

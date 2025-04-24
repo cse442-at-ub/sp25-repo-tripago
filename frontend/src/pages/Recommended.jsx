@@ -7,60 +7,25 @@ import { FaHeart } from "react-icons/fa";
 import "../styles/recommended.css";
 import MobileSidebarToggle from "../components/MobileSidebarToggle.jsx";
 import '../styles/trip/AcceptRejectDest.css';
+import { UserContext } from "../context/UserContext.jsx";
+import { useLocation } from "react-router-dom";
 
-const VerifyLocation = () => {
+const Recommended = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [favorites, setFavorites] = useState({});
-  const [destinations, setDestinations] = useState([]);
+  // const [destinations, setDestinations] = useState([]);
   const [destinationImages, setDestinationImages] = useState([]);
   const [error, setError] = useState(null);
   const [imagesFetched, setImagesFetched] = useState(false); // Flag to ensure images are fetched only once
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 480);
   const [isMobile, setIsMobile] = useState(false);
+  const { user } = UserContext;
+  const location = useLocation();
+const destinations = location.state?.destinations || [];
 
   useEffect(() => {
-    const fetchDestinations = async () => {
-      try {
-        
-        //const response = await fetch("http://localhost/tripago/getRecommendations.php?category=Recommendations");
-        const response = await fetch("/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getRecommendations.php?category=Recommendations");
-        
-        if (!response.ok) {
-          throw new Error("Failed to fetch recommendations");
-        }
-  
-        const data = await response.json();
-        let destinationsList = data.data || [];
-  
-        // Fetch images for each destination **before** updating state
-        destinationsList = await Promise.all(
-          destinationsList.map(async (destination) => {
-            try {
-              //const imgResponse = await fetch(`http://localhost/tripago/pexelsSearch.php?query=${destination.name}`);
-              const imgResponse = await fetch(`/CSE442/2025-Spring/cse-442aj/backend/api/images/pexelsSearch.php?query=${destination.name}`);
-        
-              if (!imgResponse.ok) {
-                throw new Error("Failed to fetch image");
-              }
-  
-              const imgData = await imgResponse.json();
-              return { ...destination, image_url: imgData.photos[0]?.src.large || Paris }; 
-            } catch (imgErr) {
-              console.error("Error retrieving image for", destination.name, imgErr);
-              return { ...destination, image_url: Paris }; // Default to Paris image
-            }
-          })
-        );
-  
-        setDestinations(destinationsList); // Update state **after** fetching images
-      } catch (err) {
-        console.error("Error fetching destinations:", err);
-      }
-    };
-  
-    fetchDestinations();
 
     // Copied from userprofile.jsx
     const handleResize = () => {
@@ -81,21 +46,24 @@ const VerifyLocation = () => {
     setFavorites((prev) => ({ ...prev, [destination.name]: !isFavorited }));
   
     try {
+
       const url = isFavorited
         ? "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/removeFavorite.php"
         : "/CSE442/2025-Spring/cse-442aj/backend/api/favorites/addFavorite.php";
-  
+
+      
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: destination.name,
-          countryCode: destination.countryCode,
+          cityName: destination.name,
+          cityCode: destination.iataCode,
+          email: user?.email
         }),
       });
-  
+
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message || "Failed to update favorites");
@@ -119,14 +87,11 @@ const VerifyLocation = () => {
   };
 
   const filteredDestinations = destinations.filter(destination =>
-    //destination.city_name.toLowerCase().includes(searchQuery.toLowerCase())
+ 
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  //const toggleFavorite = (name) => {
-  //  setFavorites(prev => ({ ...prev, [name]: !prev[name] }));
-  //  console.log(destinations);
-  //};
+ 
 
   return (
     <>
@@ -200,7 +165,6 @@ const VerifyLocation = () => {
                 maxWidth: "500px",
                 minWidth: '300px',
                 transition: "border 0.3s ease-in-out"
-                /*border: selectedLocation === destination.name ? "3px solid #7c3aed" : "3px solid transparent",*/
               }}
               onClick={() => setSelectedLocation(destination.name)}
             >
@@ -244,4 +208,4 @@ const VerifyLocation = () => {
   );
 };
 
-export default VerifyLocation;
+export default Recommended;
