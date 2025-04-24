@@ -9,6 +9,7 @@ import MobileSidebarToggle from "../../components/MobileSidebarToggle.jsx";
 import { encode } from "html-entities";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
 import HelpTooltip from "../../components/HelpTooltip.jsx";
+import imageCompression from 'browser-image-compression';
 
 const UserProfile = () => {
   const [user, setUser] = useState({
@@ -252,11 +253,20 @@ const UserProfile = () => {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
-    const formData = new FormData();
-    formData.append("image", file);
-
+  
     try {
+      // Compress the image
+      const options = {
+        maxSizeMB: 1, // Limit to 1MB
+        maxWidthOrHeight: 1024, // Resize if necessary
+        useWebWorker: true,
+      };
+  
+      const compressedFile = await imageCompression(file, options);
+  
+      const formData = new FormData();
+      formData.append("image", compressedFile);
+  
       const res = await fetch(
         "/CSE442/2025-Spring/cse-442aj/backend/api/users/uploadUserImage.php",
         {
@@ -265,19 +275,19 @@ const UserProfile = () => {
           credentials: "include",
         }
       );
-
+  
       const data = await res.json();
-
+  
       if (data.success) {
         setUser((prev) => ({
           ...prev,
-          profilePic: `${data.imageUrl}?t=${Date.now()}`,
+          profilePic: `${data.imageUrl}?t=${Date.now()}`, // bust cache
         }));
       } else {
         console.error("Upload failed:", data.message);
       }
     } catch (err) {
-      console.error("Image upload error:", err);
+      console.error("Image compression/upload error:", err);
     }
   };
 

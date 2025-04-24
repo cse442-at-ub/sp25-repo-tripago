@@ -90,4 +90,10 @@ html {
   color: var(--dark-grey);
 }
 
+@media screen and (max-width: 480px) {
+  .nav-show-login-signup {
+    display:flex;
+  }
+}
+
 
