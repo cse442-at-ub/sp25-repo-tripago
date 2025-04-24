@@ -191,6 +191,7 @@
 
 @media screen and (max-width: 476px) {
   .direct-messages-container {
+    width: 85%;
     max-width: 90%;
     padding: 15px;
     height: auto;

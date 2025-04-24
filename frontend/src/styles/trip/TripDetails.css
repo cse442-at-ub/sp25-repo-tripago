@@ -257,7 +257,7 @@ p {
 }
 
 .hotel-details h3 {
-  font-size: 18px;
+  font-size: 1.2rem;
   color: #333;
   margin: 0 0 15px 0;
 }
@@ -301,7 +301,7 @@ p {
 
 .budget-header h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.2rem;
   color: #333;
 }
 
@@ -332,13 +332,13 @@ p {
 }
 
 .budget-amount {
-  font-size: 32px;
+  font-size: 1.7rem;
   font-weight: bold;
   color: #333;
 }
 
 .budget-spent {
-  font-size: 32px;
+  font-size: 1.7rem;
   color: #666;
 }
 
@@ -607,6 +607,7 @@ p {
 .trip-dates-bar h3 {
   color: var(--black);
   margin-bottom: 5px;
+  font-size: 1.2rem;
 }
 
 .auto-fill-btn {
@@ -706,7 +707,7 @@ p {
 
   .budget-amount,
   .budget-spent {
-    font-size: 24px;
+    font-size: 1.1rem;
   }
 
   .hotel-status {
