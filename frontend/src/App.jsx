@@ -16,6 +16,7 @@ import SettingsLanguageAndRegion from "./pages/settings/SettingsLanguageAndRegio
 import SettingsManagePassword from "./pages/settings/SettingsManagePassword.jsx";
 import SettingsRecentActivity from "./pages/settings/SettingsRecentActivity.jsx";
 import SettingsMyData from "./pages/settings/SettingsMyData.jsx";
+import DeleteAccount from './pages/settings/SettingsDeleteAccount.jsx';
 import SettingsTermsOfService from "./pages/settings/SettingsTermsOfService.jsx";
 import SettingsPrivacyPolicy from "./pages/settings/SettingsPrivacyPolicy.jsx";
 import Profile from "./pages/profile/Profile.jsx";
@@ -194,6 +195,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <SettingsMyData />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/delete-account"
+                element={
+                  <ProtectedRoute>
+                    <DeleteAccount />
                   </ProtectedRoute>
                 }
               />
