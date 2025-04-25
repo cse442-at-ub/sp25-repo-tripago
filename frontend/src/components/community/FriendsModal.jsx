@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/community/FriendsModal.css";
 import axios from "axios";
+import { Slide } from "react-slideshow-image";
+import "react-slideshow-image/dist/styles.css";
+import DeleteComment from "./DeleteComment.jsx";
 
 const FriendsModal = ({
   isOpen,
@@ -17,8 +20,9 @@ const FriendsModal = ({
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [itinerary, setItinerary] = useState([]);
+  const [memories, setMemories] = useState([]);
 
-  console.log("is friend is: ", isFriend);
+  console.log("Is friend?: ", isFriend);
 
   // Load comments and itinerary
   useEffect(() => {
@@ -59,6 +63,35 @@ const FriendsModal = ({
         })
         .catch((err) => console.error("Error loading itinerary:", err));
     }
+
+    const fetchMemories = async () => {
+
+      try {
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: tripId}, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const result = response.data;
+        console.log("getMemories form response: ", result);
+
+        const mem = []
+        for (const memory of result.memories) {
+          memory["images"] = []
+          for (const image of result.images) {
+            if (image.memory_id === memory.id) {
+              memory["images"].push(image.image_url)
+            }
+          }
+          mem.push(memory);
+        }
+        setMemories(mem);
+
+      } catch(err) {
+          console.log("Error fetching memories: ", err);
+      }
+    };
+
+    fetchMemories();
+
   }, [isOpen, isFriend, tripId, userEmail]);
 
   // Submit a new comment
@@ -123,6 +156,25 @@ const FriendsModal = ({
 
   if (!isOpen) return null;
 
+  // Style for image slideshow
+  const divStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundSize: "cover",
+    height: "400px",
+  };
+
+  // Properties of image slideshow
+  const properties = {
+    transitionDuration: 200,
+    prevArrow: <a className="prev">◀</a>,
+    nextArrow: <a className="next">▶</a>,
+    autoplay: false,
+    canSwipe: true,
+    cssClass: "slide-container",
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -162,13 +214,49 @@ const FriendsModal = ({
               </ul>
             </div>
 
+            <div className="memories-section">
+              <h3>Memories</h3>
+                {memories.length === 0 ? (
+                  <p className="no-memories-message">
+                    Looks like this trip has no memories.
+                  </p>
+                ) : (
+                  memories.map((memory) => (
+                    <div key={memory.id} className="memory-card">
+                      <div className={"slide-container"}>
+                        <Slide {...properties} arrows={memory.images.length > 1}>
+                          {memory.images.map((slideImage, index) => (
+                            <div key={index}>
+                              <div
+                                className={"memory-image"}
+                                style={{
+                                  ...divStyle,
+                                  backgroundImage: `url(${slideImage})`,
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </Slide>
+                      </div>
+
+                      <p>{memory.caption}</p>
+                    </div>
+                  ))
+                )}
+            </div>
+
             <div className="comments-section">
               <h3>Comments</h3>
               <div className="comments-list">
                 {comments.map((c, i) => (
                   <div key={i} className="comment">
-                    <span className="comment-user">{c.first_name} {c.last_name}:</span>{" "}
-                    {c.comment_text}
+                    <div>
+                      <span className="comment-user">{c.first_name} {c.last_name}:</span>{" "}
+                      {c.comment_text}
+                    </div>
+                    {currentUserEmail === c.commenter_email &&
+                      <DeleteComment comment={c} tripId={tripId} setComments={setComments} />
+                    }
                   </div>
                 ))}
               </div>

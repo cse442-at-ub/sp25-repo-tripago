@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { UserContext } from "../../context/UserContext.jsx";
 import FriendsModal from "../../components/community/FriendsModal.jsx";
 import HelpTooltip from "../../components/HelpTooltip.jsx";
+import DeleteTrip from "../../components/trip/DeleteTrip.jsx";
 
 const AllTrips = () => {
   const navigate = useNavigate();
@@ -238,16 +239,19 @@ const AllTrips = () => {
                       };
                       console.log("When clicking view, we send,");
                       console.log(selected);
-
+                      
                       localStorage.setItem(
                         "selectedTrip",
                         JSON.stringify(selected)
                       );
                       navigate("/profile");
                     }}
-                  >
+                    >
                     Edit
                   </button>
+
+                  {/* Delete Button */}
+                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
 
                   {/* Trip Info */}
                   <div className="trip-info">
@@ -255,16 +259,7 @@ const AllTrips = () => {
                       {encode(trip.destination)}
                     </h4>
                     <p className="trip-dates">{encode(trip.dates)}</p>
-
-                    {/* Bottom Row: Icons + Price */}
-                    <div className="trip-bottom-row">
-                      <div className="trip-icons">
-                        <img src={plane} alt="Plane" className="icon" />
-                        <img src={house} alt="House" className="icon" />
-                        <img src={car} alt="Car" className="icon" />
-                      </div>
-                      <p className="trip-price">${trip.price}</p>
-                    </div>
+                    <p className="trip-price">${trip.price}</p>
                   </div>
 
                   {/* Trip Image */}
@@ -320,14 +315,7 @@ const AllTrips = () => {
                       {encode(trip.destination)}
                     </h4>
                     <p className="trip-dates">{trip.dates}</p>
-                    <div className="trip-bottom-row">
-                      <div className="trip-icons">
-                        <img src={plane} alt="Plane" className="icon" />
-                        <img src={house} alt="House" className="icon" />
-                        <img src={car} alt="Car" className="icon" />
-                      </div>
-                      <p className="trip-price">${trip.price}</p>
-                    </div>
+                    <p className="trip-price">${trip.price}</p>
                   </div>
 
                   <img
@@ -386,6 +374,9 @@ const AllTrips = () => {
                     View
                   </button>
 
+                  {/* Delete Trip */}
+                  <DeleteTrip trip={trip} trips={trips} setTrips={setTrips} setLogged={setLogged} setNotLogged={setNotLogged}/>
+
                   {/* Trip Info */}
                   <div className="trip-info">
                     <h4 className="trip-destination">
@@ -393,15 +384,7 @@ const AllTrips = () => {
                     </h4>
                     <p className="trip-dates">{trip.dates}</p>
 
-                    {/* Bottom Row: Icons + Price */}
-                    <div className="trip-bottom-row">
-                      <div className="trip-icons">
-                        <img src={plane} alt="Plane" className="icon" />
-                        <img src={house} alt="House" className="icon" />
-                        <img src={car} alt="Car" className="icon" />
-                      </div>
-                      <p className="trip-price">${trip.price}</p>
-                    </div>
+                    <p className="trip-price">${trip.price}</p>
                   </div>
 
                   <button

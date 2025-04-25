@@ -4,107 +4,86 @@ header("Access-Control-Allow-Methods: PUT,GET,POST,DELETE,OPTIONS");
 header("Content-Type: application/json");
 
 $jsonData = file_get_contents("php://input");
+$data = json_decode($jsonData, true);
 
-$data = json_decode($jsonData,true);
-
-if ($data == null){
-  echo json_encode(["success"=>false,"message"=>"Error with data recieved"]);
-  exit();
-}
-
-//set sender as user who sent the request
-$token = $_COOKIE['authCookie'];
-
-$mysqli = new mysqli("localhost","romanswi","50456839","cse442_2025_spring_team_aj_db");
-if ($mysqli->connect_error != 0){
-    echo json_encode(["success"=>false,"message"=>"Database connection failed ". $mysqli->connect_error]);
+if ($data == null) {
+    echo json_encode(["success" => false, "message" => "Error with data received"]);
     exit();
 }
 
-$stmt = $mysqli->prepare("SELECT * FROM users WHERE token=?");
-$stmt->bind_param("s",$token);
+// Set sender as the user who sent the request
+$token = $_COOKIE['authCookie'];
+
+$mysqli = new mysqli("localhost", "romanswi", "50456839", "cse442_2025_spring_team_aj_db");
+if ($mysqli->connect_error != 0) {
+    echo json_encode(["success" => false, "message" => "Database connection failed " . $mysqli->connect_error]);
+    exit();
+}
+
+$stmt = $mysqli->prepare("SELECT email FROM users WHERE token=?");
+$stmt->bind_param("s", $token);
 $stmt->execute();
-
 $result = $stmt->get_result();
-$result = $result->fetch_assoc();
+$user = $result->fetch_assoc();
+$sender = $user["email"];
 
-$sender = $result["email"];
 if (!$sender) {
-  echo json_encode(["success" => false, "message" => "Not logged in"]);
-  exit();
+    echo json_encode(["success" => false, "message" => "Not logged in"]);
+    exit();
 }
 
-//Get all emails that user is sending requests to. This will get pending requests
-$stmt = $mysqli->prepare("SELECT (recipient) FROM friends WHERE sender=? AND approved=0");
-$stmt->bind_param("s",$sender);
-$stmt->execute();
-
-$result = $stmt->get_result();
-$result = $result->fetch_all();
 $pending_requests = [];
-//populate pending requests with emails pending requests are sent to
-foreach ($result as $email){
-    $pending_requests[] = $email[0];
-}
-
-//do the same but for accepted requests
-$stmt = $mysqli->prepare("SELECT (recipient) FROM friends WHERE sender=? AND approved=1");
-$stmt->bind_param("s",$sender);
+// Get recipient emails for pending requests
+$stmt = $mysqli->prepare("SELECT recipient FROM friends WHERE sender=? AND approved=0");
+$stmt->bind_param("s", $sender);
 $stmt->execute();
-
 $result = $stmt->get_result();
-$result = $result->fetch_all();
+while ($row = $result->fetch_assoc()) {
+    $pending_requests[] = $row['recipient'];
+}
+
 $approved_requests = [];
-//populate pending requests with emails pending requests are sent to
-foreach ($result as $email){
-    $approved_requests[] = $email[0];
+// Get recipient emails for approved requests (friends)
+$stmt = $mysqli->prepare("SELECT recipient FROM friends WHERE sender=? AND approved=1");
+$stmt->bind_param("s", $sender);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $approved_requests[] = $row['recipient'];
 }
 
-
-$pending_names;
-if (count($pending_requests) > 0){
-    //at this point, we should have two lists, each containing email strings. One has approved emails, and the other pending
-    $in = str_repeat('?,',count($pending_requests)-1). '?';
-    //get first and last names of emails from users table
-    $stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
-    $types = str_repeat('s',count($pending_requests));
-    $stmt->bind_param($types,...$pending_requests);
+$pending_with_email = [];
+if (count($pending_requests) > 0) {
+    $in = str_repeat('?,', count($pending_requests) - 1) . '?';
+    $stmt = $mysqli->prepare("SELECT first_name, last_name, email FROM users WHERE email IN ($in)");
+    $types = str_repeat('s', count($pending_requests));
+    $stmt->bind_param($types, ...$pending_requests);
     $stmt->execute();
     $result = $stmt->get_result();
-    $result = $result->fetch_all();
-
-    //$result should have list of lists
-    //this should get a list of first names and last names from the users table
-    foreach ($result as $names){
-        $full_name = $names[0] . ' ' . $names[1];
-        $pending_names[] = $full_name;
+    while ($row = $result->fetch_assoc()) {
+        $full_name = $row['first_name'] . ' ' . $row['last_name'];
+        $pending_with_email[] = ['name' => $full_name, 'email' => $row['email']];
     }
-} else {
-    $pending_names = [];
 }
 
-$approved_names;
-if (count($approved_requests) > 0){
-    //now get approved names 
-    $in = str_repeat('?,',count($approved_requests)-1). '?';
-    $stmt = $mysqli->prepare("SELECT first_name,last_name FROM users WHERE email IN ($in)");
-    $types = str_repeat('s',count($approved_requests));
-    $stmt->bind_param($types,...$approved_requests);
+$approved_with_email = [];
+if (count($approved_requests) > 0) {
+    $in = str_repeat('?,', count($approved_requests) - 1) . '?';
+    $stmt = $mysqli->prepare("SELECT first_name, last_name, email FROM users WHERE email IN ($in)");
+    $types = str_repeat('s', count($approved_requests));
+    $stmt->bind_param($types, ...$approved_requests);
     $stmt->execute();
     $result = $stmt->get_result();
-    $result = $result->fetch_all();
-    foreach ($result as $names){
-        $full_name = $names[0] . ' ' . $names[1];
-        $approved_names[] = $full_name;
+    while ($row = $result->fetch_assoc()) {
+        $full_name = $row['first_name'] . ' ' . $row['last_name'];
+        $approved_with_email[] = ['name' => $full_name, 'email' => $row['email']];
     }
-} else {
-    $approved_names = [];
 }
 
+// Send a list of approved requests (friends) and pending requests, each with name and email
+echo json_encode([$approved_with_email, $pending_with_email]);
 
-//here $appoved_names and $pending_names should have corresponding data
-
-//send list of approved names and pending names. List of two lists
-echo json_encode([$approved_names,$pending_names]);
+$stmt->close();
+$mysqli->close();
 
 ?>

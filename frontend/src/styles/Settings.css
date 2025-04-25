@@ -157,6 +157,131 @@
   color: var(--black);
 }
 
+.error-message {
+  color: red;
+  margin-bottom: 30px;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 30px;
+}
+
+/* Delete Account Page Styles */
+.delete-account-section {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.warning-text {
+  color: #dc3545;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.deletion-effects {
+  margin-bottom: 25px;
+  padding-left: 20px;
+  text-align: left;
+}
+
+.deletion-effects li {
+  margin-bottom: 12px;
+  color: #666;
+}
+
+.deletion-effects > li {
+  font-weight: 500;
+  color: #444;
+}
+
+.deletion-effects ul {
+  margin-top: 8px;
+  margin-bottom: 0;
+  padding-left: 20px;
+}
+
+.deletion-effects ul li {
+  margin-bottom: 6px;
+  font-weight: normal;
+  font-size: 0.95em;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.delete-button:hover {
+  background-color: var(--white);
+  color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+
+.confirmation-dialog {
+  margin-top: 20px;
+}
+
+.password-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.confirmation-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.cancel-button {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 10px 20px;
+  flex: 1;
+}
+
+.cancel-button:hover {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.confirm-delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.confirm-delete-button:hover {
+  background-color: var(--white);
+  color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+
+.confirm-delete-button:disabled {
+  background-color: #dc354580;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
 @media screen and (max-width: 980px) {
   .settings-left.open {
     display: flex;
@@ -258,7 +383,7 @@
   /* Make settings container full-width on mobile */
   .settings-container {
     flex-direction: column;
-    width: 100%;
+    width: fit-content;
     padding: 20px; /* Reduce excessive padding */
   }
 
@@ -302,8 +427,8 @@
   }
 
   .settings-right {
-    width: 100%;
-    padding: 0;
+    width: fit-content;
+    padding: 50px;
     /* height: auto; */
     margin-top: 50px;
     min-height: 100vh;
@@ -364,4 +489,45 @@
   .terms-btn {
     margin-bottom: 100px;
   }
+
+  .confirmation-buttons {
+    flex-direction: column;
+  }
 }
+
+
+
+/*For alerts*/
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1003;
+}
+
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 90%;
+  max-height: 80vh;  
+  overflow-y: auto;  
+  text-align: center;
+  position: relative;
+}
+
+.send-req-modal-content {
+  color: var(--primary-color);
+  font-weight: 600;
+  width: 300px
+}
+
