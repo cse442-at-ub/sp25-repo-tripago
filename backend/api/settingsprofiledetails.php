@@ -55,6 +55,42 @@ if ($result == null){ //email is available
   $stmt->bind_param("ss", $email, $token);
   $stmt->execute();
 
+  $stmt = $mysqli->prepare("UPDATE trips SET email=? WHERE email=?");
+  $stmt->bind_param("ss",$email,$oldEmail);
+  $stmt->execute();
+
+  $stmt = $mysqli->prepare("UPDATE trip_discussion SET user_email=? WHERE user_email=?");
+  $stmt->bind_param("ss",$email,$oldEmail);
+  $stmt->execute();
+
+  $stmt = $mysqli->prepare("UPDATE trip_collaborators SET user_email=? WHERE user_email=?");
+  $stmt->bind_param("ss",$email,$oldEmail);
+  $stmt->execute();
+
+  $stmt = $mysqli->prepare("UPDATE comments SET commenter_email=? WHERE commenter_email=?");
+  $stmt->bind_param("ss",$email,$oldEmail);
+  $stmt->execute();
+
+  $stmt = $mysqli->prepare("UPDATE bucket_list SET user_email=? WHERE user_email=?");
+  $stmt->bind_param("ss",$email,$oldEmail);
+  $stmt->execute();
+
+  $stmt = $mysqli->prepare("UPDATE activities SET email=? WHERE email=?");
+  $stmt->bind_param("ss",$email,$oldEmail);
+  $stmt->execute();
+
+  $stmt = $mysqli->prepare("UPDATE friends SET 
+  sender = REPLACE(sender,?,?),
+  recipient = REPLACE(recipient,?,?)
+  WHERE
+  sender=? OR recipient=?
+ 
+");
+  $stmt->bind_param("ssssss",$oldEmail,$email,$oldEmail,$email,$oldEmail,$oldEmail);
+  $stmt->execute();
+
+
+
   $expiration = (new DateTime())->getTimestamp() + 3600;
   setcookie("user",$email,$expiration,"/","",true,true);
 

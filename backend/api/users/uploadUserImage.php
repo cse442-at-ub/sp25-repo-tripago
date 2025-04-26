@@ -3,6 +3,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json");
 
+file_put_contents(__DIR__ . "/debug.log", "SCRIPT STARTED\n", FILE_APPEND);
+
 // 1. Start log
 $debugLog = fopen(__DIR__ . "/debug.log", "a");
 fwrite($debugLog, "\n--- UPLOAD START ---\n");
@@ -40,7 +42,7 @@ if (!$email) {
 }
 
 // 3. Validate file
-if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+if (!isset($_FILES['image'])) {
   fwrite($debugLog, "Invalid file upload\n");
   echo json_encode(["success" => false, "message" => "Invalid file upload"]);
   fclose($debugLog);

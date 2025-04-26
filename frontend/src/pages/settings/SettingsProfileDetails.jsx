@@ -7,6 +7,19 @@ import { FaCog } from 'react-icons/fa';
 import axios from 'axios';
 
 const SettingsProfileDetails = () => {
+  const [successMessage, setSuccessMessage] = useState(""); // State for the success message
+
+  useEffect(() => {
+      if (successMessage) {
+        const timer = setTimeout(() => {
+          setSuccessMessage("");
+        }, 1500); // Adjust the duration as needed
+  
+        return () => clearTimeout(timer);
+      }
+    }, [successMessage]);
+  
+  
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -32,12 +45,7 @@ const SettingsProfileDetails = () => {
     
     const handleResize = () => {
       const isNowMobile = window.innerWidth <= 480;
-      console.log(
-        "Window width:",
-        window.innerWidth,
-        "| isMobile:",
-        isNowMobile
-      );
+      
       setIsMobile(isNowMobile);
     };
   
@@ -65,8 +73,10 @@ const SettingsProfileDetails = () => {
       })
       const result = response.data
       console.log("Profile Details Form Response: ", result);
-      alert(result.message)
+      setSuccessMessage(result.message);
+      //alert(result.message)
     } catch(error) {
+      setSuccessMessage("There was an error changing your email");
       console.log("Error updating profile details:", error)
     }
   };
@@ -104,24 +114,33 @@ const SettingsProfileDetails = () => {
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
+        <button onClick={() => navigate("/settings/delete-account")}>Delete Account</button>
 
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
+        
       </div>
 
       {/* Right Panel */}
       <div className="settings-right">
         <h2>Profile Details</h2>
+
+        {successMessage && (
+          <div className="modal-overlay">
+            <div className="modal-content send-req-modal-content"> 
+              {successMessage}
+            </div>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Display Name</label>
+            <label>Update Username</label>
             <input
               type="text"
               name="displayName"
-              placeholder="Enter new name"
+              placeholder="Enter new username"
               value={formData.displayName}
               onChange={handleChange}
               // required
@@ -129,7 +148,7 @@ const SettingsProfileDetails = () => {
           </div>
 
           <div className="form-group">
-            <label>Email</label>
+            <label>Update Email</label>
             <input
               type="email"
               name="email"
@@ -143,7 +162,6 @@ const SettingsProfileDetails = () => {
           <button type="submit">Save Changes</button>
         </form>
       </div>
-
     </div>
     </>
   );

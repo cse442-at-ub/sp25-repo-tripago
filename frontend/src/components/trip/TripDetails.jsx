@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Accordion from "../Accordion";
 import { resolvePath, useNavigate } from "react-router-dom";
@@ -7,8 +7,13 @@ import { FaEdit, FaTimes } from "react-icons/fa";
 import { encode } from "html-entities";
 import axios from "axios";
 import autofillIcon from "../../assets/autofill.png";
+import { Slide } from "react-slideshow-image";
+import "react-slideshow-image/dist/styles.css";
+import ShareTripButton from "../../components/trip/ShareTripButton.jsx";
+import TripTags from "./TripTags.jsx";
+import HelpTooltip from "../HelpTooltip.jsx";
 
-const Itinerary = ({ trip, setShowModal }) => {
+const Itinerary = ({ trip, setShowModal, isInvitee }) => {
   //THIS STORES THE ACTIVITIES FOR EACH DAY :)
   //Need to get saved activities from DB, (or at least check!)
   //its called "autofillMessages", but should handle manual ones too!
@@ -16,7 +21,10 @@ const Itinerary = ({ trip, setShowModal }) => {
   const [location, setLocation] = useState({}); // State to store location input for each day
   const [placeholderText, setPlaceholderText] = useState({}); // State to store the placeholder text for each day
   const [addActivityButtonText, setAddActivityButtonText] = useState({}); // State to store the text of the add activity button
+  const tripID = trip?.id;
 
+  console.log("In Itinerary, our trip is, ", trip);
+  console.log("In Itinerary, our tripId is, ", tripID);
   const startDate = new Date(trip.startDate);
   const endDate = new Date(trip.endDate);
   const diffTime = Math.abs(endDate - startDate);
@@ -43,7 +51,7 @@ const Itinerary = ({ trip, setShowModal }) => {
 
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/getAllActivities.php",
-        {start_date:startDate},
+        { trip_id: tripID, start_date: startDate, city_name: trip.name },
         {
           headers: {
             "Content-Type": "application/json",
@@ -54,8 +62,6 @@ const Itinerary = ({ trip, setShowModal }) => {
       console.log(response.data);
 
       const data = response.data.activities;
-
-      console.log("After post");
 
       //should have a list which contains "activities"
 
@@ -112,7 +118,7 @@ const Itinerary = ({ trip, setShowModal }) => {
     try {
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/generateActivity.php",
-        { location: trip.name },
+        { location: trip.name, trip_id: tripID },
         {
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +126,7 @@ const Itinerary = ({ trip, setShowModal }) => {
         }
       );
 
-      console.log("After generating an activity,:")
+      console.log("After generating an activity,:");
       const data = response.data;
 
       console.log(data);
@@ -183,7 +189,14 @@ but can expand it in the future, if need (or want) be!
       */
       const response = await axios.post(
         "/CSE442/2025-Spring/cse-442aj/backend/api/amadeus/destinations/addActivity.php",
-        {day:day,name:name,price:price,start:startDate},
+        {
+          trip_id: tripID,
+          day: day,
+          name: name,
+          price: price,
+          start: startDate,
+          city_name: trip.name,
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -193,6 +206,7 @@ but can expand it in the future, if need (or want) be!
 
       const data = response.data;
 
+      console.log("After addActivity: ");
       console.log(data);
 
       if (data.success) {
@@ -304,7 +318,7 @@ but can expand it in the future, if need (or want) be!
                 {dayActivities.map((activity, index) => (
                   <div key={index} className="activity-item">
                     <div className="activity-header">
-                      <h3>{encode(activity.name)}</h3>
+                      <h3>{activity.name}</h3>
                     </div>
                     {activity.time && (
                       <p className="activity-time">
@@ -313,7 +327,7 @@ but can expand it in the future, if need (or want) be!
                     )}
                     {activity.description && (
                       <p className="activity-description">
-                        {encode(activity.description)}
+                        {activity.description}
                       </p>
                     )}
                   </div>
@@ -375,7 +389,7 @@ but can expand it in the future, if need (or want) be!
   };
 
   return (
-    <div className="itinerary-container">
+    <div className="itinerary-container tab-pane-container">
       {!trip.startDate || !trip.endDate ? (
         <div className="no-dates-selected">
           <div>
@@ -387,7 +401,14 @@ but can expand it in the future, if need (or want) be!
 
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
-              <h3>Trip Dates:</h3>
+              <div className="tooltip-container">
+                <HelpTooltip>
+                  <span className="tooltip-purple">Add your trip dates</span> to
+                  begin setting your itinerary and hotel details. If you're not
+                  sure, don't worry. You can change this later on!
+                </HelpTooltip>
+                <h3>Trip Dates:</h3>
+              </div>
 
               <button
                 className="edit-budget-btn"
@@ -402,7 +423,14 @@ but can expand it in the future, if need (or want) be!
       ) : (
         <>
           <div className="hotel-details">
-            <h3>Hotel Details:</h3>
+            <div className="tooltip-container">
+              <HelpTooltip>
+                Let us find you a hotel. Tripago uses live search to suggest <span className="tooltip-purple">a
+                hotel that fits your trip.</span> You can always change it later on.
+              </HelpTooltip>
+              <h3>Hotel Details:</h3>
+            </div>
+
             <div className="hotel-status">
               {trip.hotel.name ? (
                 <div className="booked-hotel-details">
@@ -411,7 +439,7 @@ but can expand it in the future, if need (or want) be!
                   <button
                     className="find-hotel-btn"
                     onClick={() =>
-                      navigate("/loading-screen", {
+                      navigate(`/loading-screen?tripId=${tripID}&fromInvite=${isInvitee}`, {
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
@@ -439,7 +467,7 @@ but can expand it in the future, if need (or want) be!
                   <button
                     className="find-hotel-btn"
                     onClick={() =>
-                      navigate("/loading-screen", {
+                      navigate(`/loading-screen?tripId=${tripID}&fromInvite=${isInvitee}`, {
                         state: {
                           headerText:
                             "Hang on! We're finding the best hotels for you",
@@ -451,6 +479,7 @@ but can expand it in the future, if need (or want) be!
                             adults: 2, // safe default
                             rooms: 1, // safe default
                           },
+                          
                         },
                       })
                     }
@@ -463,7 +492,13 @@ but can expand it in the future, if need (or want) be!
           </div>
           <div className="trip-dates-edit">
             <div className="trip-dates-bar">
-              <h3>Trip Dates:</h3>
+
+               <div className="tooltip-container">
+                <HelpTooltip>
+                  Build your perfect day. Add activities manually by entering a location, or click “Autofill my day” to <span className="tooltip-purple">get suggestions based on your destination.</span> You can mix and match — it’s your trip!
+                </HelpTooltip>
+                <h3>Trip Dates:</h3>
+              </div>
 
               <button
                 className="edit-budget-btn"
@@ -480,11 +515,12 @@ but can expand it in the future, if need (or want) be!
   );
 };
 
-const Budgeting = ({ trip }) => {
+const Budgeting = ({ trip, isInvitee }) => {
   const [budget, setBudget] = useState(trip.budget?.amount ?? 0); // Default to 0
   const [expenses, setExpenses] = useState(trip.budget?.expenses ?? []); // Default to empty list
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const tripID = trip?.id;
 
   useEffect(() => {
     console.log(
@@ -504,7 +540,11 @@ const Budgeting = ({ trip }) => {
     const amount = parseFloat(expense.amount);
     return sum + (isNaN(amount) ? 0 : amount);
   }, 0);
-  const isOverBudget = totalExpenses > budget;
+
+  const hotelPrice =
+    typeof trip?.hotel?.price === "number" ? trip.hotel.price : 0;
+
+  const isOverBudget = totalExpenses + hotelPrice > budget;
 
   const handleEditBudget = () => {
     setShowBudgetModal(true);
@@ -520,6 +560,7 @@ const Budgeting = ({ trip }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            trip_id: tripID,
             city_name: trip.name,
             budget_amount: newBudget, // triggers the update block
           }),
@@ -540,6 +581,7 @@ const Budgeting = ({ trip }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            trip_id: tripID,
             city_name: trip.name,
             category: newExpense.category,
             amount: newExpense.amount,
@@ -556,10 +598,9 @@ const Budgeting = ({ trip }) => {
     const loadExpenses = async () => {
       try {
         const res = await fetch(
-          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?city_name=${encodeURIComponent(
-            trip.name
-          )}`
+          `/CSE442/2025-Spring/cse-442aj/backend/api/trips/getTripExpenses.php?trip_id=${trip.id}`
         );
+
         const data = await res.json();
         if (data.success) {
           setExpenses(data.expenses || []);
@@ -571,16 +612,26 @@ const Budgeting = ({ trip }) => {
       }
     };
 
-    if (trip.name) {
+    if (trip?.id) {
       loadExpenses();
     }
-  }, [trip.name]);
+  }, [trip]);
 
   return (
-    <div className="budgeting-container">
+    <div className="budgeting-container tab-pane-container">
       <div className="budget-info">
         <div className="budget-header">
-          <h2>Budgeting</h2>
+          <div className="tooltip-container">
+            <HelpTooltip>
+              Keep track of your trip spending. Set a budget, then{" "}
+              <span className="tooltip-purple">
+                log your expenses as you go
+              </span>
+              . We'll show you how much you've spent so far — and let you know
+              if you’ve met your budget.
+            </HelpTooltip>
+            <h2>Budgeting</h2>
+          </div>
           <button className="edit-budget-btn" onClick={handleEditBudget}>
             <FaEdit /> Edit budget
           </button>
@@ -589,7 +640,7 @@ const Budgeting = ({ trip }) => {
         <div className="budget-overview">
           <div className="budget-amount">${budget.toFixed(2)}</div>
           <div className="budget-spent">
-            You spent ${Number(totalExpenses).toFixed(2)}
+            You spent ${Number(totalExpenses + hotelPrice).toFixed(2)}
             {isOverBudget && (
               <div className="budget-warning">
                 <span className="warning-icon">ⓘ</span>
@@ -644,12 +695,13 @@ const Budgeting = ({ trip }) => {
 
 const BudgetModal = ({ currentBudget, onClose, onSave }) => {
   const [amount, setAmount] = useState(currentBudget.toString());
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-      alert("Please enter a valid budget amount");
+      setErrorMessage("Please enter a valid budget amount"); // Set the error message
       return;
     }
 
@@ -663,6 +715,7 @@ const BudgetModal = ({ currentBudget, onClose, onSave }) => {
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setAmount(value);
     }
+    setErrorMessage(""); // Clear error message on input change
   };
 
   return (
@@ -686,7 +739,7 @@ const BudgetModal = ({ currentBudget, onClose, onSave }) => {
             onChange={handleAmountChange}
             required
           />
-
+          {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message */}
           <button type="submit" className="modal-button">
             Save Budget
           </button>
@@ -786,12 +839,112 @@ const ExpenseModal = ({ onClose, onSave }) => {
   );
 };
 
-const TripDetails = ({ trip, setShowModal }) => {
+const Memories = ({ trip }) => {
+
+  const [memories, setMemories] = useState([]);
+
+  const [showShareModal, setShowShareModal] = useState(false);
+
+  useEffect(() => {
+
+    const fetchMemories = async () => {
+
+      try {
+        // CHANGE THIS BACK TO BACKEND
+        const response = await axios.post("/CSE442/2025-Spring/cse-442aj/backend/api/trips/getMemories.php", {id: trip.id}, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const result = response.data;
+        console.log("getMemories form response: ", result);
+
+        const mem = []
+        for (const memory of result.memories) {
+          memory["images"] = []
+          for (const image of result.images) {
+            if (image.memory_id === memory.id) {
+              memory["images"].push(image.image_url)
+            }
+          }
+          mem.push(memory);
+        }
+        setMemories(mem);
+
+      } catch(err) {
+          console.log("Error fetching memories: ", err);
+      }
+    };
+
+    fetchMemories();
+  }, [showShareModal]);
+
+  // Style for image slideshow
+  const divStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundSize: "cover",
+    height: "400px",
+  };
+
+  // Properties of image slideshow
+  const properties = {
+    transitionDuration: 200,
+    prevArrow: <a className="prev">◀</a>,
+    nextArrow: <a className="next">▶</a>,
+    autoplay: false,
+    canSwipe: true,
+    cssClass: "slide-container",
+  };
+
+  return (
+    <div className="memories-container tab-pane-container">
+      <ShareTripButton trip={trip} showShareModal={showShareModal} setShowShareModal={setShowShareModal} />
+      {memories.length === 0 ? (
+        <p className="no-memories-message">
+          Looks like this trip has no memories. Use the button above to post a
+          memory to this trip. Memories can include pictures and comments about
+          your trip.
+        </p>
+      ) : (
+        memories.map((memory) => (
+          <div key={memory.id} className="memory-card">
+            <div className="slide-container">
+              <Slide {...properties} arrows={memory.images.length > 1}>
+                {memory.images.map((slideImage, index) => (
+                  <div key={index}>
+                    <div
+                      className="memory-image"
+                      style={{
+                        ...divStyle,
+                        backgroundImage: `url(${slideImage})`,
+                      }}
+                    />
+                  </div>
+                ))}
+              </Slide>
+            </div>
+
+            <p>{memory.caption}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+};
+
+const TripDetails = ({
+  trip,
+  setShowModal,
+  isInvitee,
+  currentTab,
+  setCurrentTab,
+}) => {
   const navigate = useNavigate();
 
   console.log("Trip is:", trip);
+  const tripId = trip?.id;
 
-  const [currentTab, setCurrentTab] = useState("itinerary");
+  // const [currentTab, setCurrentTab] = useState("itinerary");
 
   return (
     <div className="trip-details">
@@ -801,8 +954,17 @@ const TripDetails = ({ trip, setShowModal }) => {
           <div className="title-container divider">
             <div className="trip-title-wrapper">
               <h2>
-                Your trip to{" "}
-                <span className="title-accent">{encode(trip.name)}</span>
+                {isInvitee ? (
+                  <>
+                    Group trip to{" "}
+                    <span className="title-accent">{encode(trip.name)}</span>
+                  </>
+                ) : (
+                  <>
+                    Your trip to{" "}
+                    <span className="title-accent">{encode(trip.name)}</span>
+                  </>
+                )}
               </h2>
             </div>
             {/* <p>Select a different trip</p> */}
@@ -814,6 +976,9 @@ const TripDetails = ({ trip, setShowModal }) => {
               Select a different trip
             </p>
           </div>
+
+          <TripTags tripId={tripId} isInvitee={isInvitee} />
+
           <div className="itin-budget-container">
             <p
               className={`itin-budget-tab ${
@@ -823,6 +988,7 @@ const TripDetails = ({ trip, setShowModal }) => {
             >
               Itinerary
             </p>
+
             <p
               className={`itin-budget-tab ${
                 currentTab === "budgeting" && "active"
@@ -831,13 +997,28 @@ const TripDetails = ({ trip, setShowModal }) => {
             >
               Budgeting
             </p>
+            <p
+              className={`itin-budget-tab ${
+                currentTab === "memories" && "active"
+              }`}
+              onClick={() => setCurrentTab("memories")}
+            >
+              Memories
+            </p>
           </div>
 
           <div className="tab-content">
             {currentTab === "itinerary" && (
-              <Itinerary trip={trip} setShowModal={setShowModal} />
+              <Itinerary
+                trip={trip}
+                setShowModal={setShowModal}
+                isInvitee={isInvitee}
+              />
             )}
-            {currentTab === "budgeting" && <Budgeting trip={trip} />}
+            {currentTab === "budgeting" && (
+              <Budgeting trip={trip} isInvitee={isInvitee} />
+            )}
+            {currentTab === "memories" && <Memories trip={trip} />}
           </div>
         </div>
       ) : (
@@ -864,7 +1045,7 @@ const tripProps = PropTypes.shape({
   name: PropTypes.string.isRequired,
   startDate: PropTypes.string,
   endDate: PropTypes.string,
-  // location: PropTypes.string.isRequired,
+  id: PropTypes.number,
   countryCode: PropTypes.string,
   days: PropTypes.arrayOf(
     PropTypes.shape({
@@ -895,22 +1076,34 @@ const tripProps = PropTypes.shape({
 TripDetails.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
+  isInvitee: PropTypes.bool,
+  currentTab: PropTypes.string.isRequired,
+  setCurrentTab: PropTypes.func.isRequired,
 };
+
 Itinerary.propTypes = {
   trip: tripProps,
   setShowModal: PropTypes.func.isRequired,
+  isInvitee: PropTypes.bool,
 };
+
 Budgeting.propTypes = {
   trip: tripProps,
+  isInvitee: PropTypes.bool,
 };
+
 ExpenseModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
+
 BudgetModal.propTypes = {
   currentBudget: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
+Memories.propTypes = {
+  trip: tripProps,
+}
 
 export default TripDetails;

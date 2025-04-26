@@ -16,12 +16,7 @@ const SettingsLanguageAndRegion = () => {
       
       const handleResize = () => {
         const isNowMobile = window.innerWidth <= 480;
-        console.log(
-          "Window width:",
-          window.innerWidth,
-          "| isMobile:",
-          isNowMobile
-        );
+        
         setIsMobile(isNowMobile);
       };
   
@@ -66,14 +61,16 @@ const SettingsLanguageAndRegion = () => {
         <button onClick={() => navigate("/settings/manage-password")}>Manage Password</button>
         <button onClick={() => navigate("/settings/recent-activity")}>Recent Activity</button>
         <button onClick={() => navigate("/settings/my-data")}>My Data</button>
+        <button onClick={() => navigate("/settings/delete-account")}>Delete Account</button>
 
         <h3>Legal</h3>
         <button onClick={() => navigate("/settings/terms-of-service")}>Terms of Service</button>
         <button onClick={() => navigate("/settings/privacy-policy")}>Privacy Policy</button>
-        <button className="return-home-btn" onClick={() => navigate("/user-profile")}>Return to Profile</button>
+      
       </div>
 
       {/* Right Panel */}
+      
       <div className="settings-right">
         <h2>Language & Region Settings</h2>
 
