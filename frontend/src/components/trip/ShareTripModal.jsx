@@ -347,6 +347,7 @@ const ShareTripModal = ({ onClose, trip }) => {
           </div>
         </div>
 
+        {/* added ability to send emails*/}
         <div className="modal-footer">
           <button className="modal-button" onClick={(e) => { handleShare(e); handleEmailSubmit(e); }}>
             Post Trip Memory
